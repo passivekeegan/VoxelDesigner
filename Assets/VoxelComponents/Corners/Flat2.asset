@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab3ecded7e562a4891d4ed1cb739d86, type: 3}
+  m_Name: Flat2
+  m_EditorClassIdentifier: 
+  objname: Flat2
+  vertices:
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 6
+      vector: 5
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 5
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 6
+      vector: 5
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 4
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 1
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 6
+      vector: 7
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 7
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 6
+      vector: 7
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 2
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 1
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 2
+    vertex2: 1
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 3
+    vertex2: 1
+  _edgesocket_cnt: 5
+  _facesocket_cnt: 15
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0
+  _serial_edgecounts: 0000000002000000020000000200000002000000
+  _serial_edgesockets: 0300000001000000020000000300000001000000000000000000000002000000
+  _serial_facecounts: 000000000100000000000000000000000000000001000000000000000000000000000000000000000000000000000000010000000100000000000000
+  _serial_facesockets: 03000000010000000000000002000000

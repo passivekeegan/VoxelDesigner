@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab3ecded7e562a4891d4ed1cb739d86, type: 3}
+  m_Name: AsymInL2
+  m_EditorClassIdentifier: 
+  objname: AsymInL2
+  vertices:
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 8
+      vector: 4
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 10
+      vector: 4
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 10
+      vector: 8
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 0
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 8
+      vector: 2
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 10
+      vector: 2
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 10
+      vector: 9
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 0
+  - operations:
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 6
+      vector: 3
+    - use_custom: 0
+      custom_modifier: 1
+      modifier: 2
+      vector: 3
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 1
+    vertex2: 2
+  _edgesocket_cnt: 5
+  _facesocket_cnt: 15
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0
+  _serial_edgecounts: 0200000000000000020000000200000000000000
+  _serial_edgesockets: 000000000100000001000000020000000200000000000000
+  _serial_facecounts: 010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000001000000
+  _serial_facesockets: 010000000000000002000000
