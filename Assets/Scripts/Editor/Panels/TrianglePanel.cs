@@ -58,6 +58,17 @@ public class TrianglePanel : PanelGUI
 		_triangles.Clear();
 	}
 
+	public override int primary_index {
+		get {
+			return _trianglelist.index;
+		}
+	}
+	public override PreviewDrawMode previewMode {
+		get {
+			return PreviewDrawMode.Triangle;
+		}
+	}
+
 	public override void DrawGUI(Rect rect)
 	{
 		RefreshOptionLabels();

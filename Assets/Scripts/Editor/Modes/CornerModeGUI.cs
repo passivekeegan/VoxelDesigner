@@ -25,8 +25,8 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 			new SelectionPanel<CornerDesign>("Corner Selection"),
 			new VertexPanel("Vertices"),
 			new TrianglePanel("Triangles", new string[0], new string[0]),
-			new SocketPanel("Edge Sockets", EDGESOCKET_LABELS, CornerDesign.EDGESOCKET_CNT),
-			new SocketPanel("Face Sockets", FACESOCKET_LABELS, CornerDesign.FACESOCKET_CNT)
+			new SocketPanel("Edge Sockets", EDGESOCKET_LABELS, CornerDesign.EDGESOCKET_CNT, PreviewDrawMode.EdgeSocket),
+			new SocketPanel("Face Sockets", FACESOCKET_LABELS, CornerDesign.FACESOCKET_CNT, PreviewDrawMode.FaceSocket)
 		};
 		_mode_labels = new string[] {
 			"Selection", "Vertex", "Triangle", "Edge Socket", "Face Socket"
@@ -41,23 +41,23 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 		switch (_mode) {
 			case 0:
 				SelectionPanel<CornerDesign> select = (SelectionPanel<CornerDesign>)_modes[_mode];
-				if (_selected != select.selected) {
-					_selected = select.selected;
+				if (selected != select.selected) {
+					selected = select.selected;
 				}
 				break;
 			case 1:
 				VertexPanel vertex = (VertexPanel) _modes[_mode];
-				vertex.target = _selected;
+				vertex.target = selected;
 				break;
 			case 2:
 				TrianglePanel tri = (TrianglePanel )_modes[_mode];
-				tri.target = _selected;
+				tri.target = selected;
 				break;
 			case 3:
 				SocketPanel edge = (SocketPanel)_modes[_mode];
-				edge.target = _selected;
-				if (_selected != null) {
-					edge.sockets = _selected.edgesockets;
+				edge.target = selected;
+				if (selected != null) {
+					edge.sockets = selected.edgesockets;
 				}
 				else {
 					edge.sockets = null;
@@ -65,9 +65,9 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 				break;
 			case 4:
 				SocketPanel face = (SocketPanel)_modes[_mode];
-				face.target = _selected;
-				if (_selected != null) {
-					face.sockets = _selected.facesockets;
+				face.target = selected;
+				if (selected != null) {
+					face.sockets = selected.facesockets;
 				}
 				else {
 					face.sockets = null;

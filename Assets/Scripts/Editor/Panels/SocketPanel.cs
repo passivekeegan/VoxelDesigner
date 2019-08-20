@@ -8,7 +8,11 @@ public class SocketPanel : PanelGUI
 	public VoxelComponent target;
 	public List<List<int>> sockets;
 
+	private int _primary_index;
+	private int _secondary_index;
+
 	private int _socketcnt;
+	private PreviewDrawMode _drawmode;
 	private Vector2 _scroll;
 	private Rect _rect_title;
 	private Rect _rect_scroll;
@@ -18,9 +22,12 @@ public class SocketPanel : PanelGUI
 	private List<List<int>> _sockets;
 	private List<ReorderableList> _socketlists;
 
-	public SocketPanel(string title, string[] labels, int socket_count)
+	public SocketPanel(string title, string[] labels, int socket_count, PreviewDrawMode drawmode)
 	{
 		_title = title;
+		_drawmode = drawmode;
+		_primary_index = -1;
+		_secondary_index = -1;
 		_socketcnt = socket_count;
 		_socketrects = new List<Rect>();
 		_socket_labels = new List<string>();
@@ -43,6 +50,8 @@ public class SocketPanel : PanelGUI
 	public override void Enable()
 	{
 		_scroll = Vector2.zero;
+		_primary_index = -1;
+		_secondary_index = -1;
 		for (int k = 0; k < _socketcnt; k++) {
 			//initialize socket int lists and reorderable lists
 			int list_index = k;
@@ -67,6 +76,9 @@ public class SocketPanel : PanelGUI
 			reorderlist.onReorderCallbackWithDetails += (ReorderableList list, int old_index, int new_index) => {
 				ReorderSocketElement(list, list_index, old_index, new_index);
 			};
+			reorderlist.onSelectCallback += (ReorderableList list) => {
+				SelectSocketElement(list_index, list);
+			};
 			_socketlists[k] = reorderlist;
 		}
 	}
@@ -74,10 +86,28 @@ public class SocketPanel : PanelGUI
 	public override void Disable()
 	{
 		target = null;
-
+		_primary_index = -1;
+		_secondary_index = -1;
 		for (int k = 0; k < _socketcnt; k++) {
 			_socketlists[k] = null;
 			_sockets[k].Clear();
+		}
+	}
+
+	public override PreviewDrawMode previewMode {
+		get {
+			return _drawmode;
+		}
+	}
+
+	public override int primary_index {
+		get {
+			return _primary_index;
+		}
+	}
+	public override int secondary_index {
+		get {
+			return _secondary_index;
 		}
 	}
 
@@ -313,6 +343,18 @@ public class SocketPanel : PanelGUI
 		repaint = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
+	}
+
+	private void SelectSocketElement(int list_index, ReorderableList list)
+	{
+		_primary_index = list_index;
+		_secondary_index = list.index;
+		for (int k = 0;k < _socketlists.Count;k++) {
+			if (k == list_index) {
+				continue;
+			}
+			_socketlists[k].index = -1;
+		}
 	}
 	#endregion
 }
