@@ -1,0 +1,279 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab3ecded7e562a4891d4ed1cb739d86, type: 3}
+  m_Name: Bsc_Joint_X
+  m_EditorClassIdentifier: 
+  objname: Bsc_Joint_X
+  vertices:
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.092695, y: 0.3, z: -0.194148}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.035858, y: 0.3, z: -0.05975}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.069674, y: 0.3, z: -0.001178}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.12179, y: 0.3, z: 0.177351}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.145367, y: 0.175162, z: -0.126491}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.030285, y: 0.175162, z: -0.014589}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.002508, y: 0.175162, z: 0.033523}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.036861, y: 0.175162, z: 0.189137}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.18727, y: 0.074582, z: -0.030339}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.092411, y: 0.074582, z: 0.053354}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.06736, y: 0.074582, z: 0.177351}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.233975, y: 0, z: 0.135085}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0, y: 0, z: -0.270171}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.11991, y: -0.074582, z: -0.147011}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0, y: -0.074582, z: -0.106708}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.11991, y: -0.074582, z: -0.147011}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.182228, y: -0.175162, z: -0.062646}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.027778, y: -0.175162, z: -0.018933}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.027777, y: -0.175162, z: -0.018933}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.182228, y: -0.175162, z: -0.062646}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.214485, y: -0.3, z: 0.016798}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.033817, y: -0.3, z: 0.060929}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.033816, y: -0.3, z: 0.060929}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.214485, y: -0.3, z: 0.016798}
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 5
+    vertex2: 4
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 1
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 4
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 5
+    vertex2: 1
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 5
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 11
+    vertex1: 8
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 11
+    vertex1: 9
+    vertex2: 10
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 6
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 5
+    vertex1: 6
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 10
+    vertex1: 9
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 2
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 10
+    vertex1: 6
+    vertex2: 7
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 3
+    vertex2: 7
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 12
+    vertex1: 13
+    vertex2: 14
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 12
+    vertex1: 14
+    vertex2: 15
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 17
+    vertex2: 14
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 16
+    vertex2: 17
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 17
+    vertex1: 16
+    vertex2: 20
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 17
+    vertex1: 20
+    vertex2: 21
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 15
+    vertex1: 14
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 18
+    vertex1: 14
+    vertex2: 17
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 21
+    vertex1: 18
+    vertex2: 17
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 15
+    vertex1: 18
+    vertex2: 19
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 21
+    vertex1: 22
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 23
+    vertex1: 19
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 23
+    vertex1: 18
+    vertex2: 22
+  _edgesocket_cnt: 5
+  _facesocket_cnt: 15
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0
+  _serial_edgecounts: 0400000004000000040000000800000004000000
+  _serial_edgesockets: 000000000100000002000000030000001400000015000000160000001700000003000000070000000a0000000b0000000b0000000800000004000000000000000c0000000d000000100000001400000017000000130000000f0000000c000000
+  _serial_facecounts: 010000000000000000000000000000000100000001000000000000000000000000000000010000000000000000000000010000000000000001000000
+  _serial_facesockets: 030000000000000014000000170000000c0000000b000000

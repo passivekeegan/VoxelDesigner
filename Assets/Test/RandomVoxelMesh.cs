@@ -22,8 +22,6 @@ public class RandomVoxelMesh : MonoBehaviour
 	{
 		data = new VoxelMeshData();
 		data.flat_shaded = flat_shade;
-		data.bevel = bevel;
-		data.space = space;
 		data.map = map;
 
 		Random.InitState(rand_seed);

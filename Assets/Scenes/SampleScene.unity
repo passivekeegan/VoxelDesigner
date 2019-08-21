@@ -193,7 +193,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -342,12 +342,12 @@ MonoBehaviour:
   flat_shade: 1
   rand_seed: 0
   voxel_samples: 1000
-  range_radius: 4
-  cutoff: 0.58
+  range_radius: 5
+  cutoff: 0.5
   bevel: 0.1
   space: 0.268
   filter: {fileID: 2137259898}
-  map: {fileID: 11400000, guid: a3519df3778493240b669be245a9bd7c, type: 2}
+  map: {fileID: 11400000, guid: 47879ac5b4d2cb342bba274c8e14f65c, type: 2}
 --- !u!33 &2137259898
 MeshFilter:
   m_ObjectHideFlags: 0

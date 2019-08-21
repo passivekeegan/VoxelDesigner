@@ -25,7 +25,6 @@ public class PreviewPanel : PanelGUI
 	private PreviewRenderUtility _previewutility;
 	private Texture _texture;
 
-	private VertexArgs _args;
 	private PreviewObject _originobj;
 	private PreviewObject _vertexobj;
 	private PreviewObject _triangleobj;
@@ -35,11 +34,6 @@ public class PreviewPanel : PanelGUI
 	{
 		_drawmode = PreviewDrawMode.Vertex;
 		_colourmap = colourmap;
-		_args = new VertexArgs()
-		{
-			bevel = 0.1f,
-			space = 0.256f
-		};
 
 		_primary_index = -1;
 		_secondary_index = -1;
@@ -179,14 +173,14 @@ public class PreviewPanel : PanelGUI
 			if (!tri.IsValid(vertices.Count, null, null)) {
 				continue;
 			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0, ref _args);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0, ref _args);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0, ref _args);
+			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
+			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
+			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
 			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
 			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
 		}
 		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0, ref _args);
+			Vector3 vertex = vertices[k].GenerateVertexVector(0);
 			AddVertexMesh(vertex, uv, ref _vertexobj);
 		}
 	}
@@ -205,16 +199,19 @@ public class PreviewPanel : PanelGUI
 			if (!tri.IsValid(vertices.Count, null, null)) {
 				continue;
 			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0, ref _args);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0, ref _args);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0, ref _args);
+			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
+			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
+			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
 			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
 			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
 		}
 		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0, ref _args);
+			Vector3 vertex = vertices[k].GenerateVertexVector(0);
 			if (_primary_index == k) {
 				AddVertexMesh(vertex, selectedUV, ref _vertexobj);
+			}
+			else if (_secondary_index == k) {
+				AddVertexMesh(vertex, selectedGroupUV, ref _vertexobj);
 			}
 			else {
 				AddVertexMesh(vertex, nonSelectedUV, ref _vertexobj);
@@ -238,9 +235,9 @@ public class PreviewPanel : PanelGUI
 			if (!tri.IsValid(vertices.Count, null, null)) {
 				continue;
 			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0, ref _args);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0, ref _args);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0, ref _args);
+			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
+			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
+			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
 			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
 			Vector2 uv;
 			if (_primary_index == k) {
@@ -256,7 +253,7 @@ public class PreviewPanel : PanelGUI
 		}
 		//draw vertices
 		for (int k = 0;k < vertices.Count;k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0, ref _args);
+			Vector3 vertex = vertices[k].GenerateVertexVector(0);
 			if (select_vertex0 == k || select_vertex1 == k || select_vertex2 == k) {
 				AddVertexMesh(vertex, selectedUV, ref _vertexobj);
 			}
@@ -279,9 +276,9 @@ public class PreviewPanel : PanelGUI
 			if (!tri.IsValid(vertices.Count, null, null)) {
 				continue;
 			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0, ref _args);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0, ref _args);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0, ref _args);
+			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
+			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
+			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
 			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
 			Vector2 uv = normalUV;
 			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
@@ -302,7 +299,7 @@ public class PreviewPanel : PanelGUI
 		}
 		//vertex mesh
 		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0, ref _args);
+			Vector3 vertex = vertices[k].GenerateVertexVector(0);
 			if (selectedgroup.Contains(k)) {
 				if (selected_index == k) {
 					AddVertexMesh(vertex, selectedUV, ref _vertexobj);
@@ -330,9 +327,9 @@ public class PreviewPanel : PanelGUI
 			if (!tri.IsValid(vertices.Count, null, null)) {
 				continue;
 			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0, ref _args);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0, ref _args);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0, ref _args);
+			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
+			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
+			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
 			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
 			Vector2 uv = normalUV;
 			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
@@ -353,7 +350,7 @@ public class PreviewPanel : PanelGUI
 		}
 		//vertex mesh
 		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0, ref _args);
+			Vector3 vertex = vertices[k].GenerateVertexVector(0);
 			if (selectedgroup.Contains(k)) {
 				if (selected_index == k) {
 					AddVertexMesh(vertex, selectedUV, ref _vertexobj);
