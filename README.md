@@ -2,6 +2,8 @@
 
 This is a Unity project I created to help me design hexagon voxels and assign them to certain patterns in a Unity Editor window and then use those designs to assemble a mesh. It is a work in progress so be aware things may be difficult to understand and some feature that appear there are missing entirely but I am working on implementing them in the future.
 
+![](/Screenshots/designer0.png?raw=true)
+
 ## Main Idea
 
 The main idea behind this project is I want to design hexagon shaped voxels. What I mean by designing voxels is that I want to hand make little meshes and add them to the whole mesh based on rules then link them together to form whole voxels for many voxels in a terrain map. Why would I want to do that? I want to do this because by making the mesh this way you can have a lot of control over how the mesh looks and the interaction between the voxels. I also want to do this because then when you want to change the look of your voxel mesh you can redesign it without ever going back into the code which can reduce errors cropping up. I use a simple abstraction to break the voxels up into base parts or components, design those individual elements, describe how they should connect to other elements and then map them to patterns that get matched when constructing the mesh.
