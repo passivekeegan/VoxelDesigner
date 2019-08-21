@@ -173,11 +173,11 @@ public class VoxelCreator : EditorWindow
 		}
 		switch (Event.current.type) {
 			case EventType.MouseDrag:
-				//_prev_mesh.RotatePreviewObject(Event.current.delta.x, Event.current.delta.y);
+				_preview.RotatePreview(Event.current.delta);
 				_repaint = true;
 				break;
 			case EventType.ScrollWheel:
-				//_prev_mesh.ZoomPreviewObject(Event.current.delta.y);
+				_preview.ZoomPreview(Event.current.delta.y);
 				_repaint = true;
 				break;
 		}

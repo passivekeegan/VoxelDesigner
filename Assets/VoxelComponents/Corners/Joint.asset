@@ -113,18 +113,6 @@ MonoBehaviour:
     vertex0: 0
     vertex1: 1
     vertex2: 2
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 0
-    vertex1: 2
-    vertex2: 5
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 0
-    vertex1: 3
-    vertex2: 5
   _edgesocket_cnt: 5
   _facesocket_cnt: 15
   cornerplugs: 
