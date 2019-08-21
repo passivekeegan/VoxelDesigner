@@ -40,23 +40,23 @@ public class FaceModeGUI : ModeGUI<FaceDesign>
 		switch (_mode) {
 			case 0:
 				SelectionPanel<FaceDesign> select = (SelectionPanel<FaceDesign>)_modes[_mode];
-				if (_selected != select.selected) {
-					_selected = select.selected;
+				if (selected != select.selected) {
+					selected = select.selected;
 				}
 				break;
 			case 1:
 				VertexPanel vertex = (VertexPanel)_modes[_mode];
-				vertex.target = _selected;
+				vertex.target = selected;
 				break;
 			case 2:
 				TrianglePanel tri = (TrianglePanel)_modes[_mode];
-				tri.target = _selected;
+				tri.target = selected;
 				break;
 			case 3:
 				PlugPanel corner = (PlugPanel)_modes[_mode];
-				corner.target = _selected;
-				if (_selected != null) {
-					corner.plugs = _selected.cornerplugs;
+				corner.target = selected;
+				if (selected != null) {
+					corner.plugs = selected.cornerplugs;
 				}
 				else {
 					corner.plugs = null;
@@ -64,9 +64,9 @@ public class FaceModeGUI : ModeGUI<FaceDesign>
 				break;
 			case 4:
 				PlugPanel edge = (PlugPanel)_modes[_mode];
-				edge.target = _selected;
-				if (_selected != null) {
-					edge.plugs = _selected.edgeplugs;
+				edge.target = selected;
+				if (selected != null) {
+					edge.plugs = selected.edgeplugs;
 				}
 				else {
 					edge.plugs = null;

@@ -70,6 +70,18 @@ public class VertexPanel : PanelGUI
 		_vertices.Clear();
 	}
 
+	public override int primary_index {
+		get {
+			return _vertexlist.index;
+		}
+	}
+
+	public override PreviewDrawMode previewMode {
+		get {
+			return PreviewDrawMode.Vertex;
+		}
+	}
+
 	public override void DrawGUI(Rect rect)
 	{
 		//update lists

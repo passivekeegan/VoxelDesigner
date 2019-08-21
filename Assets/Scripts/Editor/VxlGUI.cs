@@ -1,4 +1,5 @@
-﻿using UnityEditorInternal;
+﻿using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public static class VxlGUI
@@ -21,6 +22,24 @@ public static class VxlGUI
 	public const int MODE = 30;
 	public const int PANEL_TITLE = 24;
 	public const int HEADER_TITLE = 12;
+
+	public readonly static Mesh VertexMesh;
+
+	static VxlGUI()
+	{
+		GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		Mesh mesh = sphere.GetComponent<MeshFilter>().sharedMesh;
+		VertexMesh = new Mesh();
+		VertexMesh.vertices = (Vector3[]) mesh.vertices.Clone();
+		VertexMesh.triangles = (int[]) mesh.triangles.Clone();
+		VertexMesh.normals = (Vector3[]) mesh.normals.Clone();
+		VertexMesh.uv = (Vector2[]) mesh.uv.Clone();
+		VertexMesh.RecalculateBounds();
+		VertexMesh.RecalculateTangents();
+		VertexMesh.UploadMeshData(false);
+
+		GameObject.DestroyImmediate(sphere);
+	}
 
 	public static Rect GetAboveRow(Rect rect, int space, float factor)
 	{

@@ -23,25 +23,25 @@
 		switch (_mode) {
 			case 0:
 				SelectionPanel<MappingObject> select = (SelectionPanel<MappingObject>)_modes[_mode];
-				if (_selected != select.selected) {
-					_selected = select.selected;
+				if (selected != select.selected) {
+					selected = select.selected;
 				}
 				break;
 			case 1:
 				DesignMapPanel dmpanel = (DesignMapPanel)_modes[_mode];
-				dmpanel.target = _selected;
+				dmpanel.target = selected;
 				break;
 			case 2:
 				CornerMapPanel cmpanel = (CornerMapPanel)_modes[_mode];
-				cmpanel.target = _selected;
+				cmpanel.target = selected;
 				break;
 			case 3:
 				EdgeMapPanel empanel = (EdgeMapPanel)_modes[_mode];
-				empanel.target = _selected;
+				empanel.target = selected;
 				break;
 			case 4:
 				FaceMapPanel fmpanel = (FaceMapPanel)_modes[_mode];
-				fmpanel.target = _selected;
+				fmpanel.target = selected;
 				break;
 		}
 	}

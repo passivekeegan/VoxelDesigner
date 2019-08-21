@@ -11,6 +11,7 @@ public class VoxelCreator : EditorWindow
 		"Corner", "Edge", "Face", "Mapping"
 	};
 
+	public Texture2D colourmap;
 	public GUISkin skin;
 
 	private bool _repaint;
@@ -24,8 +25,7 @@ public class VoxelCreator : EditorWindow
 	private EdgeModeGUI _edgegui;
 	private FaceModeGUI _facegui;
 	private MappingModeGUI _mappinggui;
-
-	//private PreviewPanel _preview;
+	private PreviewPanel _preview;
 
 	[MenuItem("Window/Voxel Designer")]
 	public static void Initialize()
@@ -44,6 +44,7 @@ public class VoxelCreator : EditorWindow
 	private void OnDisable()
 	{
 		Undo.undoRedoPerformed -= UndoRedoPerformed;
+		_preview.Disable();
 	}
 
 	public void Intialize()
@@ -59,7 +60,9 @@ public class VoxelCreator : EditorWindow
 		_edgegui = new EdgeModeGUI();
 		_facegui = new FaceModeGUI();
 		_mappinggui = new MappingModeGUI();
-		//_preview = new PreviewPanel();
+		_preview = new PreviewPanel(colourmap);
+		_preview.Enable();
+
 
 		UpdateLayoutRects();
 		EnableMode(_mode);
@@ -100,12 +103,14 @@ public class VoxelCreator : EditorWindow
 		//process preview input
 		ProcessPreviewInput();
 		//refresh mesh if dirty
-		if (_update) {
-			//update voxel mesh
-			_update = false;
-		}
-		//draw preview window
-		//_preview.DrawGUI(_rect_preview);
+		_preview.update = _update;
+
+		//update preview variables
+		UpdatePreviewVariables();
+		_preview.update = true;
+
+		//draw preview panel
+		_preview.DrawGUI(_rect_preview);
 
 		if (Event.current.type == EventType.MouseMove) {
 			_repaint = true;
@@ -168,14 +173,46 @@ public class VoxelCreator : EditorWindow
 		}
 		switch (Event.current.type) {
 			case EventType.MouseDrag:
-				//_prev_mesh.RotatePreviewObject(Event.current.delta.x, Event.current.delta.y);
+				_preview.RotatePreview(Event.current.delta);
 				_repaint = true;
 				break;
 			case EventType.ScrollWheel:
-				//_prev_mesh.ZoomPreviewObject(Event.current.delta.y);
+				_preview.ZoomPreview(Event.current.delta.y);
 				_repaint = true;
 				break;
 		}
+	}
+
+	private void UpdatePreviewVariables()
+	{
+		VoxelComponent target = null;
+		PreviewDrawMode prevmode = PreviewDrawMode.None;
+		int primary_index = -1;
+		int secondary_index = -1;
+		switch (_mode) {
+			case 0:
+				target = _cornergui.selected;
+				prevmode = _cornergui.previewMode;
+				primary_index = _cornergui.primary_index;
+				secondary_index = _cornergui.secondary_index;
+				break;
+			case 1:
+				target = _edgegui.selected;
+				prevmode = _edgegui.previewMode;
+				primary_index = _edgegui.primary_index;
+				secondary_index = _edgegui.secondary_index;
+				break;
+			case 2:
+				target = _facegui.selected;
+				prevmode = _facegui.previewMode;
+				primary_index = _facegui.primary_index;
+				secondary_index = _facegui.secondary_index;
+				break;
+		}
+		_preview.target = target;
+		_preview.SetDrawMode(prevmode);
+		_preview.SetPrimaryIndex(primary_index);
+		_preview.SetSecondaryIndex(secondary_index);
 	}
 
 	private void UpdateLayoutRects()

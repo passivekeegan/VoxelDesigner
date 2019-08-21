@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 {
-	protected T _selected;
+	public T selected;
+
 	protected int _mode;
 	protected string[] _mode_labels;
 	protected Rect _rect_submodes;
@@ -24,6 +25,33 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 	{
 		for (int k = 0;k < _modes.Length;k++) {
 			_modes[k].Disable();
+		}
+	}
+
+	public override PreviewDrawMode previewMode {
+		get {
+			if (_mode < 0 || _mode >= _modes.Length) {
+				return PreviewDrawMode.None;
+			}
+			return _modes[_mode].previewMode;
+		}
+	}
+
+	public override int primary_index {
+		get {
+			if (_mode < 0 || _mode >= _modes.Length) {
+				return -1;
+			}
+			return _modes[_mode].primary_index;
+		}
+	}
+
+	public override int secondary_index {
+		get {
+			if (_mode < 0 || _mode >= _modes.Length) {
+				return -1;
+			}
+			return _modes[_mode].secondary_index;
 		}
 	}
 
@@ -61,14 +89,14 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		VxlGUI.DrawRect(_rect_selected, "DarkGradient");
 		//selection label
 		string text = "[None]";
-		if (_selected != null) {
-			text = _selected.objname;
+		if (selected != null) {
+			text = selected.objname;
 		}
 		GUI.Label(_rect_selected, _title + ":  " + text, GUI.skin.GetStyle("LeftLightHeader"));
 		//dirty selected object
 		if (update) {
-			if (_selected != null) {
-				EditorUtility.SetDirty(_selected);
+			if (selected != null) {
+				EditorUtility.SetDirty(selected);
 			}
 			update = false;
 		}
