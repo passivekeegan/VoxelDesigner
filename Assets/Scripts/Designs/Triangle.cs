@@ -65,6 +65,16 @@ public struct Triangle
 		this.vertex2 = TriIndex.EncodeIndex(index2);
 	}
 
+	public Triangle(TriIndexType type0, TriIndexType type1, TriIndexType type2, ushort vertex0, ushort vertex1, ushort vertex2)
+	{
+		this.type0 = type0;
+		this.type1 = type1;
+		this.type2 = type2;
+		this.vertex0 = vertex0;
+		this.vertex1 = vertex1;
+		this.vertex2 = vertex2;
+	}
+
 	/// <summary>
 	/// Determines if the vertex indices of the triangle are valid and inbounds.
 	/// </summary>

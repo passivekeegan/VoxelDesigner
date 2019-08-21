@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab3ecded7e562a4891d4ed1cb739d86, type: 3}
+  m_Name: Bsc_AsymL1_Y
+  m_EditorClassIdentifier: 
+  objname: Bsc_AsymL1_Y
+  vertices:
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.086603, y: 0.1, z: -0.2047}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.042044, y: 0.041758, z: -0.076053}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.107809, y: -0.08484, z: 0.050698}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.133974, y: -0.27, z: 0.177351}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.214484, y: -0.3, z: 0.016799}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.182227, y: -0.175162, z: -0.062645}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.119909, y: -0.074582, z: -0.147011}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0, y: 0, z: -0.27017}
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 6
+    vertex2: 7
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 1
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 1
+    vertex1: 5
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 1
+    vertex1: 2
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 4
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 3
+    vertex2: 4
+  _edgesocket_cnt: 5
+  _facesocket_cnt: 15
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0
+  _serial_edgecounts: 0400000002000000010000000200000004000000
+  _serial_edgesockets: 00000000010000000200000003000000030000000400000003000000070000000000000004000000050000000600000007000000
+  _serial_facecounts: 010000000100000000000000000000000100000000000000000000000000000000000000010000000000000000000000010000000000000000000000
+  _serial_facesockets: 0300000003000000000000000400000007000000

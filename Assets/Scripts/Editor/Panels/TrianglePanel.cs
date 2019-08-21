@@ -85,18 +85,45 @@ public class TrianglePanel : PanelGUI
 		GUI.EndScrollView();
 		//draw button panel
 		VxlGUI.DrawRect(_rect_panel, "DarkGradient");
-		float button_width = Mathf.Min(60, _rect_panel.width / 2f);
+		float button_width = Mathf.Min(60, _rect_panel.width / 3f);
 		//draw add button
 		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 0, button_width), "Add", GUI.skin.GetStyle("LightButton"))) {
 			_trianglelist.onAddCallback(_trianglelist);
 		}
+		//draw flip button
+		EditorGUI.BeginDisabledGroup(_trianglelist.index < 0 || _trianglelist.index >= _trianglelist.count);
+		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 1, button_width), "Flip", GUI.skin.GetStyle("LightButton"))) {
+			FlipTriangle(_trianglelist.index);
+		}
+		EditorGUI.EndDisabledGroup();
 		//draw delete button
-		EditorGUI.BeginDisabledGroup(_trianglelist == null || _trianglelist.index < 0 || _trianglelist.index >= _trianglelist.count);
+		EditorGUI.BeginDisabledGroup(_trianglelist.index < 0 || _trianglelist.index >= _trianglelist.count);
 		if (GUI.Button(VxlGUI.GetLeftElement(_rect_panel, 0, button_width), "Delete", GUI.skin.GetStyle("LightButton"))) {
 			_trianglelist.onRemoveCallback(_trianglelist);
 		}
 		EditorGUI.EndDisabledGroup();
 		EditorGUI.EndDisabledGroup();
+	}
+
+	private void FlipTriangle(int index)
+	{
+		if (target == null || target.triangles == null) {
+			return;
+		}
+		List<Triangle> triangles = target.triangles;
+		if (index < 0 || index >= triangles.Count) {
+			return;
+		}
+		Triangle tri = triangles[index];
+		if (tri.type1 == tri.type2 && tri.vertex1 == tri.vertex2) {
+			return;
+		}
+		Undo.RecordObject(target, "Flip Triangle At Index: " + index);
+		triangles[index] = new Triangle(tri.type0, tri.type2, tri.type1, tri.vertex0, tri.vertex2, tri.vertex1);
+		repaint = true;
+		update = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
 	}
 
 	public void UpdateTriangleList()

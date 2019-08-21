@@ -5,14 +5,10 @@ using UnityEngine;
 public class VoxelMeshData
 {
 	public bool flat_shaded;
-	public float bevel = 0.1f;
-	public float space = 0f;
 	public MappingObject map;
 
 	public List<Vector3> vertices;
 	public List<int> triangles;
-
-	private VertexArgs _args;
 
 	//(voxel ijl => VoxelSlot)
 	private Dictionary<IJL, VoxelSlot> _voxelslots;
@@ -709,10 +705,6 @@ public class VoxelMeshData
 		if (map == null) {
 			return;
 		}
-		_args = new VertexArgs() {
-			bevel = bevel,
-			space = space
-		};
 
 		GenerateCornerMeshes();
 		GenerateEdgeMeshes();
@@ -736,7 +728,7 @@ public class VoxelMeshData
 			int shift = data.Value.shift;
 			Vector3 corner_vertex = data.Value.vertex;
 			for (int k = 0; k < design.vertices.Count; k++) {
-				Vector3 vertex = corner_vertex + design.vertices[k].GenerateVertexVector(shift, ref _args);
+				Vector3 vertex = corner_vertex + design.vertices[k].GenerateVertexVector(shift);
 				int index = -1;
 				if (data.Value.draw && !flat_shaded) {
 					vertices.Add(vertex);
@@ -799,7 +791,7 @@ public class VoxelMeshData
 			Vector3 edge_vertex = data.Value.vertex;
 			List<VertexVector> edge_vertices = design.vertices;
 			for (int k = 0; k < edge_vertices.Count; k++) {
-				Vector3 vertex = edge_vertex + edge_vertices[k].GenerateVertexVector(shift, ref _args);
+				Vector3 vertex = edge_vertex + edge_vertices[k].GenerateVertexVector(shift);
 				int index = -1;
 				if (data.Value.draw && !flat_shaded) {
 					vertices.Add(vertex);
@@ -891,7 +883,7 @@ public class VoxelMeshData
 			Vector3 face_vertex = data.Value.vertex;
 			List<VertexVector> face_vertices = design.vertices;
 			for (int k = 0; k < design.vertices.Count; k++) {
-				Vector3 vertex = face_vertex + face_vertices[k].GenerateVertexVector(shift, ref _args);
+				Vector3 vertex = face_vertex + face_vertices[k].GenerateVertexVector(shift);
 				int index = -1;
 				if (data.Value.draw && !flat_shaded) {
 					vertices.Add(vertex);

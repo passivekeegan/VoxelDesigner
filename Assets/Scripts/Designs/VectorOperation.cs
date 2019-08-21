@@ -8,10 +8,16 @@
 [System.Serializable]
 public struct VectorOperation
 {
-	public bool use_custom;
-	public float custom_modifier;
-	public ModifierType modifier;
-	public VectorType vector;
+	public float scale;
+	public VType vector_type;
+	public Vector3 vector;
+
+	public VectorOperation(float scale, VType vector_type, Vector3 vector)
+	{
+		this.scale = scale;
+		this.vector_type = vector_type;
+		this.vector = vector;
+	}
 
 	/// <summary>
 	/// Create and initialize a VectorOperation using a custom 
@@ -25,18 +31,6 @@ public struct VectorOperation
 	/// A VectorType enum type that specifies a directionally 
 	/// shifted vector to use in the operation.
 	/// </param>
-	public VectorOperation(float modifier, VectorType vector)
-	{
-		this.use_custom = true;
-		this.custom_modifier = modifier;
-		this.modifier = default(ModifierType);
-		if (System.Enum.IsDefined(typeof(VectorType), vector)) {
-			this.vector = vector;
-		}
-		else {
-			this.vector = default(VectorType);
-		}
-	}
 
 	/// <summary>
 	/// Create and initialize a VectorOperation using a special 
@@ -50,23 +44,6 @@ public struct VectorOperation
 	/// A VectorType enum type that specifies a directionally 
 	/// shifted vector to use in the operation.
 	/// </param>
-	public VectorOperation(ModifierType modifier, VectorType vector)
-	{
-		this.use_custom = false;
-		this.custom_modifier = 1f;
-		if (System.Enum.IsDefined(typeof(ModifierType), modifier)) {
-			this.modifier = modifier;
-		}
-		else {
-			this.modifier = default(ModifierType);
-		}
-		if (System.Enum.IsDefined(typeof(VectorType), vector)) {
-			this.vector = vector;
-		}
-		else {
-			this.vector = default(VectorType);
-		}
-	}
 
 	/// <summary>
 	/// Create and initialize a VectorOperation directly.
@@ -88,21 +65,42 @@ public struct VectorOperation
 	/// A VectorType enum type that specifies a directionally 
 	/// shifted vector to use in the operation.
 	/// </param>
-	public VectorOperation(bool use_custom, float custom_modifier, ModifierType modifier, VectorType vector)
+
+	public Vector3 CalculateVector(int d)
 	{
-		this.use_custom = use_custom;
-		this.custom_modifier = custom_modifier;
-		if (System.Enum.IsDefined(typeof(ModifierType), modifier)) {
-			this.modifier = modifier;
-		}
-		else {
-			this.modifier = default(ModifierType);
-		}
-		if (System.Enum.IsDefined(typeof(VectorType), vector)) {
-			this.vector = vector;
-		}
-		else {
-			this.vector = default(VectorType);
+		switch (vector_type) {
+			case VType.Custom:
+				return scale * (Vx.AxiRot[Vx.D[1, d]] * vector);
+			case VType.Up:
+				return scale * Vector3.up;
+			case VType.Down:
+				return scale * Vector3.down;
+			case VType.D0:
+				return scale * Vx.HexagonUnit[2 * d];
+			case VType.D1:
+				return scale * Vx.HexagonUnit[2 * Vx.D[1, d]];
+			case VType.D2:
+				return scale * Vx.HexagonUnit[2 * Vx.D[2, d]];
+			case VType.D3:
+				return scale * Vx.HexagonUnit[2 * Vx.D[3, d]];
+			case VType.D4:
+				return scale * Vx.HexagonUnit[2 * Vx.D[4, d]];
+			case VType.D5:
+				return scale * Vx.HexagonUnit[2 * Vx.D[5, d]];
+			case VType.M0:
+				return scale * Vx.HexagonUnit[(2 * d) + 1];
+			case VType.M1:
+				return scale * Vx.HexagonUnit[(2 * Vx.D[1, d]) + 1];
+			case VType.M2:
+				return scale * Vx.HexagonUnit[(2 * Vx.D[2, d]) + 1];
+			case VType.M3:
+				return scale * Vx.HexagonUnit[(2 * Vx.D[3, d]) + 1];
+			case VType.M4:
+				return scale * Vx.HexagonUnit[(2 * Vx.D[4, d]) + 1];
+			case VType.M5:
+				return scale * Vx.HexagonUnit[(2 * Vx.D[5, d]) + 1];
+			default:
+				return Vector3.zero;
 		}
 	}
 
@@ -111,9 +109,28 @@ public struct VectorOperation
 	/// </summary>
 	public static VectorOperation empty {
 		get {
-			return new VectorOperation(default(ModifierType), default(VectorType));
+			return new VectorOperation(1f, default(VType), Vector3.zero);
 		}
 	}
+}
+
+public enum VType
+{
+	Custom,
+	Up,
+	Down,
+	D0,
+	D1,
+	D2,
+	D3,
+	D4,
+	D5,
+	M0,
+	M1,
+	M2,
+	M3,
+	M4,
+	M5
 }
 
 /// <summary>
@@ -142,131 +159,3 @@ public enum VectorType
 	M5
 }
 
-/// <summary>
-/// A static class containing functional extensions 
-/// to the VectorType enum.
-/// </summary>
-public static class VectorTypeExt
-{
-	/// <summary>
-	/// Gets the vector that the provided VectorType specifies and 
-	/// shifts its direction.
-	/// </summary>
-	/// <param name="type">
-	/// A VectorType enum type that specifies a directionally 
-	/// shifted vector.
-	/// </param>
-	/// <param name="shift">
-	/// An integer in the range of [0, 5] that represents a shift 
-	/// around 6 directions horizontally.
-	/// </param>
-	/// <returns>
-	/// Returns a Vector3 struct representing the final vector after 
-	/// being shifted.
-	/// </returns>
-	public static Vector3 Vector(this VectorType type, int shift)
-	{
-		if (shift < 0 || shift > 5) {
-			return Vector3.zero;
-		}
-		switch (type) {
-			case VectorType.UP:
-				return Vx.YAxis;
-			case VectorType.DOWN:
-				return -Vx.YAxis;
-			case VectorType.D0:
-				return Vx.Hexagon[shift];
-			case VectorType.D1:
-				return Vx.Hexagon[Vx.D[1, shift]];
-			case VectorType.D2:
-				return Vx.Hexagon[Vx.D[2, shift]];
-			case VectorType.D3:
-				return Vx.Hexagon[Vx.D[3, shift]];
-			case VectorType.D4:
-				return Vx.Hexagon[Vx.D[4, shift]];
-			case VectorType.D5:
-				return Vx.Hexagon[Vx.D[5, shift]];
-			case VectorType.M0:
-				return Vx.MidHexagon[shift];
-			case VectorType.M1:
-				return Vx.MidHexagon[Vx.D[1, shift]];
-			case VectorType.M2:
-				return Vx.MidHexagon[Vx.D[2, shift]];
-			case VectorType.M3:
-				return Vx.MidHexagon[Vx.D[3, shift]];
-			case VectorType.M4:
-				return Vx.MidHexagon[Vx.D[4, shift]];
-			case VectorType.M5:
-				return Vx.MidHexagon[Vx.D[5, shift]];
-			default:
-				return Vector3.zero;
-		}
-	}
-}
-
-/// <summary>
-/// An enum representing special or important float \
-/// modifiers to be used in vector operations.
-/// </summary>
-public enum ModifierType
-{
-	One,
-	N_One,
-	Bevel,
-	N_Bevel,
-	Space,
-	N_Space,
-	SpHyp,
-	N_SpHyp,
-	SpAdj,
-	N_SpAdj,
-	HBevel
-}
-
-/// <summary>
-/// A static class containing functional extensions 
-/// to the ModifierType enum.
-/// </summary>
-public static class ModifierTypeExt
-{
-	/// <summary>
-	/// Gets the float value of the corresponding special modifier type.
-	/// </summary>
-	/// <param name="type">
-	/// A ModifierType enum type that specifies a special float 
-	/// value that corresponds to it.
-	/// </param>
-	/// <param name="args">
-	/// A reference to a struct contained some of the special variables 
-	/// potentially required.
-	/// </param>
-	/// <returns>
-	/// Returns the float value. Returns 1 if the modifier type is not 
-	/// recognized.
-	/// </returns>
-	public static float Value(this ModifierType type, ref VertexArgs args)
-	{
-		switch (type) {
-			case ModifierType.Bevel:
-				return args.bevel;
-			case ModifierType.N_Bevel:
-				return -args.bevel;
-			case ModifierType.Space:
-				return args.space;
-			case ModifierType.N_Space:
-				return -args.space;
-			case ModifierType.SpHyp:
-				return args.space / Vx.SQRT3;
-			case ModifierType.N_SpHyp:
-				return -args.space / Vx.SQRT3;
-			case ModifierType.SpAdj:
-				return args.space / (2 * Vx.SQRT3);
-			case ModifierType.N_SpAdj:
-				return -args.space / (2 * Vx.SQRT3);
-			case ModifierType.HBevel:
-				return args.bevel / 2f;
-			default:
-				return 1f;
-		}
-	}
-}
