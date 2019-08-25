@@ -35,6 +35,9 @@ public class PlugPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_scroll = Vector2.zero;
 		_pluglist = new ReorderableList(_plugs, typeof(int), false, false, false, false);
 		_pluglist.showDefaultBackground = false;
@@ -47,6 +50,9 @@ public class PlugPanel : PanelGUI
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		_pluglist = null;
 		_plugs.Clear();
 	}
@@ -111,8 +117,9 @@ public class PlugPanel : PanelGUI
 			}
 			Undo.RecordObject(target, "Modify Plugs");
 			plugs[index] = plug;
-			update = true;
-			repaint = true;
+			_update_mesh = true;
+			_render_mesh = true;
+			_repaint_menu = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}

@@ -38,6 +38,9 @@ public class EdgeMapPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_addpat = EdgePattern.empty;
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
@@ -63,6 +66,9 @@ public class EdgeMapPanel : PanelGUI
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		target = null;
 
 		_patternlist = null;
@@ -210,7 +216,7 @@ public class EdgeMapPanel : PanelGUI
 		//apply change
 		if (EditorGUI.EndChangeCheck()) {
 			_addpat = new EdgePattern((type_index == 1), p0, p1, c0, c1, v0, v1, v2, v3);
-			repaint = true;
+			_repaint_menu = false;
 		}
 		//draw pattern header
 		VxlGUI.DrawRect(_rect_patheader, "DarkGradient");
@@ -232,8 +238,7 @@ public class EdgeMapPanel : PanelGUI
 			if (target != null) {
 				Undo.RecordObject(target, "Add Edge Pattern");
 				target.AddEdgePattern(_edges[_edgelist.index], _addpat);
-				update = true;
-				repaint = true;
+				_repaint_menu = false;
 				//dirty target
 				EditorUtility.SetDirty(target);
 				//update pattern list
@@ -248,8 +253,7 @@ public class EdgeMapPanel : PanelGUI
 			if (target != null) {
 				Undo.RecordObject(target, "Delete Edge Pattern");
 				target.DeleteEdgePattern(_edges[_edgelist.index], _patterns[_patternlist.index]);
-				update = true;
-				repaint = true;
+				_repaint_menu = false;
 				//dirty target
 				EditorUtility.SetDirty(target);
 				//update pattern list

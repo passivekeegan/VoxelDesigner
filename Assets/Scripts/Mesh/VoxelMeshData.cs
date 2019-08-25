@@ -376,9 +376,15 @@ public class VoxelMeshData
 			return new EdgeData();
 		}
 		//calculate shift
-		int shift = EdgePattern.CalculateShift(map_pat, edge_pat);
-		if ((axi == 0 || axi == 1) && Vx.IsEdgeTopHeavy(edge_key)) {
-			shift += 1;
+		int shift = -1;
+		if (edge_pat.vertical) {
+			shift = EdgePattern.CalculateVerticalShift(map_pat, edge_pat, edge_key);
+		}
+		else {
+			shift = EdgePattern.CalculateHorizontalShift(map_pat, edge_pat, axi);
+		}
+		if (shift < 0) {
+			return new EdgeData();
 		}
 		if (EdgePattern.CalculateAxiFlip(map_pat, edge_pat)) {
 			axi = Vx.OPPAXI[axi];

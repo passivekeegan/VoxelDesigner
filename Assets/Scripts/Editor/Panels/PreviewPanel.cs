@@ -6,9 +6,11 @@ using UnityEngine;
 public class PreviewPanel : PanelGUI
 {
 	private const float MINZOOM = 0.1f;
-	private const float MAXZOOM = 1f;
-	private const float ZOOMSPEED = 0.1f;
-	private const float HORIZONTALROTSPEED = 1f;
+	private const float MAXZOOM = 2f;
+	private const float MAXHEIGHT = 2f;
+	private const float ZOOMSPEED = 0.01f;
+	private const float HORIZONTALSPEED = 1f;
+	private const float VERTICALSPEED = 0.01f;
 
 	public VoxelComponent target;
 
@@ -25,15 +27,18 @@ public class PreviewPanel : PanelGUI
 	private PreviewRenderUtility _previewutility;
 	private Texture _texture;
 
-	private PreviewObject _originobj;
-	private PreviewObject _vertexobj;
-	private PreviewObject _triangleobj;
+	private HashSet<int> _primary_vertex;
+	private HashSet<int> _secondary_vertex;
 
+	private PreviewObject _originobj;
+	private PreviewObject _triangleobj;
 
 	public PreviewPanel(Texture2D colourmap)
 	{
 		_drawmode = PreviewDrawMode.Vertex;
 		_colourmap = colourmap;
+		_primary_vertex = new HashSet<int>();
+		_secondary_vertex = new HashSet<int>();
 
 		_primary_index = -1;
 		_secondary_index = -1;
@@ -47,20 +52,12 @@ public class PreviewPanel : PanelGUI
 		//initialize origin object
 		_originobj = new PreviewObject("Origin");
 		_originobj.UpdateMaterial(_previewmat);
-		AddVertexMesh(Vector3.zero, originUV, ref _originobj);
+		AddVertexMesh(Vector3.zero, VxlGUI.ORIGIN_UV, ref _originobj);
 		_originobj.UploadMeshChanges();
 		_previewutility.AddSingleGO(_originobj.obj);
 		_originobj.obj.transform.position = Vector3.zero;
 		_originobj.obj.transform.rotation = Quaternion.identity;
 		_originobj.obj.transform.localScale = Vector3.one;
-		//initialize vertex object
-		_vertexobj = new PreviewObject("Vertices");
-		_vertexobj.UpdateMaterial(_previewmat);
-		_vertexobj.UploadMeshChanges();
-		_previewutility.AddSingleGO(_vertexobj.obj);
-		_vertexobj.obj.transform.position = Vector3.zero;
-		_vertexobj.obj.transform.rotation = Quaternion.identity;
-		_vertexobj.obj.transform.localScale = Vector3.one;
 		//initialize triangle object
 		_triangleobj = new PreviewObject("Triangles");
 		_triangleobj.UpdateMaterial(_previewmat);
@@ -70,58 +67,58 @@ public class PreviewPanel : PanelGUI
 		_triangleobj.obj.transform.rotation = Quaternion.identity;
 		_triangleobj.obj.transform.localScale = Vector3.one;
 		//mark dirty for update and repaint
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 	}
 
 	public override void Disable()
 	{
+		_primary_vertex.Clear();
+		_secondary_vertex.Clear();
 		_previewutility.Cleanup();
 		_previewutility = null;
 		_originobj.Dispose();
-		_vertexobj.Dispose();
 		_triangleobj.Dispose();
-	}
-
-	public override int primary_index {
-		get {
-			return _primary_index;
-		}
-	}
-
-	public override int secondary_index {
-		get {
-			return _secondary_index;
-		}
-	}
-
-	public void SetPrimaryIndex(int index)
-	{
-		_primary_index = index;
-	}
-
-	public void SetSecondaryIndex(int index)
-	{
-		_secondary_index = index;
-	}
-
-	public void SetDrawMode(PreviewDrawMode mode)
-	{
-		_drawmode = mode;
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 	}
 
 	public override void DrawGUI(Rect rect)
 	{
-
-		if (update) {
+		if (_update_mesh) {
 			//update mesh
 			UpdateMesh();
+			//clear update mesh flag
+			_update_mesh = false;
+		}
+		if (_render_mesh) {
+			//update render vertices
+			UpdateRenderVertex();
 			//update preview render texture
 			_previewutility.BeginPreview(rect, GUI.skin.GetStyle("DarkGrey"));
+			if (target != null && target.vertices != null && drawVertices) {
+				List<VertexVector> vectors = target.vertices;
+				for (int k = 0; k < vectors.Count; k++) {
+					Vector3 vertex = Quaternion.Euler(0, _hrot, 0) * vectors[k].GenerateVertexVector(0);
+					bool selected = _primary_vertex.Contains(k);
+					bool groupselected = _secondary_vertex.Contains(k);
+					if (selected) {
+						_previewutility.DrawMesh(VxlGUI.SelectVertex, vertex, Quaternion.identity, _previewmat, 0);
+					}
+					else if (groupselected) {
+						_previewutility.DrawMesh(VxlGUI.GroupSelectVertex, vertex, Quaternion.identity, _previewmat, 0);
+					}
+					else {
+						_previewutility.DrawMesh(VxlGUI.NonSelectVertex, vertex, Quaternion.identity, _previewmat, 0);
+					}
+				}
+			}
 			_previewutility.Render();
 			_texture = _previewutility.EndPreview();
-			//clear update mesh flag
-			update = false;
+			//clear render mesh flag
+			_render_mesh = false;
 		}
 		//return if nothing to draw
 		if (_texture == null) {
@@ -129,45 +126,90 @@ public class PreviewPanel : PanelGUI
 		}
 		//draw preview render texture
 		GUI.DrawTexture(rect, _texture);
-		//clear repaint flag
-		repaint = false;
 	}
 
-
-	private void UpdateMesh()
+	private void UpdateRenderVertex()
 	{
-		_vertexobj.Clear();
-		_triangleobj.Clear();
+		_primary_vertex.Clear();
+		_secondary_vertex.Clear();
 		switch (_drawmode) {
-			case PreviewDrawMode.Simple:
-				UpdateSimpleModeMesh();
-				break;
 			case PreviewDrawMode.Vertex:
-				UpdateVertexModeMesh();
+				_primary_vertex.Add(_primary_index);
+				_secondary_vertex.Add(_secondary_index);
 				break;
 			case PreviewDrawMode.Triangle:
-				UpdateTriangleModeMesh();
+				UpdateTriangleVertexSelect();
 				break;
 			case PreviewDrawMode.EdgeSocket:
-				UpdateEdgeSocketModeMesh();
+				if (target != null) {
+					UpdateSocketSelect(target.edgesockets);
+				}
 				break;
 			case PreviewDrawMode.FaceSocket:
-				UpdateFaceSocketModeMesh();
+				if (target != null) {
+					UpdateSocketSelect(target.facesockets);
+				}
 				break;
 		}
-		_vertexobj.UploadMeshChanges();
+	}
+	private void UpdateMesh()
+	{
+		_triangleobj.Clear();
+		switch (_drawmode) {
+			case PreviewDrawMode.Triangle:
+				UpdateTriangles(true, true);
+				break;
+			case PreviewDrawMode.Simple:
+			case PreviewDrawMode.Vertex:
+			case PreviewDrawMode.EdgeSocket:
+			case PreviewDrawMode.FaceSocket:
+				UpdateTriangles(true, false);
+				break;
+		}
 		_triangleobj.UploadMeshChanges();
 	}
 
-	private void UpdateSimpleModeMesh()
+	#region Getters and Setters
+	private bool drawVertices {
+		get {
+			return _drawmode == PreviewDrawMode.Vertex ||
+				_drawmode == PreviewDrawMode.Triangle ||
+				_drawmode == PreviewDrawMode.EdgeSocket || 
+				_drawmode == PreviewDrawMode.FaceSocket;
+		}
+	}
+	public override int primary_index {
+		get {
+			return _primary_index;
+		}
+	}
+	public override int secondary_index {
+		get {
+			return _secondary_index;
+		}
+	}
+	public void SetPrimaryIndex(int index)
+	{
+		_primary_index = index;
+	}
+	public void SetSecondaryIndex(int index)
+	{
+		_secondary_index = index;
+	}
+	public void SetDrawMode(PreviewDrawMode mode)
+	{
+		_drawmode = mode;
+	}
+	#endregion
+
+	#region Vertex and Triangle
+	private void UpdateTriangles(bool backface, bool select)
 	{
 		if (target == null || target.vertices == null || target.triangles == null) {
 			return;
 		}
 		List<VertexVector> vertices = target.vertices;
 		List<Triangle> triangles = target.triangles;
-		//draw triangles
-		Vector2 uv = normalUV;
 		for (int k = 0; k < triangles.Count; k++) {
 			Triangle tri = triangles[k];
 			if (!tri.IsValid(vertices.Count, null, null)) {
@@ -177,209 +219,66 @@ public class PreviewPanel : PanelGUI
 			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
 			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
 			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
-			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
-		}
-		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0);
-			AddVertexMesh(vertex, uv, ref _vertexobj);
+			Vector2 uv = VxlGUI.NORMAL_UV;
+			if (select) {
+				if (_primary_index == k) {
+					uv = VxlGUI.SELECT_UV;
+				}
+				else {
+					uv = VxlGUI.NONSELECT_UV;
+				}
+			}
+			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, backface, ref _triangleobj);
 		}
 	}
-
-	private void UpdateVertexModeMesh()
+	private void UpdateTriangleVertexSelect()
 	{
 		if (target == null || target.vertices == null || target.triangles == null) {
 			return;
 		}
-		List<VertexVector> vertices = target.vertices;
 		List<Triangle> triangles = target.triangles;
-		//draw triangles
-		Vector2 uv = normalUV;
-		for (int k = 0; k < triangles.Count; k++) {
-			Triangle tri = triangles[k];
-			if (!tri.IsValid(vertices.Count, null, null)) {
-				continue;
-			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
-			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
-			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
-		}
-		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0);
-			if (_primary_index == k) {
-				AddVertexMesh(vertex, selectedUV, ref _vertexobj);
-			}
-			else if (_secondary_index == k) {
-				AddVertexMesh(vertex, selectedGroupUV, ref _vertexobj);
-			}
-			else {
-				AddVertexMesh(vertex, nonSelectedUV, ref _vertexobj);
-			}
-		}
-	}
-
-	private void UpdateTriangleModeMesh()
-	{
-		if (target == null || target.vertices == null ||target.triangles == null) {
+		if (_primary_index < 0 || _primary_index >= triangles.Count) {
 			return;
 		}
-		List<VertexVector> vertices = target.vertices;
-		List<Triangle> triangles = target.triangles;
-		//draw triangles
-		int select_vertex0 = -1;
-		int select_vertex1 = -1;
-		int select_vertex2 = -1;
-		for (int k = 0;k < triangles.Count;k++) {
-			Triangle tri = triangles[k];
-			if (!tri.IsValid(vertices.Count, null, null)) {
-				continue;
-			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
-			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
-			Vector2 uv;
-			if (_primary_index == k) {
-				uv = selectedUV;
-				select_vertex0 = tri.vertex0;
-				select_vertex1 = tri.vertex1;
-				select_vertex2 = tri.vertex2;
-			}
-			else {
-				uv = nonSelectedUV;
-			}
-			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
-		}
-		//draw vertices
-		for (int k = 0;k < vertices.Count;k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0);
-			if (select_vertex0 == k || select_vertex1 == k || select_vertex2 == k) {
-				AddVertexMesh(vertex, selectedUV, ref _vertexobj);
-			}
-			else {
-				AddVertexMesh(vertex, nonSelectedUV, ref _vertexobj);
-			}
-		}
-	}
-
-	private void UpdateEdgeSocketModeMesh()
-	{
-		if (target == null || target.vertices == null || target.triangles == null || target.edgesockets == null) {
+		Triangle tri = triangles[_primary_index];
+		if (!tri.IsValid(target.vertices.Count, null, null)) {
 			return;
 		}
-		List<VertexVector> vertices = target.vertices;
-		List<Triangle> triangles = target.triangles;
-		//draw triangles
-		for (int k = 0; k < triangles.Count; k++) {
-			Triangle tri = triangles[k];
-			if (!tri.IsValid(vertices.Count, null, null)) {
-				continue;
-			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
-			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
-			Vector2 uv = normalUV;
-			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
-		}
-		//edge sockets
-		HashSet<int> selectedgroup = new HashSet<int>();
-		List<List<int>> edgesockets = target.edgesockets;
-		int selected_index = -1;
-		if (_primary_index >= 0 && _primary_index < edgesockets.Count && edgesockets[_primary_index] != null) {
-			List<int> socket = edgesockets[_primary_index];
-			for (int k = 0;k < socket.Count;k++) {
-				int vertex_index = socket[k];
-				if (_secondary_index == k) {
-					selected_index = vertex_index;
-				}
-				selectedgroup.Add(vertex_index);
-			}
-		}
-		//vertex mesh
-		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0);
-			if (selectedgroup.Contains(k)) {
-				if (selected_index == k) {
-					AddVertexMesh(vertex, selectedUV, ref _vertexobj);
-				}
-				else {
-					AddVertexMesh(vertex, selectedGroupUV, ref _vertexobj);
-				}
-			}
-			else {
-				AddVertexMesh(vertex, nonSelectedUV, ref _vertexobj);
-			}
-		}
+		_primary_vertex.Add(tri.vertex0);
+		_primary_vertex.Add(tri.vertex1);
+		_primary_vertex.Add(tri.vertex2);
 	}
-
-	private void UpdateFaceSocketModeMesh()
+	private void UpdateSocketSelect(List<List<int>> sockets)
 	{
-		if (target == null || target.vertices == null || target.triangles == null || target.facesockets == null) {
+		if (sockets == null) {
 			return;
 		}
-		List<VertexVector> vertices = target.vertices;
-		List<Triangle> triangles = target.triangles;
-		//draw triangles
-		for (int k = 0; k < triangles.Count; k++) {
-			Triangle tri = triangles[k];
-			if (!tri.IsValid(vertices.Count, null, null)) {
-				continue;
-			}
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
-			Vector3 normal = Vector3.Cross((vertex1 - vertex0).normalized, (vertex2 - vertex0).normalized);
-			Vector2 uv = normalUV;
-			AddTriangleMesh(vertex0, vertex1, vertex2, normal, uv, true, ref _triangleobj);
+		if (_primary_index < 0 || _primary_index >= sockets.Count || sockets[_primary_index] == null) {
+			return;
 		}
-		//edge sockets
-		HashSet<int> selectedgroup = new HashSet<int>();
-		List<List<int>> facesockets = target.facesockets;
-		int selected_index = -1;
-		if (_primary_index >= 0 && _primary_index < facesockets.Count && facesockets[_primary_index] != null) {
-			List<int> socket = facesockets[_primary_index];
-			for (int k = 0; k < socket.Count; k++) {
-				int vertex_index = socket[k];
-				if (_secondary_index == k) {
-					selected_index = vertex_index;
-				}
-				selectedgroup.Add(vertex_index);
+		List<int> axi_socket = sockets[_primary_index];
+		for (int k = 0; k < axi_socket.Count; k++) {
+			int vertex_index = axi_socket[k];
+			if (_secondary_index == k) {
+				_primary_vertex.Add(vertex_index);
 			}
-		}
-		//vertex mesh
-		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0);
-			if (selectedgroup.Contains(k)) {
-				if (selected_index == k) {
-					AddVertexMesh(vertex, selectedUV, ref _vertexobj);
-				}
-				else {
-					AddVertexMesh(vertex, selectedGroupUV, ref _vertexobj);
-				}
-			}
-			else {
-				AddVertexMesh(vertex, nonSelectedUV, ref _vertexobj);
-			}
+			_secondary_vertex.Add(vertex_index);
 		}
 	}
-
 	private void AddVertexMesh(Vector3 point, Vector2 uv, ref PreviewObject obj)
 	{
 		int vertex_index = obj.vertices.Count;
-		Vector3[] vertices = VxlGUI.VertexMesh.vertices;
+		Vector3[] vertices = VxlGUI.NormalVertex.vertices;
 		for (int k = 0; k < vertices.Length; k++) {
-			obj.vertices.Add(point + (0.01f * vertices[k]));
+			obj.vertices.Add(point + vertices[k]);
 			obj.normals.Add(vertices[k].normalized);
 			obj.uvs.Add(uv);
 		}
-		int[] triangles = VxlGUI.VertexMesh.triangles;
+		int[] triangles = VxlGUI.NormalVertex.triangles;
 		for (int k = 0; k < triangles.Length; k++) {
 			obj.triangles.Add(vertex_index + triangles[k]);
 		}
 	}
-
 	private void AddTriangleMesh(Vector3 vertex0, Vector3 vertex1, Vector3 vertex2, Vector3 normal, Vector2 uv, bool drawbackface, ref PreviewObject obj)
 	{
 		int vertex_index = obj.vertices.Count;
@@ -417,67 +316,98 @@ public class PreviewPanel : PanelGUI
 			obj.triangles.Add(vertex_index + 5);
 		}
 	}
+	#endregion
 
-	private Vector2 normalUV {
-		get {
-			return new Vector2(0.125f, 0.125f);
-		}
-	}
-	private Vector2 selectedUV {
-		get {
-			return new Vector2(0.875f, 0.125f);
-		}
-	}
-	private Vector2 selectedGroupUV {
-		get {
-			return new Vector2(0.625f, 0.375f);
-		}
-	}
-	private Vector2 nonSelectedUV {
-		get {
-			return new Vector2(0.875f, 0.625f);
-		}
-	}
-	private Vector2 originUV {
-		get {
-			return new Vector2(0.125f, 0.875f);
-		}
-	}
-
+	#region Preview
 	private void InitializePreviewUtility()
 	{
 		_previewutility = new PreviewRenderUtility();
 		_previewutility.camera.backgroundColor = new Color(50 / 255f, 50 / 255f, 50 / 255f);
-		_previewutility.camera.nearClipPlane = 0.001f;
+		_previewutility.camera.nearClipPlane = 0.01f;
 		_previewutility.camera.farClipPlane = 1000f;
 		_previewutility.cameraFieldOfView = 60;
 		_previewutility.ambientColor = new Color(0.4f, 0.4f, 0.4f);
 
 		_camfocus = Vector3.zero;
 		_hrot = 0f;
-		_previewutility.camera.transform.position = MAXZOOM * (new Vector3(0, 1, -2)).normalized;
-		_previewutility.camera.transform.LookAt(_camfocus, Vector3.up);
+		UpdateCameraTransform(0.5f, 1f);
 	}
-
-
 	public void ZoomPreview(float delta)
 	{
-		float zoomlevel = _previewutility.camera.transform.position.magnitude;
-		zoomlevel = Mathf.Clamp(zoomlevel + (delta * ZOOMSPEED), MINZOOM, MAXZOOM);
-		_previewutility.camera.transform.position = zoomlevel * (new Vector3(0, 1, -2)).normalized;
-		_previewutility.camera.transform.LookAt(_camfocus, Vector3.up);
+		Vector3 pos = _previewutility.camera.transform.position;
+		float zoom_factor = Mathf.Clamp01(-((pos.z + MINZOOM) / (MAXZOOM - MINZOOM)));
+		float lower_bias = MINZOOM / MAXZOOM;
+		float zoom_influence = 1 - lower_bias;
+		float height_factor = pos.y / ((lower_bias + (zoom_influence * zoom_factor)) * MAXHEIGHT);
+		zoom_factor += (delta * ZOOMSPEED);
+		UpdateCameraTransform(zoom_factor, height_factor);
 	}
-
-	public void RotatePreview(Vector2 delta)
+	public void RotatePreview(float delta)
 	{
-		_hrot = (_hrot + (delta.x * HORIZONTALROTSPEED)) % 360;
+		_hrot = (_hrot + (delta * HORIZONTALSPEED)) % 360;
 		if (_hrot < 0) {
 			_hrot += 360;
 		}
 		Quaternion objrot = Quaternion.Euler(0f, _hrot, 0f);
-		_vertexobj.obj.transform.rotation = objrot;
 		_triangleobj.obj.transform.rotation = objrot;
 	}
+	public void MoveVerticalPreview(float delta)
+	{
+		Vector3 pos = _previewutility.camera.transform.position;
+		float zoom_factor = Mathf.Clamp01(-((pos.z + MINZOOM) / (MAXZOOM - MINZOOM)));
+		float lower_bias = MINZOOM / MAXZOOM;
+		float zoom_influence = 1 - lower_bias;
+		float height_factor = (pos.y + (delta * VERTICALSPEED)) / ((lower_bias + (zoom_influence * zoom_factor)) * MAXHEIGHT);
+		UpdateCameraTransform(zoom_factor, height_factor);
+	}
+	public int VertexCast(Vector2 viewpos)
+	{
+		Ray ray = _previewutility.camera.ViewportPointToRay(viewpos);
+		if (ray.direction == Vector3.zero || target == null || target.vertices == null) {
+			return -1;
+		}
+		Quaternion vertex_rot = Quaternion.Euler(0f, _hrot, 0f);
+
+		float nearest_t = Mathf.Infinity;
+		int nearest_sphere = -1;
+		float near_clip = _previewutility.camera.nearClipPlane;
+		float far_clip = _previewutility.camera.farClipPlane;
+		List<VertexVector> vertices = target.vertices;
+		for (int k = 0; k < vertices.Count; k++) {
+			Vector3 vertex = vertex_rot * vertices[k].GenerateVertexVector(0);
+			Vector3 point_vector = ray.origin - vertex;
+			float proj_pv = Vector3.Dot(ray.direction, point_vector);
+			float sqr_magn = Vector3.SqrMagnitude(point_vector - (proj_pv * ray.direction));
+			//check if ray intersects point
+			if (sqr_magn > VxlGUI.POINT_RADIUSSQR) {
+				continue;
+			}
+			//get t of impact and check if in range
+			float t = Mathf.Abs(proj_pv) - Mathf.Sqrt(Mathf.Max(0, VxlGUI.POINT_RADIUSSQR - sqr_magn));
+			if (t < near_clip || t > far_clip) {
+				continue;
+			}
+			if (t >= nearest_t) {
+				continue;
+			}
+			nearest_t = t;
+			nearest_sphere = k;
+		}
+		return nearest_sphere;
+	}
+
+	private void UpdateCameraTransform(float zoom_factor, float height_factor)
+	{
+		zoom_factor = Mathf.Clamp01(zoom_factor);
+		height_factor = Mathf.Clamp(height_factor, -1, 1);
+		float lower_bias = MINZOOM / MAXZOOM;
+		float zoom_influence = 1 - lower_bias;
+		float y = ((zoom_factor * zoom_influence) + lower_bias) * height_factor * MAXHEIGHT;
+		float z = Mathf.Lerp(MINZOOM, MAXZOOM, zoom_factor);
+		_previewutility.camera.transform.position = new Vector3(0, y, -z);
+		_previewutility.camera.transform.LookAt(_camfocus, Vector3.up);
+	}
+	#endregion
 }
 
 public struct PreviewObject
@@ -525,7 +455,7 @@ public struct PreviewObject
 		collider.cookingOptions = MeshColliderCookingOptions.WeldColocatedVertices | 
 								  MeshColliderCookingOptions.EnableMeshCleaning | 
 								  MeshColliderCookingOptions.CookForFasterSimulation;
-		collider.sharedMesh = mesh;
+		//collider.sharedMesh = mesh;
 	}
 
 	public void Clear()

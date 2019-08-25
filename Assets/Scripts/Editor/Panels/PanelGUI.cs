@@ -2,8 +2,9 @@
 
 public abstract class PanelGUI
 {
-	public bool repaint;
-	public bool update;
+	protected bool _repaint_menu;
+	protected bool _update_mesh;
+	protected bool _render_mesh;
 	
 	protected string _title;
 
@@ -13,6 +14,21 @@ public abstract class PanelGUI
 		get {
 			return PreviewDrawMode.None;
 		}
+	}
+
+	public virtual bool repaintMenu {
+		get => _repaint_menu;
+		set => _repaint_menu = value;
+	}
+
+	public virtual bool updateMesh {
+		get => _update_mesh;
+		set => _update_mesh = value;
+	}
+
+	public virtual bool renderMesh {
+		get => _render_mesh;
+		set => _render_mesh = value;
 	}
 
 	public virtual int primary_index {

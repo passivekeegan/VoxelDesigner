@@ -34,7 +34,9 @@ public class TrianglePanel : PanelGUI
 
 	public override void Enable()
 	{
-
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		_scroll = Vector2.zero;
 		//initialize triangle list
 		_trianglelist = new ReorderableList(_triangles, typeof(Triangle), true, false, false, false);
@@ -48,6 +50,7 @@ public class TrianglePanel : PanelGUI
 		_trianglelist.onRemoveCallback += DeleteTriangleElement;
 		_trianglelist.drawElementCallback += DrawTriangleElement;
 		_trianglelist.onReorderCallbackWithDetails += ReorderTriangleElements;
+		_trianglelist.onSelectCallback += SelectTriangle;
 	}
 
 	public override void Disable()
@@ -56,6 +59,9 @@ public class TrianglePanel : PanelGUI
 
 		_trianglelist = null;
 		_triangles.Clear();
+		_update_mesh = false;
+		_repaint_menu = false;
+		_render_mesh = false;
 	}
 
 	public override int primary_index {
@@ -120,8 +126,9 @@ public class TrianglePanel : PanelGUI
 		}
 		Undo.RecordObject(target, "Flip Triangle At Index: " + index);
 		triangles[index] = new Triangle(tri.type0, tri.type2, tri.type1, tri.vertex0, tri.vertex2, tri.vertex1);
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -250,8 +257,11 @@ public class TrianglePanel : PanelGUI
 		else {
 			target.triangles.Insert(index, Triangle.empty);
 		}
-		repaint = true;
-		update = true;
+		if (index >= 0) {
+			_update_mesh = true;
+			_render_mesh = true;
+		}
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -274,8 +284,9 @@ public class TrianglePanel : PanelGUI
 		else {
 			list.index = -1;
 		}
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -392,8 +403,9 @@ public class TrianglePanel : PanelGUI
 				}
 				Undo.RecordObject(target, "Update Triangle Build");
 				target.triangles[index] = new Triangle(index0, index1, index2);
-				repaint = true;
-				update = true;
+				_update_mesh = true;
+				_render_mesh = true;
+				_repaint_menu = true;
 				//dirty target object
 				EditorUtility.SetDirty(target);
 			}
@@ -415,10 +427,15 @@ public class TrianglePanel : PanelGUI
 		target.triangles[old_index] = new_vertex;
 		target.triangles[new_index] = old_vertex;
 		list.index = new_index;
-		repaint = true;
-		update = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
+	}
+
+	private void SelectTriangle(ReorderableList list)
+	{
+		_update_mesh = true;
+		_render_mesh = true;
 	}
 	#endregion
 }

@@ -1,0 +1,1663 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab3ecded7e562a4891d4ed1cb739d86, type: 3}
+  m_Name: Mb_Grazer
+  m_EditorClassIdentifier: 
+  objname: Mb_Grazer
+  vertices:
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.240655, y: 0.449768, z: 0.330624}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.205952, y: 0.449768, z: 0.493892}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.218474, y: 0.350095, z: 0.495208}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.261091, y: 0.350482, z: 0.336177}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.308546, y: 0.449768, z: 0.178139}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.243322, y: 0.252787, z: 0.49782}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.324801, y: 0.348024, z: 0.173876}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.406657, y: 0.449768, z: 0.043101}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.28193, y: 0.252544, z: 0.338997}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.280103, y: 0.159377, z: 0.501686}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.426189, y: 0.351353, z: 0.039302}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.530699, y: 0.449768, z: -0.068587}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.529472, y: 0.34909, z: -0.081925}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.309956, y: 0.156678, z: 0.341601}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.328257, y: 0.071351, z: 0.506747}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.355395, y: 0.250615, z: 0.167477}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.433194, y: 0.255477, z: 0.013672}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.523132, y: 0.263897, z: -0.106632}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.376017, y: 0.141419, z: 0.12914}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.428335, y: 0.155948, z: -0.045778}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.514062, y: 0.185112, z: -0.145409}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.360449, y: 0.066802, z: 0.353187}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.386965, y: -0.009939, z: 0.512917}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.404813, y: 0.050342, z: 0.153865}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.422295, y: 0.102476, z: -0.164369}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.492855, y: 0.120434, z: -0.195625}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.384092, y: 0.061765, z: -0.265917}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.446461, y: 0.062208, z: -0.300914}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.401939, y: 0.037817, z: -0.391973}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.31978, y: 0.039019, z: -0.361666}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.338042, y: 0.046656, z: -0.498979}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.207185, y: 0.038098, z: -0.47226}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.261408, y: 0.087598, z: -0.624902}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.139619, y: 0.089278, z: -0.599219}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.19126, y: 0.147214, z: -0.725125}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.097766, y: 0.147214, z: -0.694747}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.013, y: 0.084468, z: -0.604879}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0, y: 0.147214, z: -0.684471}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.042947, y: 0.020681, z: -0.514589}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.109426, y: 0.081138, z: -0.624631}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.097766, y: 0.147214, z: -0.694747}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.191259, y: 0.147214, z: -0.725125}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.222744, y: 0.083175, z: -0.654408}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.250717, y: 0.009939, z: -0.59158}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.114031, y: 0.011141, z: -0.554313}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.125644, y: -0.066802, z: -0.488752}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.274727, y: -0.071351, z: -0.537652}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.069155, y: -0.050342, z: -0.427511}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.140857, y: -0.156678, z: -0.43923}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.294421, y: -0.159377, z: -0.493419}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.196582, y: -0.004959, z: -0.387079}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.152615, y: -0.252544, z: -0.413657}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.309464, y: -0.252787, z: -0.459633}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.286707, y: 0.018687, z: -0.316339}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.160592, y: -0.350482, z: -0.3942}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.319626, y: -0.350095, z: -0.436808}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.166001, y: -0.449768, z: -0.373725}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0.324747, y: -0.449768, z: -0.425305}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: 0, y: -0.449768, z: -0.356278}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.01182, y: -0.348024, z: -0.368224}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.166002, y: -0.449768, z: -0.373725}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.032658, y: -0.250615, z: -0.391519}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.179058, y: -0.351353, z: -0.388741}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.324748, y: -0.449768, z: -0.425305}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.335686, y: -0.34909, z: -0.417574}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.204756, y: -0.255477, z: -0.381993}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.353912, y: -0.263897, z: -0.39973}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.07617, y: -0.141419, z: -0.39021}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.253813, y: -0.155948, z: -0.34806}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.382959, y: -0.185112, z: -0.372487}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.169594, y: -0.055794, z: -0.358649}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.353495, y: -0.102476, z: -0.283534}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.415844, y: -0.120434, z: -0.329012}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.422337, y: -0.061765, z: -0.199675}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.483829, y: -0.062208, z: -0.236189}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.540428, y: -0.037817, z: -0.152103}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.17767, y: -0.090566, z: -0.346239}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.223524, y: -0.026235, z: -0.332261}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.251755, y: -0.095238, z: -0.312091}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.209136, y: -0.055805, z: -0.328808}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.213414, y: -0.069761, z: -0.324055}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.322051, y: -0.07154, z: -0.256934}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.244577, y: -0.041825, z: -0.303756}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.253577, y: -0.062882, z: -0.297151}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.283935, y: -0.002246, z: -0.279686}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.292276, y: -0.022338, z: -0.256851}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.347329, y: 0.043361, z: -0.236439}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.33417, y: 0.021455, z: -0.212628}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.383537, y: 0.07154, z: -0.150437}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.304673, y: -0.044684, z: -0.248728}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.336764, y: 0, z: -0.194431}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.351226, y: -0.021455, z: -0.183086}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.367742, y: 0.044684, z: -0.13949}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.396156, y: 0.095238, z: -0.061981}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.368577, y: 0.022338, z: -0.124693}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.384129, y: 0.062882, z: -0.071028}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.378427, y: -0.043361, z: -0.182576}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.388687, y: 0.090566, z: 0.019252}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.384182, y: 0.002246, z: -0.106052}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.387347, y: 0.069761, z: -0.022794}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.385349, y: 0.041825, z: -0.059932}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.417311, y: -0.018687, z: -0.090126}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.395396, y: 0.055794, z: 0.032452}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.389324, y: 0.055805, z: -0.016713}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.399509, y: 0.026235, z: -0.027447}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.433512, y: 0.004959, z: 0.023294}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.473102, y: -0.039019, z: -0.096105}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.601149, y: -0.046656, z: -0.043263}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.512582, y: -0.038098, z: 0.056702}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.671885, y: -0.087598, z: 0.086065}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.467121, y: -0.020681, z: 0.220101}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.588749, y: -0.089278, z: 0.178696}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.723606, y: -0.147214, z: 0.196927}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.650552, y: -0.147214, z: 0.262705}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.530341, y: -0.084468, z: 0.291181}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.59277, y: -0.147214, z: 0.342235}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.423033, y: -0.011141, z: 0.37591}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.486233, y: -0.081138, z: 0.407082}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.552786, y: -0.147214, z: 0.432041}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.455361, y: -0.083175, z: 0.520106}
+  - operations:
+    - scale: 1
+      vector_type: 0
+      vector: {x: -0.532347, y: -0.147214, z: 0.528197}
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 1
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 2
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 0
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 3
+    vertex1: 2
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 3
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 7
+    vertex1: 4
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 3
+    vertex1: 5
+    vertex2: 8
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 3
+    vertex2: 8
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 5
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 7
+    vertex1: 6
+    vertex2: 10
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 11
+    vertex1: 7
+    vertex2: 10
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 11
+    vertex1: 10
+    vertex2: 12
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 9
+    vertex2: 13
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 9
+    vertex2: 14
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 8
+    vertex2: 15
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 10
+    vertex1: 6
+    vertex2: 15
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 15
+    vertex1: 8
+    vertex2: 13
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 12
+    vertex1: 10
+    vertex2: 16
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 10
+    vertex1: 15
+    vertex2: 16
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 12
+    vertex1: 16
+    vertex2: 17
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 16
+    vertex1: 15
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 15
+    vertex1: 13
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 17
+    vertex1: 16
+    vertex2: 19
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 16
+    vertex1: 18
+    vertex2: 19
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 17
+    vertex1: 19
+    vertex2: 20
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 14
+    vertex2: 21
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 21
+    vertex1: 14
+    vertex2: 22
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 23
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 21
+    vertex2: 23
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 20
+    vertex1: 19
+    vertex2: 24
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 20
+    vertex1: 24
+    vertex2: 25
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 25
+    vertex1: 24
+    vertex2: 26
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 25
+    vertex1: 26
+    vertex2: 27
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 26
+    vertex1: 28
+    vertex2: 27
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 26
+    vertex1: 29
+    vertex2: 28
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 30
+    vertex1: 28
+    vertex2: 29
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 30
+    vertex1: 29
+    vertex2: 31
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 31
+    vertex1: 32
+    vertex2: 30
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 31
+    vertex1: 33
+    vertex2: 32
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 33
+    vertex1: 34
+    vertex2: 32
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 33
+    vertex1: 35
+    vertex2: 34
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 36
+    vertex1: 35
+    vertex2: 33
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 36
+    vertex1: 37
+    vertex2: 35
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 38
+    vertex1: 33
+    vertex2: 31
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 38
+    vertex1: 36
+    vertex2: 33
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 39
+    vertex1: 37
+    vertex2: 36
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 39
+    vertex1: 40
+    vertex2: 37
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 39
+    vertex1: 41
+    vertex2: 40
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 39
+    vertex1: 42
+    vertex2: 41
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 43
+    vertex1: 42
+    vertex2: 39
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 44
+    vertex1: 39
+    vertex2: 36
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 43
+    vertex1: 39
+    vertex2: 44
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 44
+    vertex1: 36
+    vertex2: 38
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 45
+    vertex1: 43
+    vertex2: 44
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 45
+    vertex1: 44
+    vertex2: 38
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 45
+    vertex1: 46
+    vertex2: 43
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 47
+    vertex1: 38
+    vertex2: 31
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 45
+    vertex1: 38
+    vertex2: 47
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 48
+    vertex1: 46
+    vertex2: 45
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 48
+    vertex1: 45
+    vertex2: 47
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 48
+    vertex1: 49
+    vertex2: 46
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 47
+    vertex1: 31
+    vertex2: 50
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 50
+    vertex1: 31
+    vertex2: 29
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 51
+    vertex1: 49
+    vertex2: 48
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 51
+    vertex1: 52
+    vertex2: 49
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 50
+    vertex1: 29
+    vertex2: 53
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 53
+    vertex1: 29
+    vertex2: 26
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 54
+    vertex1: 52
+    vertex2: 51
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 54
+    vertex1: 55
+    vertex2: 52
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 56
+    vertex1: 55
+    vertex2: 54
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 56
+    vertex1: 57
+    vertex2: 55
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 58
+    vertex1: 56
+    vertex2: 54
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 58
+    vertex1: 54
+    vertex2: 59
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 59
+    vertex1: 54
+    vertex2: 51
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 60
+    vertex1: 58
+    vertex2: 59
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 61
+    vertex1: 51
+    vertex2: 48
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 59
+    vertex1: 51
+    vertex2: 61
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 60
+    vertex1: 59
+    vertex2: 62
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 62
+    vertex1: 59
+    vertex2: 61
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 63
+    vertex1: 60
+    vertex2: 62
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 63
+    vertex1: 62
+    vertex2: 64
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 64
+    vertex1: 62
+    vertex2: 65
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 62
+    vertex1: 61
+    vertex2: 65
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 64
+    vertex1: 65
+    vertex2: 66
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 61
+    vertex1: 48
+    vertex2: 67
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 65
+    vertex1: 61
+    vertex2: 67
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 48
+    vertex1: 47
+    vertex2: 67
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 66
+    vertex1: 65
+    vertex2: 68
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 65
+    vertex1: 67
+    vertex2: 68
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 66
+    vertex1: 68
+    vertex2: 69
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 67
+    vertex1: 47
+    vertex2: 70
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 50
+    vertex1: 70
+    vertex2: 47
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 69
+    vertex1: 68
+    vertex2: 71
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 69
+    vertex1: 71
+    vertex2: 72
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 72
+    vertex1: 71
+    vertex2: 73
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 72
+    vertex1: 73
+    vertex2: 74
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 73
+    vertex1: 75
+    vertex2: 74
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 76
+    vertex1: 68
+    vertex2: 67
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 67
+    vertex1: 70
+    vertex2: 76
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 50
+    vertex1: 77
+    vertex2: 70
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 53
+    vertex1: 77
+    vertex2: 50
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 71
+    vertex1: 68
+    vertex2: 78
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 76
+    vertex1: 78
+    vertex2: 68
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 76
+    vertex1: 70
+    vertex2: 79
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 77
+    vertex1: 79
+    vertex2: 70
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 76
+    vertex1: 79
+    vertex2: 80
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 80
+    vertex1: 78
+    vertex2: 76
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 71
+    vertex1: 78
+    vertex2: 81
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 73
+    vertex1: 71
+    vertex2: 81
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 77
+    vertex1: 82
+    vertex2: 79
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 82
+    vertex1: 80
+    vertex2: 79
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 80
+    vertex1: 83
+    vertex2: 78
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 81
+    vertex1: 78
+    vertex2: 83
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 82
+    vertex1: 83
+    vertex2: 80
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 53
+    vertex1: 84
+    vertex2: 77
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 84
+    vertex1: 82
+    vertex2: 77
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 85
+    vertex1: 83
+    vertex2: 82
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 84
+    vertex1: 85
+    vertex2: 82
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 84
+    vertex1: 53
+    vertex2: 86
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 53
+    vertex1: 26
+    vertex2: 86
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 84
+    vertex1: 86
+    vertex2: 87
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 85
+    vertex1: 84
+    vertex2: 87
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 26
+    vertex1: 88
+    vertex2: 86
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 88
+    vertex1: 87
+    vertex2: 86
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 26
+    vertex1: 24
+    vertex2: 88
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 85
+    vertex1: 89
+    vertex2: 83
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 81
+    vertex1: 83
+    vertex2: 89
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 85
+    vertex1: 87
+    vertex2: 90
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 89
+    vertex1: 85
+    vertex2: 90
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 81
+    vertex1: 89
+    vertex2: 91
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 89
+    vertex1: 90
+    vertex2: 91
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 92
+    vertex1: 90
+    vertex2: 87
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 88
+    vertex1: 92
+    vertex2: 87
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 24
+    vertex1: 93
+    vertex2: 88
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 24
+    vertex1: 19
+    vertex2: 93
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 92
+    vertex1: 94
+    vertex2: 90
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 94
+    vertex1: 91
+    vertex2: 90
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 88
+    vertex1: 95
+    vertex2: 92
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 88
+    vertex1: 93
+    vertex2: 95
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 94
+    vertex1: 92
+    vertex2: 95
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 81
+    vertex1: 91
+    vertex2: 96
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 73
+    vertex1: 81
+    vertex2: 96
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 97
+    vertex1: 93
+    vertex2: 19
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 97
+    vertex1: 19
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 94
+    vertex1: 98
+    vertex2: 91
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 98
+    vertex1: 96
+    vertex2: 91
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 99
+    vertex1: 95
+    vertex2: 93
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 99
+    vertex1: 93
+    vertex2: 97
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 94
+    vertex1: 95
+    vertex2: 100
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 100
+    vertex1: 95
+    vertex2: 99
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 98
+    vertex1: 94
+    vertex2: 100
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 101
+    vertex1: 73
+    vertex2: 96
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 98
+    vertex1: 101
+    vertex2: 96
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 18
+    vertex1: 102
+    vertex2: 97
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 18
+    vertex1: 23
+    vertex2: 102
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 97
+    vertex1: 103
+    vertex2: 99
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 100
+    vertex1: 99
+    vertex2: 103
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 97
+    vertex1: 102
+    vertex2: 103
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 98
+    vertex1: 100
+    vertex2: 104
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 104
+    vertex1: 100
+    vertex2: 103
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 104
+    vertex1: 103
+    vertex2: 102
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 101
+    vertex1: 98
+    vertex2: 104
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 105
+    vertex1: 104
+    vertex2: 102
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 101
+    vertex1: 104
+    vertex2: 105
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 105
+    vertex1: 102
+    vertex2: 23
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 101
+    vertex1: 106
+    vertex2: 73
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 105
+    vertex1: 106
+    vertex2: 101
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 73
+    vertex1: 106
+    vertex2: 75
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 107
+    vertex1: 75
+    vertex2: 106
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 105
+    vertex1: 108
+    vertex2: 106
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 107
+    vertex1: 106
+    vertex2: 108
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 23
+    vertex1: 108
+    vertex2: 105
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 108
+    vertex1: 109
+    vertex2: 107
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 23
+    vertex1: 110
+    vertex2: 108
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 21
+    vertex1: 110
+    vertex2: 23
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 108
+    vertex1: 111
+    vertex2: 109
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 110
+    vertex1: 111
+    vertex2: 108
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 111
+    vertex1: 112
+    vertex2: 109
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 111
+    vertex1: 113
+    vertex2: 112
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 114
+    vertex1: 113
+    vertex2: 111
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 110
+    vertex1: 114
+    vertex2: 111
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 114
+    vertex1: 115
+    vertex2: 113
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 21
+    vertex1: 116
+    vertex2: 110
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 116
+    vertex1: 114
+    vertex2: 110
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 21
+    vertex1: 22
+    vertex2: 116
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 117
+    vertex1: 115
+    vertex2: 114
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 116
+    vertex1: 117
+    vertex2: 114
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 22
+    vertex1: 117
+    vertex2: 116
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 117
+    vertex1: 118
+    vertex2: 115
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 22
+    vertex1: 119
+    vertex2: 117
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 117
+    vertex1: 120
+    vertex2: 118
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 117
+    vertex1: 119
+    vertex2: 120
+  _edgesocket_cnt: 5
+  _facesocket_cnt: 15
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0
+  _serial_edgecounts: 0000000000000000000000000000000000000000
+  _serial_edgesockets: 
+  _serial_facecounts: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _serial_facesockets: 

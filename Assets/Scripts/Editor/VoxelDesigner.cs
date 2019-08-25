@@ -14,8 +14,9 @@ public class VoxelDesigner : EditorWindow
 	public Texture2D colourmap;
 	public GUISkin skin;
 
-	private bool _repaint;
-	private bool _update;
+	private bool _repaint_menu;
+	private bool _update_mesh;
+	private bool _render_mesh;
 	private int _mode;
 	private Rect _rect_mode;
 	private Rect _rect_menucontent;
@@ -48,8 +49,9 @@ public class VoxelDesigner : EditorWindow
 
 	public void Intialize()
 	{
-		_update = false;
-		_repaint = true;
+		_repaint_menu = true;
+		_update_mesh = false;
+		_render_mesh = true;
 		_mode = 0;
 		_cornergui = new CornerModeGUI();
 		_edgegui = new EdgeModeGUI();
@@ -68,11 +70,14 @@ public class VoxelDesigner : EditorWindow
 		GUI.skin = skin;
 		//update important rects
 		UpdateLayoutRects();
+		if (Event.current.type == EventType.MouseMove) {
+			_repaint_menu = true;
+		}
 		//draw mode toolbar
 		EditorGUI.BeginChangeCheck();
 		int newmode = GUI.Toolbar(_rect_mode, _mode, MODES, GUI.skin.GetStyle("ModeToolbar"));
 		//switch modes
-		if (EditorGUI.EndChangeCheck()) {
+		if (EditorGUI.EndChangeCheck() && newmode != _mode) {
 			//enable new mode
 			EnableMode(newmode);
 			//disable old mode
@@ -98,20 +103,20 @@ public class VoxelDesigner : EditorWindow
 		//process preview input
 		ProcessPreviewInput();
 		//refresh mesh if dirty
-		_preview.update = _update;
-
+		if (_update_mesh) {
+			_update_mesh = false;
+			_preview.updateMesh = true;
+		}
+		if (_render_mesh) {
+			_render_mesh = false;
+			_preview.renderMesh = true;
+		}
 		//update preview variables
 		UpdatePreviewVariables();
-		_preview.update = true;
-
 		//draw preview panel
 		_preview.DrawGUI(_rect_preview);
-
-		if (Event.current.type == EventType.MouseMove) {
-			_repaint = true;
-		}
-		if (_repaint) {
-			_repaint = false;
+		if (_repaint_menu) {
+			_repaint_menu = true;
 			Repaint();
 		}
 	}
@@ -155,10 +160,12 @@ public class VoxelDesigner : EditorWindow
 	private void DrawMode(PanelGUI modegui)
 	{
 		modegui.DrawGUI(_rect_menucontent);
-		_repaint = _repaint || modegui.repaint;
-		modegui.repaint = false;
-		_update = _update || modegui.update;
-		modegui.update = false;
+		_repaint_menu = _repaint_menu || modegui.repaintMenu;
+		modegui.repaintMenu = false;
+		_update_mesh = _update_mesh || modegui.updateMesh;
+		modegui.updateMesh = false;
+		_render_mesh = _render_mesh || modegui.renderMesh;
+		modegui.renderMesh = false;
 	}
 
 	private void ProcessPreviewInput()
@@ -168,12 +175,32 @@ public class VoxelDesigner : EditorWindow
 		}
 		switch (Event.current.type) {
 			case EventType.MouseDrag:
-				_preview.RotatePreview(Event.current.delta);
-				_repaint = true;
+				if (Event.current.button == 1) {
+					_preview.MoveVerticalPreview(Event.current.delta.y);
+					_repaint_menu = true;
+					_render_mesh = true;
+				}
+				if (Event.current.button == 2) {
+					_preview.RotatePreview(Event.current.delta.x);
+					_repaint_menu = true;
+					_render_mesh = true;
+				}
 				break;
 			case EventType.ScrollWheel:
 				_preview.ZoomPreview(Event.current.delta.y);
-				_repaint = true;
+				_repaint_menu = true;
+				_render_mesh = true;
+				break;
+			case EventType.MouseDown:
+				if (Event.current.button == 0) {
+					float x = Mathf.Clamp01((Event.current.mousePosition.x - _rect_preview.xMin) / _rect_preview.width);
+					float y = 1 - Mathf.Clamp01((Event.current.mousePosition.y - _rect_preview.yMin) / _rect_preview.height);
+					Vector2 viewport_point = new Vector2(x, y);
+					int index = _preview.VertexCast(viewport_point);
+					if (index < 0) {
+						return;
+					}
+				}
 				break;
 		}
 	}
@@ -223,6 +250,9 @@ public class VoxelDesigner : EditorWindow
 	//Callbacks
 	private void UndoRedoPerformed()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = false;
 		Repaint();
 	}
 }

@@ -41,6 +41,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_scroll_guid = Vector2.zero;
 		_scroll_unsaved = Vector2.zero;
 		//initialize guid reorderable list
@@ -69,6 +72,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		_guidlist = null;
 		_guids.Clear();
 		_guidstrs.Clear();
@@ -106,7 +112,6 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 					SetSelectedFromGUIDList();
 				}
 				RefreshAssets();
-				repaint = true;
 			}
 		}
 		EditorGUI.EndDisabledGroup();
@@ -211,10 +216,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 			return false;
 		}
 		selected.objname = text;
-		update = true;
-		repaint = true;
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
+		_repaint_menu = true;
 		return true;
 	}
 	#endregion
@@ -244,6 +248,7 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 		_unsaveds.RemoveAt(_index);
 		_unsaved_selected = false;
 		_index = -1;
+		_repaint_menu = true;
 	}
 	private void SetSelectedFromGUIDList()
 	{
@@ -273,8 +278,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 		selected.Initialize();
 		_index = _unsaveds.Count;
 		_unsaveds.Add(selected);
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 	}
 	private void DeleteUnsaved()
 	{
@@ -285,7 +291,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 		_unsaveds.RemoveAt(_index);
 		selected = null;
 		_index = -1;
-		repaint = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 	}
 	private bool RenameSelectedUnsaved(string text)
 	{
@@ -308,8 +316,7 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 		}
 		Undo.RecordObject(selected, "Rename Unsaved Selected " + typeof(T).ToString());
 		selected.objname = text;
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		return true;
 	}
 	#endregion
@@ -359,6 +366,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 			return;
 		}
 		selected = loaded_obj;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 	}
 
 	#endregion
@@ -399,6 +409,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 		_index = list.index;
 		_unsaved_selected = true;
 		if (_index < 0 || _index >= _unsaveds.Count) {
+			_update_mesh = true;
+			_render_mesh = true;
+			_repaint_menu = true;
 			selected = null;
 			return;
 		}
@@ -406,6 +419,9 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 			return;
 		}
 		selected = _unsaveds[_index];
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 	}
 	#endregion
 }

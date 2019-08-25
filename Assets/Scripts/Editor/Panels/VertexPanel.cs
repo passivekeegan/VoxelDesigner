@@ -35,6 +35,9 @@ public class VertexPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		_vertex_scroll = Vector2.zero;
 		_operation_scroll = Vector2.zero;
 		_importmesh = null;
@@ -51,6 +54,7 @@ public class VertexPanel : PanelGUI
 		_vertexlist.onRemoveCallback += DeleteVertexElement;
 		_vertexlist.drawElementCallback += DrawVertexElement;
 		_vertexlist.onReorderCallbackWithDetails += ReorderVertexList;
+		_vertexlist.onSelectCallback += SelectVertex;
 		//initialize vertex operation list
 		_operationlist = new ReorderableList(_operations, typeof(VectorOperation), true, false, false, false);
 		_operationlist.showDefaultBackground = false;
@@ -74,6 +78,9 @@ public class VertexPanel : PanelGUI
 		_operations.Clear();
 		_vertexlist = null;
 		_vertices.Clear();
+		_update_mesh = false;
+		_repaint_menu = false;
+		_render_mesh = false;
 	}
 
 	public override int primary_index {
@@ -97,6 +104,7 @@ public class VertexPanel : PanelGUI
 	public override void DrawGUI(Rect rect)
 	{
 		//reset variables
+		int old_secondary = _secondary_index;
 		_secondary_index = -1;
 		//update lists
 		UpdateVertexList();
@@ -169,6 +177,10 @@ public class VertexPanel : PanelGUI
 		}
 		EditorGUI.EndDisabledGroup();
 		EditorGUI.EndDisabledGroup();
+		//if secondary index changed then mark render
+		if (_secondary_index != old_secondary) {
+			_render_mesh = true;
+		}
 	}
 
 	private void ImportVertexAndTriangle()
@@ -208,8 +220,9 @@ public class VertexPanel : PanelGUI
 				(ushort)(vertex_index + mesh_triangles[index + 2])
 			));
 		}
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -261,6 +274,7 @@ public class VertexPanel : PanelGUI
 			}
 			if (swap_occurred) {
 				triangles[k] = new Triangle(tri.type0, tri.type1, tri.type2, vertex0, vertex1, vertex2);
+				_repaint_menu = true;
 			}
 		}
 	}
@@ -360,8 +374,9 @@ public class VertexPanel : PanelGUI
 		else {
 			target.vertices.Insert(index, VertexVector.empty);
 		}
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -384,8 +399,9 @@ public class VertexPanel : PanelGUI
 		else {
 			list.index = -1;
 		}
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -428,10 +444,14 @@ public class VertexPanel : PanelGUI
 		target.vertices[new_index] = old_vertex;
 		SwapTriangleVertexIndex(old_index, new_index);
 		list.index = new_index;
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
+	}
+
+	private void SelectVertex(ReorderableList list)
+	{
+		_render_mesh = true;
 	}
 	#endregion
 
@@ -461,8 +481,9 @@ public class VertexPanel : PanelGUI
 		else {
 			operations.Insert(index, VectorOperation.empty);
 		}
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -483,8 +504,9 @@ public class VertexPanel : PanelGUI
 		else {
 			list.index = -1;
 		}
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -565,8 +587,9 @@ public class VertexPanel : PanelGUI
 			}
 			Undo.RecordObject(target, "Updated Vertex Operation.");
 			operations[index] = new VectorOperation(scale, vector_type, new Vector3(x, y, z));
-			repaint = true;
-			update = true;
+			_update_mesh = true;
+			_repaint_menu = true;
+			_render_mesh = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
@@ -588,8 +611,7 @@ public class VertexPanel : PanelGUI
 		operations[old_index] = new_op;
 		operations[new_index] = old_op;
 		list.index = new_index;
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}

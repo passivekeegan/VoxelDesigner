@@ -55,6 +55,60 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		}
 	}
 
+	public override bool repaintMenu {
+		get {
+			if (_repaint_menu) {
+				return true;
+			}
+			if (_mode >= 0 && _mode < _modes.Length) {
+				return _modes[_mode].repaintMenu;
+			}
+			return false;
+		}
+		set {
+			_repaint_menu = value;
+			if (_mode >= 0 && _mode < _modes.Length) {
+				_modes[_mode].repaintMenu = value;
+			}
+		}
+	}
+
+	public override bool updateMesh {
+		get {
+			if (_update_mesh) {
+				return true;
+			}
+			if (_mode >= 0 && _mode < _modes.Length) {
+				return _modes[_mode].updateMesh;
+			}
+			return false;
+		}
+		set {
+			_update_mesh = value;
+			if (_mode >= 0 && _mode < _modes.Length) {
+				_modes[_mode].updateMesh = value;
+			}
+		}
+	}
+
+	public override bool renderMesh {
+		get {
+			if (_render_mesh) {
+				return true;
+			}
+			if (_mode >= 0 && _mode < _modes.Length) {
+				return _modes[_mode].renderMesh;
+			}
+			return false;
+		}
+		set {
+			_render_mesh = value;
+			if (_mode >= 0 && _mode < _modes.Length) {
+				_modes[_mode].renderMesh = value;
+			}
+		}
+	}
+
 	public override void DrawGUI(Rect rect)
 	{
 		UpdateModes();
@@ -78,12 +132,6 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		//tab content
 		if (_mode >= 0 && _mode < _modes.Length) {
 			_modes[_mode].DrawGUI(_rect_content);
-			//get and reset repaint
-			repaint = repaint || _modes[_mode].repaint;
-			_modes[_mode].repaint = false;
-			//get and reset update
-			update = update || _modes[_mode].update;
-			_modes[_mode].update = false;
 		}
 		//selection background
 		VxlGUI.DrawRect(_rect_selected, "DarkGradient");
@@ -93,13 +141,7 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 			text = selected.objname;
 		}
 		GUI.Label(_rect_selected, _title + ":  " + text, GUI.skin.GetStyle("LeftLightHeader"));
-		//dirty selected object
-		if (update) {
-			if (selected != null) {
-				EditorUtility.SetDirty(selected);
-			}
-			update = false;
-		}
+		UpdateModes();
 	}
 
 	private void UpdateRects(Rect rect)

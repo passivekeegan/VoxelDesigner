@@ -38,6 +38,9 @@ public class CornerMapPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_addpat = new CornerPattern(0, 0, 0, 0, 0, 0);
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
@@ -63,6 +66,9 @@ public class CornerMapPanel : PanelGUI
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		target = null;
 
 		_patternlist = null;
@@ -115,7 +121,7 @@ public class CornerMapPanel : PanelGUI
 		//apply change
 		if (EditorGUI.EndChangeCheck()) {
 			_addpat = new CornerPattern(a0, a1, a2, b0, b1, b2);
-			repaint = true;
+			_repaint_menu = false;
 		}
 		//draw pattern header
 		VxlGUI.DrawRect(_rect_patheader, "DarkGradient");
@@ -136,8 +142,7 @@ public class CornerMapPanel : PanelGUI
 			if (target != null) {
 				Undo.RecordObject(target, "Add Corner Pattern");
 				target.AddCornerPattern(_corners[_cornerlist.index], _addpat);
-				update = true;
-				repaint = true;
+				_repaint_menu = false;
 				//dirty target object
 				EditorUtility.SetDirty(target);
 				//update pattern list
@@ -152,8 +157,7 @@ public class CornerMapPanel : PanelGUI
 			if (target != null) {
 				Undo.RecordObject(target, "Delete Corner Pattern");
 				target.DeleteCornerPattern(_corners[_cornerlist.index], _patterns[_patternlist.index]);
-				update = true;
-				repaint = true;
+				_repaint_menu = false;
 				//dirty target object
 				EditorUtility.SetDirty(target);
 				//update pattern list
