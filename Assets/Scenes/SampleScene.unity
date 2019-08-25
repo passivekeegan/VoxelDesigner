@@ -347,7 +347,7 @@ MonoBehaviour:
   bevel: 0.1
   space: 0.268
   filter: {fileID: 2137259898}
-  map: {fileID: 11400000, guid: dd0e0ba9583da5b448a7d07db63493e4, type: 2}
+  map: {fileID: 11400000, guid: 904ac75e8f151a14abc47dd0c852e361, type: 2}
 --- !u!33 &2137259898
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - colourmap: {instanceID: 0}
+  - colourmap: {fileID: 2800000, guid: 9e4dff37ce0150b43bd3459a580adfa8, type: 3}
   - skin: {fileID: 11400000, guid: 1b3dd441e9a21a240ac12bbdf9dd5efc, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
