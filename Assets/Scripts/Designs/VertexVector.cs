@@ -19,29 +19,18 @@ public struct VertexVector
 	/// An integer in the range of [0, 5] that represents a shift 
 	/// around 6 directions horizontally.
 	/// </param>
-	/// <param name="args">
-	/// A reference to a struct contained some of the special variables 
-	/// potentially required for the operations.
-	/// </param>
 	/// <returns>
 	/// A Vector3 struct representing a vector to be added to a reference point.
 	/// </returns>
-	public Vector3 GenerateVertexVector(int shift, ref VertexArgs args)
+	public Vector3 GenerateVertexVector(int shift)
 	{
-		Vector3 point = Vector3.zero;
-		if (operations != null && shift >= 0 && shift < 6) {
-			for (int index = 0;index < operations.Count;index++) {
-				float value;
-				if (operations[index].use_custom) {
-					value = operations[index].custom_modifier;
-				}
-				else {
-					value = operations[index].modifier.Value(ref args);
-				}
-				point += value * operations[index].vector.Vector(shift);
+		Vector3 vector = Vector3.zero;
+		if (operations != null) {
+			for (int index = 0; index < operations.Count; index++) {
+				vector += operations[index].CalculateVector(shift);
 			}
 		}
-		return point;
+		return vector;
 	}
 
 	/// <summary>
@@ -52,14 +41,4 @@ public struct VertexVector
 			return new VertexVector() { operations = new List<VectorOperation>() };
 		}
 	}
-}
-
-/// <summary>
-/// A struct designed to hold important values needed to construct 
-/// vertices.
-/// </summary>
-public struct VertexArgs
-{
-	public float bevel;
-	public float space;
 }

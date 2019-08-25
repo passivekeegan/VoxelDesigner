@@ -15,9 +15,12 @@ public class VertexPanel : PanelGUI
 	private Rect _rect_operation_content;
 	private Rect _rect_operation_scrollview;
 	private Rect _rect_operations_panel;
+	private Rect _rect_import;
 
+	private int _secondary_index;
 	private Vector2 _vertex_scroll;
 	private Vector2 _operation_scroll;
+	private Mesh _importmesh;
 	private List<VertexVector> _vertices;
 	private List<VectorOperation> _operations;
 	private ReorderableList _vertexlist;
@@ -32,8 +35,13 @@ public class VertexPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		_vertex_scroll = Vector2.zero;
 		_operation_scroll = Vector2.zero;
+		_importmesh = null;
+		_secondary_index = -1;
 		//initialize vertex build list
 		_vertexlist = new ReorderableList(_vertices, typeof(VertexVector), true, false, false, false);
 		_vertexlist.showDefaultBackground = false;
@@ -46,6 +54,7 @@ public class VertexPanel : PanelGUI
 		_vertexlist.onRemoveCallback += DeleteVertexElement;
 		_vertexlist.drawElementCallback += DrawVertexElement;
 		_vertexlist.onReorderCallbackWithDetails += ReorderVertexList;
+		_vertexlist.onSelectCallback += SelectVertex;
 		//initialize vertex operation list
 		_operationlist = new ReorderableList(_operations, typeof(VectorOperation), true, false, false, false);
 		_operationlist.showDefaultBackground = false;
@@ -64,15 +73,25 @@ public class VertexPanel : PanelGUI
 	{
 		target = null;
 
+		_importmesh = null;
 		_operationlist = null;
 		_operations.Clear();
 		_vertexlist = null;
 		_vertices.Clear();
+		_update_mesh = false;
+		_repaint_menu = false;
+		_render_mesh = false;
 	}
 
 	public override int primary_index {
 		get {
 			return _vertexlist.index;
+		}
+	}
+
+	public override int secondary_index {
+		get {
+			return _secondary_index;
 		}
 	}
 
@@ -84,6 +103,9 @@ public class VertexPanel : PanelGUI
 
 	public override void DrawGUI(Rect rect)
 	{
+		//reset variables
+		int old_secondary = _secondary_index;
+		_secondary_index = -1;
 		//update lists
 		UpdateVertexList();
 		UpdateOperationList();
@@ -134,7 +156,127 @@ public class VertexPanel : PanelGUI
 		}
 		EditorGUI.EndDisabledGroup();
 		EditorGUI.EndDisabledGroup();
+
+		//draw import panel
+		VxlGUI.DrawRect(_rect_import, "DarkWhite");
+		Rect importpad_rect = VxlGUI.GetPaddedRect(_rect_import, VxlGUI.MED_PAD);
+		Rect importrow_rect = VxlGUI.GetAboveElement(importpad_rect, 0, VxlGUI.MED_BAR);
+		GUI.Label(importrow_rect, "Import Obj Vertex and Triangles", GUI.skin.GetStyle("LeftLrgDarkLabel"));
+		importrow_rect = VxlGUI.GetAboveElement(importpad_rect, 1, VxlGUI.MED_BAR);
+
+		float import_width = Mathf.Min(100f, (importrow_rect.width - VxlGUI.SM_SPACE) / 2f);
+		_importmesh = (Mesh)EditorGUI.ObjectField(
+			VxlGUI.GetSandwichedRectX(importrow_rect, 0, import_width + VxlGUI.SM_SPACE),
+			_importmesh,
+			typeof(Mesh),
+			false
+		);
+		EditorGUI.BeginDisabledGroup(_importmesh == null);
+		if (GUI.Button(VxlGUI.GetRightElement(importrow_rect, 0, import_width), "Import", GUI.skin.GetStyle("DarkButton"))) {
+			ImportVertexAndTriangle();
+		}
 		EditorGUI.EndDisabledGroup();
+		EditorGUI.EndDisabledGroup();
+		//if secondary index changed then mark render
+		if (_secondary_index != old_secondary) {
+			_render_mesh = true;
+		}
+	}
+
+	private void ImportVertexAndTriangle()
+	{
+		if (target == null || _importmesh == null) {
+			return;
+		}
+		Vector3[] mesh_vertices = _importmesh.vertices;
+		int[] mesh_triangles = _importmesh.triangles;
+		if (mesh_vertices == null || mesh_triangles == null || mesh_vertices.Length <= 0) {
+			return;
+		}
+		List<VertexVector> vertices = target.vertices;
+		List<Triangle> triangles = target.triangles;
+		if (vertices == null || triangles == null) {
+			return;
+		}
+		//maximum mesh vertex count was exceeded
+		if (mesh_vertices.Length + vertices.Count > ushort.MaxValue + 1) {
+			return;
+		}
+		Undo.RecordObject(target, "Import Vertices and Triangles");
+		//add mesh vertices
+		int vertex_index = vertices.Count;
+		for (int k = 0; k < mesh_vertices.Length; k++) {
+			int index = vertices.Count;
+			vertices.Add(VertexVector.empty);
+			vertices[index].operations.Add(new VectorOperation(1, VType.Custom, mesh_vertices[k]));
+		}
+		//add mesh triangles
+		int tri_count = mesh_triangles.Length / 3;
+		for (int k = 0; k < tri_count; k++) {
+			int index = 3 * k;
+			triangles.Add(new Triangle(
+				(ushort)(vertex_index + mesh_triangles[index]),
+				(ushort)(vertex_index + mesh_triangles[index + 1]),
+				(ushort)(vertex_index + mesh_triangles[index + 2])
+			));
+		}
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
+	}
+
+	private void SwapTriangleVertexIndex(int index0, int index1)
+	{
+		if (target == null || target.vertices == null || target.triangles == null) {
+			return;
+		}
+		if (index0 == index1) {
+			return;
+		}
+		List<Triangle> triangles = target.triangles;
+		for (int k = 0; k < triangles.Count; k++) {
+			Triangle tri = triangles[k];
+			bool swap_occurred = false;
+			ushort vertex0 = tri.vertex0;
+			if (tri.type0 == TriIndexType.Vertex) {
+				if (vertex0 == index0) {
+					vertex0 = (ushort)index1;
+					swap_occurred = true;
+				}
+				else if (vertex0 == index1) {
+					vertex0 = (ushort)index0;
+					swap_occurred = true;
+				}
+			}
+			ushort vertex1 = tri.vertex1;
+			if (tri.type1 == TriIndexType.Vertex) {
+				if (vertex1 == index0) {
+					vertex1 = (ushort)index1;
+					swap_occurred = true;
+				}
+				else if (vertex1 == index1) {
+					vertex1 = (ushort)index0;
+					swap_occurred = true;
+				}
+			}
+			ushort vertex2 = tri.vertex2;
+			if (triangles[k].type2 == TriIndexType.Vertex) {
+				if (vertex2 == index0) {
+					vertex2 = (ushort)index1;
+					swap_occurred = true;
+				}
+				else if (vertex2 == index1) {
+					vertex2 = (ushort)index0;
+					swap_occurred = true;
+				}
+			}
+			if (swap_occurred) {
+				triangles[k] = new Triangle(tri.type0, tri.type1, tri.type2, vertex0, vertex1, vertex2);
+				_repaint_menu = true;
+			}
+		}
 	}
 
 	private void UpdateVertexList()
@@ -157,7 +299,7 @@ public class VertexPanel : PanelGUI
 	}
 	private void UpdateOperationList()
 	{
-		//clear list
+		//clear list 
 		_operations.Clear();
 		//check valid list target
 		List<VectorOperation> operations = GetSelectedOperation();
@@ -176,14 +318,17 @@ public class VertexPanel : PanelGUI
 	}
 	private void UpdateRects(Rect rect)
 	{
+		float import_height = (2 * VxlGUI.MED_BAR) + (2 * VxlGUI.MED_PAD);
+		_rect_import = VxlGUI.GetBelowElement(rect, 0, import_height);
+		Rect main_rect = VxlGUI.GetSandwichedRectY(rect, 0, import_height + VxlGUI.SM_SPACE);
 		//left column - vertex
-		Rect left_rect = VxlGUI.GetLeftColumn(rect, VxlGUI.SM_SPACE, 0.4f);
+		Rect left_rect = VxlGUI.GetLeftColumn(main_rect, VxlGUI.SM_SPACE, 0.4f);
 		_rect_vertex_title = VxlGUI.GetAboveElement(left_rect, 0, VxlGUI.MED_BAR);
 		_rect_vertex_scrollview = VxlGUI.GetSandwichedRectY(left_rect, VxlGUI.MED_BAR + VxlGUI.SM_SPACE, VxlGUI.SM_SPACE + VxlGUI.MED_BAR);
 		_rect_vertex_content = VxlGUI.GetScrollViewRect(_vertexlist, left_rect.width, _rect_vertex_scrollview.height);
 		_rect_vertex_panel = VxlGUI.GetBelowElement(left_rect, 0, VxlGUI.MED_BAR);
 		//right column - operation
-		Rect right_rect = VxlGUI.GetRightColumn(rect, VxlGUI.SM_SPACE, 0.6f);
+		Rect right_rect = VxlGUI.GetRightColumn(main_rect, VxlGUI.SM_SPACE, 0.6f);
 		_rect_operation_title = VxlGUI.GetAboveElement(right_rect, 0, VxlGUI.MED_BAR);
 		_rect_operation_scrollview = VxlGUI.GetSandwichedRectY(right_rect, VxlGUI.MED_BAR + VxlGUI.SM_SPACE, VxlGUI.SM_SPACE + VxlGUI.MED_BAR);
 		_rect_operation_content = VxlGUI.GetScrollViewRect(_operationlist, right_rect.width, _rect_operation_scrollview.height);
@@ -209,6 +354,9 @@ public class VertexPanel : PanelGUI
 	private void DrawVertexElementBackground(Rect rect, int index, bool active, bool focus)
 	{
 		bool hover = (_vertices.Count > 0) && rect.Contains(Event.current.mousePosition);
+		if (hover) {
+			_secondary_index = index;
+		}
 		bool on = (_vertices.Count > 0 && _vertexlist.index == index);
 		VxlGUI.DrawRect(rect, "SelectableGrey", hover, active, on, focus);
 	}
@@ -226,8 +374,9 @@ public class VertexPanel : PanelGUI
 		else {
 			target.vertices.Insert(index, VertexVector.empty);
 		}
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -250,8 +399,9 @@ public class VertexPanel : PanelGUI
 		else {
 			list.index = -1;
 		}
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -292,11 +442,16 @@ public class VertexPanel : PanelGUI
 		VertexVector new_vertex = target.vertices[new_index];
 		target.vertices[old_index] = new_vertex;
 		target.vertices[new_index] = old_vertex;
+		SwapTriangleVertexIndex(old_index, new_index);
 		list.index = new_index;
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
+	}
+
+	private void SelectVertex(ReorderableList list)
+	{
+		_render_mesh = true;
 	}
 	#endregion
 
@@ -326,8 +481,9 @@ public class VertexPanel : PanelGUI
 		else {
 			operations.Insert(index, VectorOperation.empty);
 		}
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -348,60 +504,81 @@ public class VertexPanel : PanelGUI
 		else {
 			list.index = -1;
 		}
-		repaint = true;
-		update = true;
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
 	private void DrawOperationElement(Rect rect, int index, bool isActive, bool isFocused)
 	{
-		if (target == null || target.vertices == null) {
+		if (target == null) {
 			return;
 		}
-		float max_element_width = 100f;
-		float index_width = Mathf.Min(2 * rect.height, rect.width / 4f);
-		Rect right_panel = VxlGUI.GetRightElement(VxlGUI.GetPaddedRect(rect, 1), 0, Mathf.Min((2 * max_element_width) + rect.height + (2 * VxlGUI.SM_SPACE), rect.width - index_width));
-		float element_width = Mathf.Min(max_element_width, (right_panel.width - right_panel.height - VxlGUI.SM_SPACE - VxlGUI.MED_SPACE) / 2f);
-		EditorGUI.LabelField(
-			VxlGUI.GetLeftElement(rect, 0, index_width),
+		EditorGUI.BeginChangeCheck();
+		//row 0 
+		float element_width = rect.width / 3f;
+		Rect row_rect = VxlGUI.GetAboveElement(rect, 0, VxlGUI.MED_BAR);
+		GUI.Label(
+			VxlGUI.GetLeftElement(row_rect, 0, element_width),
 			index.ToString(),
 			GUI.skin.GetStyle("LeftListLabel")
 		);
-		//draw toggle background
-		Rect rect_toggle = VxlGUI.GetLeftElement(right_panel, 0, right_panel.height);
-		//check for changes
-		EditorGUI.BeginChangeCheck();
-		//draw custom toggle controls
-		bool use_custom = EditorGUI.Toggle(
-			rect_toggle,
-			_operations[index].use_custom,
-			GUI.skin.GetStyle("Toggle")
+		float scale = EditorGUI.FloatField(
+			VxlGUI.GetLeftElement(row_rect, 0, element_width),
+			_operations[index].scale,
+			GUI.skin.GetStyle("DarkNumberField")
 		);
-		//draw modifier controls
-		float custom_modifier = _operations[index].custom_modifier;
-		ModifierType modifier = _operations[index].modifier;
-		if (use_custom) {
-			custom_modifier = EditorGUI.FloatField(
-				VxlGUI.GetRightElement(right_panel, 1, element_width, VxlGUI.SM_SPACE, 0),
-				custom_modifier,
+		VType vector_type = (VType)EditorGUI.EnumPopup(
+			VxlGUI.GetLeftElement(row_rect, 2, element_width),
+			_operations[index].vector_type,
+			GUI.skin.GetStyle("DarkDropDown")
+		);
+
+		float x = _operations[index].vector.x;
+		float y = _operations[index].vector.y;
+		float z = _operations[index].vector.z;
+		if (vector_type == VType.Custom) {
+			//row 1
+			row_rect = VxlGUI.GetAboveElement(rect, 1, VxlGUI.MED_BAR);
+			float label_factor = 0.4f;
+			//X 
+			Rect cell_rect = VxlGUI.GetLeftElement(row_rect, 0, element_width);
+			GUI.Label(
+				VxlGUI.GetLeftColumn(cell_rect, 0, label_factor),
+				"X",
+				GUI.skin.GetStyle("MidDarkLabel")
+			);
+			x = EditorGUI.FloatField(
+				VxlGUI.GetRightColumn(cell_rect, 0, 1 - label_factor),
+				x,
+				GUI.skin.GetStyle("DarkNumberField")
+			);
+			//Y
+			cell_rect = VxlGUI.GetLeftElement(row_rect, 1, element_width);
+			GUI.Label(
+				VxlGUI.GetLeftColumn(cell_rect, 0, label_factor),
+				"Y",
+				GUI.skin.GetStyle("MidDarkLabel")
+			);
+			y = EditorGUI.FloatField(
+				VxlGUI.GetRightColumn(cell_rect, 0, 1 - label_factor),
+				y,
+				GUI.skin.GetStyle("DarkNumberField")
+			);
+			//Z
+			cell_rect = VxlGUI.GetLeftElement(row_rect, 2, element_width);
+			GUI.Label(
+				VxlGUI.GetLeftColumn(cell_rect, 0, label_factor),
+				"Z",
+				GUI.skin.GetStyle("MidDarkLabel")
+			);
+			z = EditorGUI.FloatField(
+				VxlGUI.GetRightColumn(cell_rect, 0, 1 - label_factor),
+				z,
 				GUI.skin.GetStyle("DarkNumberField")
 			);
 		}
-		else {
-			modifier = (ModifierType)EditorGUI.EnumPopup(
-				VxlGUI.GetRightElement(right_panel, 1, element_width, VxlGUI.SM_SPACE, 0),
-				"",
-				modifier,
-				GUI.skin.GetStyle("DarkDropdown")
-			);
-		}
-		//draw vector type controls
-		VectorType vector = (VectorType)EditorGUI.EnumPopup(
-			VxlGUI.GetRightElement(right_panel, 0, element_width),
-			"",
-			_operations[index].vector,
-			GUI.skin.GetStyle("DarkDropdown")
-		);
 		//apply changes
 		if (EditorGUI.EndChangeCheck()) {
 			List<VectorOperation> operations = GetSelectedOperation();
@@ -409,9 +586,10 @@ public class VertexPanel : PanelGUI
 				return;
 			}
 			Undo.RecordObject(target, "Updated Vertex Operation.");
-			operations[index] = new VectorOperation(use_custom, custom_modifier, modifier, vector);
-			repaint = true;
-			update = true;
+			operations[index] = new VectorOperation(scale, vector_type, new Vector3(x, y, z));
+			_update_mesh = true;
+			_repaint_menu = true;
+			_render_mesh = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
@@ -433,8 +611,7 @@ public class VertexPanel : PanelGUI
 		operations[old_index] = new_op;
 		operations[new_index] = old_op;
 		list.index = new_index;
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}

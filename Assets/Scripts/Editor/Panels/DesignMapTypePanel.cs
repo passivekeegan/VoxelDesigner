@@ -38,6 +38,9 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_guidscroll = Vector2.zero;
 		_libscroll = Vector2.zero;
 
@@ -75,6 +78,9 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		target = null;
 
 		_guidlist = null;
@@ -204,8 +210,6 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			}
 			Undo.RecordObject(target, "Added CornerDesign to MappingObject");
 			target.AddCorner(asset);
-			update = true;
-			repaint = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
@@ -216,8 +220,6 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			}
 			Undo.RecordObject(target, "Added EdgeDesign to MappingObject");
 			target.AddEdge(asset);
-			update = true;
-			repaint = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
@@ -228,15 +230,13 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			}
 			Undo.RecordObject(target, "Added FaceDesign to MappingObject");
 			target.AddFace(asset);
-			update = true;
-			repaint = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
 		else {
 			return;
 		}
-		
+		_repaint_menu = true;
 	}
 
 	private void RemoveSelected()
@@ -262,8 +262,7 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 		else {
 			return;
 		}
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -307,8 +306,7 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 		else {
 			return;
 		}
-		update = true;
-		repaint = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}

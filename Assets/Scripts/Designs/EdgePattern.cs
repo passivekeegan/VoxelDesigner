@@ -149,36 +149,49 @@ public struct EdgePattern : IEquatable<EdgePattern>
 	{
 		return new EdgePattern(pat.vertical, pat.p1, pat.p0, pat.c1, pat.c0, pat.v2, pat.v3, pat.v0, pat.v1);
 	}
-	public static int CalculateShift(EdgePattern from, EdgePattern to)
+
+	//MAKE THIS FUNCTION CLEARER, DOESN'T DO WHAT YOU THINK IT DOES
+	public static int CalculateVerticalShift(EdgePattern from, EdgePattern to, IJL edge_key)
 	{
-		//quick shift match check
-		if (from.vertical != to.vertical) {
+		if (!from.vertical || !to.vertical) {
 			return -1;
 		}
-		if (from.vertical) {// vertical shift
-			if ((from.v0 == to.v0) && (from.v1 == to.v1) && (from.v2 == to.v2)) {
-				return 0;
-			}
-			else if ((from.v0 == to.v2) && (from.v1 == to.v0) && (from.v2 == to.v1)) {
-				return 2;
-			}
-			else if ((from.v0 == to.v1) && (from.v1 == to.v2) && (from.v2 == to.v0)) {
-				return 4;
-			}
-			else {
-				return -1;
-			}
+		int shift = 0;
+		if (Vx.IsEdgeTopHeavy(edge_key)) {
+			shift += 1;
 		}
-		else {// horizontal shift
-			if ((from.v0 == to.v0) && (from.v1 == to.v1) && (from.v2 == to.v2) && (from.v3 == to.v3)) {
-				return 0;
-			}
-			else if ((from.v0 == to.v2) && (from.v1 == to.v3) && (from.v2 == to.v0) && (from.v3 == to.v1)) {
-				return 3;
-			}
-			else {
-				return -1;
-			}
+		if ((from.v0 == to.v0) && (from.v1 == to.v1) && (from.v2 == to.v2)) {
+			return shift;
+		}
+		else if ((from.v0 == to.v2) && (from.v1 == to.v0) && (from.v2 == to.v1)) {
+			return shift + 2;
+		}
+		else if ((from.v0 == to.v1) && (from.v1 == to.v2) && (from.v2 == to.v0)) {
+			return shift + 4;
+		}
+		else {
+			return -1;
+		}
+	}
+
+	public static int CalculateHorizontalShift(EdgePattern from, EdgePattern to, int to_axi)
+	{
+		if (from.vertical || to.vertical) {
+			return -1;
+		}
+		int d = to_axi - 2;
+		if (d < 0 || d > 5) {
+			return -1;
+		}
+		int shift = Vx.ND[2, d];
+		if ((from.v0 == to.v0) && (from.v1 == to.v1) && (from.v2 == to.v2) && (from.v3 == to.v3)) {
+			return shift;
+		}
+		else if ((from.v0 == to.v2) && (from.v1 == to.v3) && (from.v2 == to.v0) && (from.v3 == to.v1)) {
+			return Vx.D[3, shift];
+		}
+		else {
+			return -1;
 		}
 	}
 }

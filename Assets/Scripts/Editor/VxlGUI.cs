@@ -23,22 +23,50 @@ public static class VxlGUI
 	public const int PANEL_TITLE = 24;
 	public const int HEADER_TITLE = 12;
 
-	public readonly static Mesh VertexMesh;
+	public const float POINT_RADIUS = 0.01f;
+	public const float POINT_RADIUSSQR = 0.0001f;
+
+	public readonly static Vector2 NORMAL_UV = new Vector2(0.125f, 0.125f);
+	public readonly static Vector2 SELECT_UV = new Vector2(0.875f, 0.125f);
+	public readonly static Vector2 GROUPSELECT_UV = new Vector2(0.625f, 0.375f);
+	public readonly static Vector2 NONSELECT_UV = new Vector2(0.875f, 0.625f);
+	public readonly static Vector2 ORIGIN_UV = new Vector2(0.125f, 0.875f);
+
+	public readonly static Mesh NormalVertex;
+	public readonly static Mesh SelectVertex;
+	public readonly static Mesh GroupSelectVertex;
+	public readonly static Mesh NonSelectVertex;
 
 	static VxlGUI()
 	{
 		GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		Mesh mesh = sphere.GetComponent<MeshFilter>().sharedMesh;
-		VertexMesh = new Mesh();
-		VertexMesh.vertices = (Vector3[]) mesh.vertices.Clone();
-		VertexMesh.triangles = (int[]) mesh.triangles.Clone();
-		VertexMesh.normals = (Vector3[]) mesh.normals.Clone();
-		VertexMesh.uv = (Vector2[]) mesh.uv.Clone();
-		VertexMesh.RecalculateBounds();
-		VertexMesh.RecalculateTangents();
-		VertexMesh.UploadMeshData(false);
+		Mesh spheremesh = sphere.GetComponent<MeshFilter>().sharedMesh;
+
+		InitializeVertex(out NormalVertex, NORMAL_UV, spheremesh);
+		InitializeVertex(out SelectVertex, SELECT_UV, spheremesh);
+		InitializeVertex(out GroupSelectVertex, GROUPSELECT_UV, spheremesh);
+		InitializeVertex(out NonSelectVertex, NONSELECT_UV, spheremesh);
 
 		GameObject.DestroyImmediate(sphere);
+	}
+
+	private static void InitializeVertex(out Mesh vertexmesh, Vector2 uv, Mesh copymesh)
+	{
+		Vector3[] vertex = copymesh.vertices;
+		Vector3[] vertexmesh_vertex = new Vector3[vertex.Length];
+		Vector2[] vertexmesh_uv = new Vector2[vertex.Length];
+		for (int k = 0; k < vertex.Length; k++) {
+			vertexmesh_vertex[k] = POINT_RADIUS * vertex[k];
+			vertexmesh_uv[k] = uv;
+		}
+		vertexmesh = new Mesh();
+		vertexmesh.vertices = vertexmesh_vertex;
+		vertexmesh.triangles = copymesh.triangles;
+		vertexmesh.normals = copymesh.normals;
+		vertexmesh.uv = vertexmesh_uv;
+		vertexmesh.RecalculateBounds();
+		vertexmesh.RecalculateTangents();
+		vertexmesh.UploadMeshData(false);
 	}
 
 	public static Rect GetAboveRow(Rect rect, int space, float factor)

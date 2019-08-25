@@ -38,6 +38,9 @@ public class FaceMapPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_addpat = FacePattern.emptyHexagon;
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
@@ -63,6 +66,9 @@ public class FaceMapPanel : PanelGUI
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		target = null;
 
 		_patternlist = null;
@@ -110,8 +116,7 @@ public class FaceMapPanel : PanelGUI
 			if (target != null) {
 				Undo.RecordObject(target, "Add Face Pattern");
 				target.AddFacePattern(_faces[_facelist.index], _addpat);
-				update = true;
-				repaint = true;
+				_repaint_menu = false;
 				//set target dirty
 				EditorUtility.SetDirty(target);
 				//update pattern list
@@ -127,8 +132,7 @@ public class FaceMapPanel : PanelGUI
 			if (target != null) {
 				Undo.RecordObject(target, "Delete Face Pattern");
 				target.DeleteFacePattern((FaceDesign)_faces[_facelist.index], _patterns[_patternlist.index]);
-				update = true;
-				repaint = true;
+				_repaint_menu = false;
 				//set target dirty
 				EditorUtility.SetDirty(target);
 				//update pattern list
@@ -251,7 +255,7 @@ public class FaceMapPanel : PanelGUI
 			else {
 				_addpat = new FacePattern(p0, p1, p2, p3, v0, v1);
 			}
-			repaint = true;
+			_repaint_menu = false;
 		}
 		
 	}

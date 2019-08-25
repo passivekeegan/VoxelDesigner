@@ -26,6 +26,9 @@ public class DesignMapPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_corner_col.Enable();
 		_edge_col.Enable();
 		_face_col.Enable();
@@ -33,11 +36,34 @@ public class DesignMapPanel : PanelGUI
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		target = null;
 
 		_corner_col.Disable();
 		_edge_col.Disable();
 		_face_col.Disable();
+	}
+
+	public override bool updateMesh {
+		get => _update_mesh || _corner_col.updateMesh || _edge_col.updateMesh || _face_col.updateMesh;
+		set {
+			_update_mesh = value;
+			_corner_col.updateMesh = value;
+			_edge_col.updateMesh = value;
+			_face_col.updateMesh = value;
+		}
+	}
+
+	public override bool renderMesh {
+		get => _render_mesh || _corner_col.renderMesh || _edge_col.renderMesh || _face_col.renderMesh;
+		set {
+			_render_mesh = value;
+			_corner_col.renderMesh = value;
+			_edge_col.renderMesh = value;
+			_face_col.renderMesh = value;
+		}
 	}
 
 	public override void DrawGUI(Rect rect)
@@ -62,13 +88,6 @@ public class DesignMapPanel : PanelGUI
 			_title,
 			GUI.skin.GetStyle("LeftLightHeader")
 		);
-		if (GUI.Button(VxlGUI.GetRightElement(_rect_header, 0, button_width), "Refresh", GUI.skin.GetStyle("LightButton"))) {
-			//update lists
-			//_corner_col.UpdateLists();
-			//_edge_col.UpdateLists();
-			//_face_col.UpdateLists();
-			repaint = true;
-		}
 		//draw columns
 		_corner_col.DrawGUI(_rect_corner);
 		_edge_col.DrawGUI(_rect_edge);

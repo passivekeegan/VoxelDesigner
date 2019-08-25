@@ -49,6 +49,9 @@ public class SocketPanel : PanelGUI
 
 	public override void Enable()
 	{
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		_scroll = Vector2.zero;
 		_primary_index = -1;
 		_secondary_index = -1;
@@ -85,6 +88,9 @@ public class SocketPanel : PanelGUI
 
 	public override void Disable()
 	{
+		_update_mesh = false;
+		_render_mesh = false;
+		_repaint_menu = false;
 		target = null;
 		_primary_index = -1;
 		_secondary_index = -1;
@@ -243,8 +249,9 @@ public class SocketPanel : PanelGUI
 		if (EditorGUI.EndChangeCheck()) {
 			Undo.RecordObject(target, "Update Socket");
 			sockets[list_index][index] = vertex;
-			update = true;
-			repaint = true;
+			_update_mesh = true;
+			_render_mesh = true;
+			_repaint_menu = true;
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
@@ -289,8 +296,9 @@ public class SocketPanel : PanelGUI
 		else {
 			sockets[list_index].Insert(index, -1);
 		}
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -316,8 +324,9 @@ public class SocketPanel : PanelGUI
 		else {
 			list.index = -1;
 		}
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -339,8 +348,9 @@ public class SocketPanel : PanelGUI
 		sockets[list_index][old_index] = new_socket;
 		sockets[list_index][new_index] = old_socket;
 		list.index = new_index;
-		update = true;
-		repaint = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
@@ -349,6 +359,9 @@ public class SocketPanel : PanelGUI
 	{
 		_primary_index = list_index;
 		_secondary_index = list.index;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
 		for (int k = 0;k < _socketlists.Count;k++) {
 			if (k == list_index) {
 				continue;
