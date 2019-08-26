@@ -6,7 +6,7 @@ public class RandomVoxelMesh : MonoBehaviour
 {
 	public bool flat_shade = true;
 	public int rand_seed = 0;
-	[Range(1, 1000)]
+	[Range(0, 1000)]
 	public int voxel_samples = 10;
 	[Range(4f, 100f)]
 	public float range_radius = 10f;
@@ -17,12 +17,19 @@ public class RandomVoxelMesh : MonoBehaviour
 	public MeshFilter filter;
 	public MappingObject map;
 	public VoxelMeshData data;
+	public List<Vector3Int> customvoxels;
 
 	public void Start()
 	{
 		data = new VoxelMeshData();
 		data.flat_shaded = flat_shade;
 		data.map = map;
+
+		if (customvoxels != null) {
+			for (int k = 0;k < customvoxels.Count;k++) {
+				data.UpdateVoxelData(new IJL(customvoxels[k]), new Voxel(1, VoxelAxi.AD0), true);
+			}
+		}
 
 		Random.InitState(rand_seed);
 		for (int k = 0; k < voxel_samples;k++) {
@@ -33,51 +40,6 @@ public class RandomVoxelMesh : MonoBehaviour
 			IJL ijl = new IJL(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y), Mathf.RoundToInt(point.z));
 			data.UpdateVoxelData(ijl, new Voxel(1, VoxelAxi.AD0), true);
 		}
-
-		
-		//data.UpdateVoxelData(new IJL(0, 1, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-1, 2, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-2, 2, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(0, 2, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(0, -2, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(0, -2, 1), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-1, -2, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-1, -2, 1), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(2, 0, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(2, 0, 1), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(2, 1, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(2, 0, 2), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(2, 1, 2), new Voxel(1, VoxelAxi.AD0), true);
-
-		//data.UpdateVoxelData(new IJL(5, 0, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, 0, 1), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, 0, 2), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, 0, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, 0, 1), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, 0, 2), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, 1, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, 1, 2), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(2, -1, 7), new Voxel(1, VoxelAxi.AD0), true);
-
-
-		//data.UpdateVoxelData(new IJL(5, -3, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, -4, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, -4, 0), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, -4, 1), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, -3, 2), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(5, -4, 2), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, -4, 2), new Voxel(1, VoxelAxi.AD0), true);
-
-
-		//data.UpdateVoxelData(new IJL(6, -4, 5), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(7, -4, 6), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(6, -3, 6), new Voxel(1, VoxelAxi.AD0), true);
-
-		//data.UpdateVoxelData(new IJL(-5, -3, 4), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-5, -4, 4), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-4, -4, 5), new Voxel(1, VoxelAxi.AD0), true);
-		//data.UpdateVoxelData(new IJL(-5, -3, 5), new Voxel(1, VoxelAxi.AD0), true);
-
 
 		data.UpdateDirtyComponents();
 

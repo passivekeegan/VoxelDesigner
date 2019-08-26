@@ -91,7 +91,7 @@ public class TrianglePanel : PanelGUI
 		GUI.EndScrollView();
 		//draw button panel
 		VxlGUI.DrawRect(_rect_panel, "DarkGradient");
-		float button_width = Mathf.Min(60, _rect_panel.width / 3f);
+		float button_width = Mathf.Min(60, _rect_panel.width / 4f);
 		//draw add button
 		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 0, button_width), "Add", GUI.skin.GetStyle("LightButton"))) {
 			_trianglelist.onAddCallback(_trianglelist);
@@ -106,6 +106,13 @@ public class TrianglePanel : PanelGUI
 		EditorGUI.BeginDisabledGroup(_trianglelist.index < 0 || _trianglelist.index >= _trianglelist.count);
 		if (GUI.Button(VxlGUI.GetLeftElement(_rect_panel, 0, button_width), "Delete", GUI.skin.GetStyle("LightButton"))) {
 			_trianglelist.onRemoveCallback(_trianglelist);
+		}
+		EditorGUI.EndDisabledGroup();
+		//draw delete all button
+		//draw delete button
+		EditorGUI.BeginDisabledGroup(_trianglelist.count <= 0);
+		if (GUI.Button(VxlGUI.GetLeftElement(_rect_panel, 1, button_width), "Delete All", GUI.skin.GetStyle("LightButton"))) {
+			DeleteAllTriangles();
 		}
 		EditorGUI.EndDisabledGroup();
 		EditorGUI.EndDisabledGroup();
@@ -217,6 +224,21 @@ public class TrianglePanel : PanelGUI
 			}
 		}
 		return count;
+	}
+
+	private void DeleteAllTriangles()
+	{
+		if (target == null || target.triangles == null || target.triangles.Count <= 0) {
+			return;
+		}
+		Undo.RecordObject(target, "Delete All Triangles");
+		target.triangles.Clear();
+		_trianglelist.index = -1;
+		_update_mesh = true;
+		_render_mesh = true;
+		_repaint_menu = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
 	}
 
 	#region TriangleBuild ReorderableList

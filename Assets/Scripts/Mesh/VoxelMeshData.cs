@@ -113,13 +113,12 @@ public class VoxelMeshData
 			}
 			else {
 				if (data.id != 0) {
-					//add data
+					//add component data
 					_cornerdata.Add(corner_key, data);
 				}
 			}
 		}
 		_dirtycorners.Clear();
-
 		//process dirty edges
 		foreach (IJL edge_key in _dirtyedges) {
 			EdgeData data = ClassifyEdge(edge_key);
@@ -135,13 +134,12 @@ public class VoxelMeshData
 			}
 			else {
 				if (data.id != 0) {
-					//add data
+					//add component data
 					_edgedata.Add(edge_key, data);
 				}
 			}
 		}
 		_dirtyedges.Clear();
-
 		//process dirty faces
 		foreach (IJL face_key in _dirtyfaces) {
 			FaceData data = ClassifyFace(face_key);
@@ -157,7 +155,7 @@ public class VoxelMeshData
 			}
 			else {
 				if (data.id != 0) {
-					//add data
+					//add component data
 					_facedata.Add(face_key, data);
 				}
 			}
@@ -531,7 +529,6 @@ public class VoxelMeshData
 		if (map == null || packet.axi < 2 || packet.axi >= 8 || packet.hexagon) {
 			return FacePattern.emptyRect;
 		}
-
 		//corner 0
 		int corner_axi = Vx.ROTAXI[2, packet.axi];
 		if (!_cornerdata.ContainsKey(packet.ckey0)) {
@@ -544,7 +541,6 @@ public class VoxelMeshData
 		}
 		int socket_axi = Vx.NROTAXI[data.shift, corner_axi];
 		int p0 = design.GetFaceSocketCount(-1, socket_axi);
-
 		//corner 1
 		corner_axi = Vx.ROTAXI[2, packet.axi];
 		if (!_cornerdata.ContainsKey(packet.ckey1)) {
@@ -557,7 +553,6 @@ public class VoxelMeshData
 		}
 		socket_axi = Vx.NROTAXI[data.shift, corner_axi];
 		int p1 = design.GetFaceSocketCount(1, socket_axi);
-
 		//corner 2
 		corner_axi = Vx.NROTAXI[1, packet.axi];
 		if (!_cornerdata.ContainsKey(packet.ckey2)) {
@@ -570,7 +565,6 @@ public class VoxelMeshData
 		}
 		socket_axi = Vx.NROTAXI[data.shift, corner_axi];
 		int p2 = design.GetFaceSocketCount(-1, socket_axi);
-
 		//corner 3
 		corner_axi = Vx.NROTAXI[1, packet.axi];
 		if (!_cornerdata.ContainsKey(packet.ckey3)) {

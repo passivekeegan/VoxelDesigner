@@ -172,13 +172,11 @@ public struct FacePattern
 			return -1;
 		}
 		if (!from.hexagon) {
-			if ((from.p0 == to.p0) && (from.p1 == to.p1) && (from.p2 == to.p2) && (from.p3 == to.p3)) {
-				if (from.v0 == to.v0 && from.v1 == to.v1) {
-					return 0;
-				}
-				else if (from.v0 == to.v1 && from.v1 == to.v0) {
-					return 3;
-				}
+			if ((from.p0 == to.p0) && (from.p1 == to.p1) && (from.p2 == to.p2) && (from.p3 == to.p3) && (from.v0 == to.v0) && (from.v1 == to.v1)) {
+				return 0;
+			}
+			else if ((from.p0 == to.p2) && (from.p1 == to.p3) && (from.p2 == to.p0) && (from.p3 == to.p1) && (from.v0 == to.v1) && (from.v1 == to.v0)) {
+				return 3;
 			}
 			return -1;
 		}

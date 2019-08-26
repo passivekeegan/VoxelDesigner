@@ -341,13 +341,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flat_shade: 0
   rand_seed: 0
-  voxel_samples: 1000
+  voxel_samples: 556
   range_radius: 5
-  cutoff: 0.617
+  cutoff: 0.547
   bevel: 0.1
   space: 0.268
   filter: {fileID: 2137259898}
-  map: {fileID: 11400000, guid: 904ac75e8f151a14abc47dd0c852e361, type: 2}
+  map: {fileID: 11400000, guid: b2b9e2bd5e8d5af46bb801ad41343ee8, type: 2}
+  customvoxels: []
 --- !u!33 &2137259898
 MeshFilter:
   m_ObjectHideFlags: 0

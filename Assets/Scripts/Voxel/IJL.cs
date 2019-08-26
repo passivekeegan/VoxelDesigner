@@ -30,7 +30,7 @@ public struct IJL
 	{
 		this.i = v.x;
 		this.j = v.y;
-		this.l = v.y;
+		this.l = v.z;
 	}
 	public IJL(IJ ij)
 	{

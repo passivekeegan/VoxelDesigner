@@ -89,16 +89,13 @@ public static class Vx
 		XAxis = new Vector3(2, 0, 0);
 		YAxis = new Vector3(0, 1, 0);
 		ZAxis = new Vector3(1, 0, SQRT3);
-		//XAxis = new Vector3(SQRT3, 0, 0);
-		//YAxis = new Vector3(0, 1, 0);
-		//ZAxis = new Vector3(SQRT3D2, 0, 1.5f);
 		Hexagon = new Vector3[] {
-			new Vector3(1,0f,SQRT3_R1),//new Vector3(SQRT3D2,0f,0.5f)
-			new Vector3(1,0f,-SQRT3_R1),//new Vector3(SQRT3D2,0f,-0.5f)
-			new Vector3(0f,0f,-SQRT3_R2),//new Vector3(0f,0f,-1f)
-			new Vector3(-1,0f,-SQRT3_R1),//new Vector3(-SQRT3D2,0f,-0.5f)
-			new Vector3(-1,0f,SQRT3_R1),//new Vector3(-SQRT3D2,0f,0.5f)
-			new Vector3(0f,0f,SQRT3_R2)//new Vector3(0f,0f,1f)
+			new Vector3(1,0f,SQRT3_R1),
+			new Vector3(1,0f,-SQRT3_R1),
+			new Vector3(0f,0f,-SQRT3_R2),
+			new Vector3(-1,0f,-SQRT3_R1),
+			new Vector3(-1,0f,SQRT3_R1),
+			new Vector3(0f,0f,SQRT3_R2)
 		};
 		MidHexagon = new Vector3[] {
 			Vector3.Lerp(Hexagon[0], Hexagon[1], 0.5f),
@@ -506,8 +503,6 @@ public static class Vx
 			return face_key + KeyTransform_RectFaceCorner[axi - 2, corner_index];
 		}
 	}
-
-
 
 	//assuming edge_key is a valid Edge key
 	public static void GetSegmentData(IJL edge_key, out IJL corner0_key, out IJL corner1_key, out int axi)
