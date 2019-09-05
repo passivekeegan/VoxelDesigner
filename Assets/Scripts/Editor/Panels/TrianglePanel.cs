@@ -7,6 +7,8 @@ using UnityEditorInternal;
 public class TrianglePanel : PanelGUI
 {
 	public VoxelComponent target;
+	public List<int> selectlist;
+	public HashSet<int> selectset;
 
 	private Rect _rect_title;
 	private Rect _rect_tri_scroll;
@@ -21,13 +23,19 @@ public class TrianglePanel : PanelGUI
 	
 	private List<Triangle> _triangles;
 	private ReorderableList _trianglelist;
+	private MeshPreview _preview;
+	private PreviewVertexDisplay _selectdisplay;
 
-	public TrianglePanel(string title, string[] cornerplug_labels, string[] edgeplug_labels)
+	public TrianglePanel(MeshPreview preview, string title, string[] cornerplug_labels, string[] edgeplug_labels)
 	{
 		_title = title;
+		_preview = preview;
+		selectlist = new List<int>();
+		selectset = new HashSet<int>();
 		_cornerplug_labels = cornerplug_labels;
 		_edgeplug_labels = edgeplug_labels;
 		_triangles = new List<Triangle>();
+		_selectdisplay = new PreviewVertexDisplay();
 		//refresh options available
 		RefreshOptionLabels();
 	}
@@ -38,6 +46,9 @@ public class TrianglePanel : PanelGUI
 		_repaint_menu = true;
 		_render_mesh = true;
 		_scroll = Vector2.zero;
+		_selectdisplay.Enable();
+		selectlist.Clear();
+		selectset.Clear();
 		//initialize triangle list
 		_trianglelist = new ReorderableList(_triangles, typeof(Triangle), true, false, false, false);
 		_trianglelist.showDefaultBackground = false;
@@ -46,8 +57,6 @@ public class TrianglePanel : PanelGUI
 		_trianglelist.elementHeight = (4 * VxlGUI.MED_BAR) + (5 * VxlGUI.SM_SPACE);
 		_trianglelist.drawNoneElementCallback += DrawTriangleNoneElement;
 		_trianglelist.drawElementBackgroundCallback += DrawTriangleElementBackground;
-		_trianglelist.onAddCallback += AddTriangleElement;
-		_trianglelist.onRemoveCallback += DeleteTriangleElement;
 		_trianglelist.drawElementCallback += DrawTriangleElement;
 		_trianglelist.onReorderCallbackWithDetails += ReorderTriangleElements;
 		_trianglelist.onSelectCallback += SelectTriangle;
@@ -62,17 +71,9 @@ public class TrianglePanel : PanelGUI
 		_update_mesh = false;
 		_repaint_menu = false;
 		_render_mesh = false;
-	}
-
-	public override int primary_index {
-		get {
-			return _trianglelist.index;
-		}
-	}
-	public override PreviewDrawMode previewMode {
-		get {
-			return PreviewDrawMode.Triangle;
-		}
+		selectlist.Clear();
+		selectset.Clear();
+		_selectdisplay.Disable();
 	}
 
 	public override void DrawGUI(Rect rect)
@@ -83,7 +84,7 @@ public class TrianglePanel : PanelGUI
 		EditorGUI.BeginDisabledGroup(target == null);
 		//draw title
 		VxlGUI.DrawRect(_rect_title, "DarkGradient");
-		GUI.Label(_rect_title, "Triangle Builds", GUI.skin.GetStyle("LeftLightHeader"));
+		GUI.Label(_rect_title, "Triangles", GUI.skin.GetStyle("LeftLightHeader"));
 		//draw triangle list
 		VxlGUI.DrawRect(_rect_tri_scroll, "DarkWhite");
 		_scroll = GUI.BeginScrollView(_rect_tri_scroll, _scroll, _rect_tri_content);
@@ -94,51 +95,38 @@ public class TrianglePanel : PanelGUI
 		float button_width = Mathf.Min(60, _rect_panel.width / 4f);
 		//draw add button
 		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 0, button_width), "Add", GUI.skin.GetStyle("LightButton"))) {
-			_trianglelist.onAddCallback(_trianglelist);
+			AddTriangle();
 		}
+		//draw add triangle button
+		EditorGUI.BeginDisabledGroup(_preview.secondaryCount != 3);
+		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 1, button_width), "S Add", GUI.skin.GetStyle("LightButton"))) {
+			AddSecondaryTriangle();
+		}
+		EditorGUI.EndDisabledGroup();
 		//draw flip button
-		EditorGUI.BeginDisabledGroup(_trianglelist.index < 0 || _trianglelist.index >= _trianglelist.count);
-		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 1, button_width), "Flip", GUI.skin.GetStyle("LightButton"))) {
-			FlipTriangle(_trianglelist.index);
+		EditorGUI.BeginDisabledGroup((_triangles.Count <= 0) || (selectlist.Count <= 0));
+		if (GUI.Button(VxlGUI.GetRightElement(_rect_panel, 2, button_width), "Flip", GUI.skin.GetStyle("LightButton"))) {
+			FlipSelectedTriangles();
 		}
-		EditorGUI.EndDisabledGroup();
 		//draw delete button
-		EditorGUI.BeginDisabledGroup(_trianglelist.index < 0 || _trianglelist.index >= _trianglelist.count);
 		if (GUI.Button(VxlGUI.GetLeftElement(_rect_panel, 0, button_width), "Delete", GUI.skin.GetStyle("LightButton"))) {
-			_trianglelist.onRemoveCallback(_trianglelist);
-		}
-		EditorGUI.EndDisabledGroup();
-		//draw delete all button
-		//draw delete button
-		EditorGUI.BeginDisabledGroup(_trianglelist.count <= 0);
-		if (GUI.Button(VxlGUI.GetLeftElement(_rect_panel, 1, button_width), "Delete All", GUI.skin.GetStyle("LightButton"))) {
-			DeleteAllTriangles();
+			DeleteSelectedTriangles();
 		}
 		EditorGUI.EndDisabledGroup();
 		EditorGUI.EndDisabledGroup();
 	}
 
-	private void FlipTriangle(int index)
+	public override void DrawPreview(Rect rect)
 	{
-		if (target == null || target.triangles == null) {
-			return;
-		}
-		List<Triangle> triangles = target.triangles;
-		if (index < 0 || index >= triangles.Count) {
-			return;
-		}
-		Triangle tri = triangles[index];
-		if (tri.type1 == tri.type2 && tri.vertex1 == tri.vertex2) {
-			return;
-		}
-		Undo.RecordObject(target, "Flip Triangle At Index: " + index);
-		triangles[index] = new Triangle(tri.type0, tri.type2, tri.type1, tri.vertex0, tri.vertex2, tri.vertex1);
-		_update_mesh = true;
-		_repaint_menu = true;
-		_render_mesh = true;
-		//dirty target object
-		EditorUtility.SetDirty(target);
+		//update preview displays
+		_selectdisplay.selected = _preview.secondaryCount;
+		_selectdisplay.superselected = _preview.secondarySuper;
+
+		rect = VxlGUI.GetPaddedRect(rect, VxlGUI.MED_PAD);
+		float width = Mathf.Min(200, rect.width / 2f);
+		_selectdisplay.DrawGUI(VxlGUI.GetAboveRightElement(rect, 0, width, 0, rect.height / 2f));
 	}
+
 
 	public void UpdateTriangleList()
 	{
@@ -226,37 +214,102 @@ public class TrianglePanel : PanelGUI
 		return count;
 	}
 
-	private void DeleteAllTriangles()
+	private void AddTriangle()
 	{
-		if (target == null || target.triangles == null || target.triangles.Count <= 0) {
+		if (target == null || !target.IsValid()) {
 			return;
 		}
-		Undo.RecordObject(target, "Delete All Triangles");
-		target.triangles.Clear();
-		_trianglelist.index = -1;
+		Undo.RecordObject(target, "Add New Triangle");
+		target.triangles.Add(Triangle.empty);
+		_repaint_menu = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
+	}
+	private void AddSecondaryTriangle()
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
+		if (_preview.secondaryCount != 3) {
+			return;
+		}
+		Undo.RecordObject(target, "Add Secondary Triangle");
+		target.triangles.Add(_preview.GetSelectedTriangle());
+		_repaint_menu = true;
+		_update_mesh = true;
+		_render_mesh = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
+	}
+	private void DeleteSelectedTriangles()
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
+		List<Triangle> triangles = target.triangles;
+		if (triangles.Count <= 0 || selectlist.Count <= 0) {
+			return;
+		}
+		Undo.RecordObject(target, "Delete Selected Triangles");
+		int index = 0;
+		int deleted = 0;
+		while (index < triangles.Count) {
+			if (selectset.Contains(index + deleted)) {
+				//delete triangle
+				triangles.RemoveAt(index);
+				deleted += 1;
+			}
+			else {
+				index += 1;
+			}
+		}
+		selectset.Clear();
+		selectlist.Clear();
 		_update_mesh = true;
 		_render_mesh = true;
 		_repaint_menu = true;
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
+	private void FlipSelectedTriangles()
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
+		List<Triangle> triangles = target.triangles;
+		if (triangles.Count <= 0 || selectlist.Count <= 0) {
+			return;
+		}
+		Undo.RecordObject(target, "Flip Selected Triangles");
+		for (int k = 0;k < selectlist.Count;k++) {
+			int index = selectlist[k];
+			if (index < 0 || index >= triangles.Count) {
+				continue;
+			}
+			triangles[index] = Triangle.Flip(triangles[index]);
+		}
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
+	}
+	
 
 	#region TriangleBuild ReorderableList
 	private void DrawTriangleNoneElement(Rect rect)
 	{
-		GUI.Label(rect, "No TriangleBuilds Found.", GUI.skin.GetStyle("RightListLabel"));
+		GUI.Label(rect, "No Triangles Found.", GUI.skin.GetStyle("RightListLabel"));
 	}
 	private void DrawTriangleElementBackground(Rect rect, int index, bool active, bool focus)
 	{
 		bool hover = (_triangles.Count > 0) && rect.Contains(Event.current.mousePosition);
-		bool on = (_triangles.Count > 0 && _trianglelist.index == index);
+		bool on = selectset.Contains(index);
 		bool valid = true;
 		if (index >= 0 && index < _triangles.Count) {
-			valid = _triangles[index].IsValid(
-				GetVertexCount(_triangles[index].type0),
-				target.cornerplugs,
-				target.edgeplugs
-			);
+			if (target != null && !target.IsValid()) {
+				valid = _triangles[index].IsValid(target.vertices.Count, target.cornerplugs, target.edgeplugs);
+			}
 		}
 		if (valid) {
 			VxlGUI.DrawRect(rect, "SelectableGrey", hover, active, on, focus);
@@ -265,54 +318,53 @@ public class TrianglePanel : PanelGUI
 			VxlGUI.DrawRect(rect, "SelectableRed", hover, active, on, focus);	
 		}
 	}
-	private void AddTriangleElement(ReorderableList list)
+	private void DrawTriangleElement(Rect rect, int index, bool active, bool focus)
 	{
-		if (target == null || target.triangles == null) {
-			return;
-		}
-		Undo.RecordObject(target, "Insert New TriangleBuild");
-		int index = list.index;
-		if (index < 0 || index >= target.triangles.Count) {
-			target.triangles.Add(Triangle.empty);
-			list.index = target.triangles.Count - 1;
-		}
-		else {
-			target.triangles.Insert(index, Triangle.empty);
-		}
-		if (index >= 0) {
-			_update_mesh = true;
-			_render_mesh = true;
-		}
-		_repaint_menu = true;
-		//dirty target object
-		EditorUtility.SetDirty(target);
-	}
-	private void DeleteTriangleElement(ReorderableList list)
-	{
-		if (target == null || target.triangles == null) {
-			return;
-		}
-		int index = list.index;
-		if (index < 0 || index >= target.triangles.Count) {
-			return;
-		}
-		Undo.RecordObject(target, "Delete TriangleBuild");
-		target.triangles.RemoveAt(index);
-		if (target.triangles.Count > 0) {
-			if (index > 0) {
-				list.index = list.index - 1;
+		rect = VxlGUI.GetPaddedRect(rect, VxlGUI.SM_SPACE);
+		//draw indexed label
+		GUI.Label(
+			VxlGUI.GetAboveElement(rect, 0, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
+			"Tri: " + index,
+			GUI.skin.GetStyle("LeftListLabel")
+		);
+		EditorGUI.BeginChangeCheck();
+		//draw triangle index 0
+		TriIndex index0 = DrawTriangleEditElement(
+			VxlGUI.GetAboveElement(rect, 1, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
+			_triangles[index].type0,
+			_triangles[index].vertex0
+		);
+		//draw triangle index 1
+		TriIndex index1 = DrawTriangleEditElement(
+			VxlGUI.GetAboveElement(rect, 2, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
+			_triangles[index].type1,
+			_triangles[index].vertex1
+		);
+		//draw triangle index 2
+		TriIndex index2 = DrawTriangleEditElement(
+			VxlGUI.GetAboveElement(rect, 3, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
+			_triangles[index].type2,
+			_triangles[index].vertex2
+		);
+
+		if (EditorGUI.EndChangeCheck()) {
+			if (target != null) {
+				if (target == null || target.triangles == null) {
+					return;
+				}
+				if (index < 0 || index >= target.triangles.Count) {
+					return;
+				}
+				Undo.RecordObject(target, "Update Triangle Build");
+				target.triangles[index] = new Triangle(index0, index1, index2);
+				_update_mesh = true;
+				_render_mesh = true;
+				_repaint_menu = true;
+				//dirty target object
+				EditorUtility.SetDirty(target);
 			}
 		}
-		else {
-			list.index = -1;
-		}
-		_update_mesh = true;
-		_render_mesh = true;
-		_repaint_menu = true;
-		//dirty target object
-		EditorUtility.SetDirty(target);
 	}
-
 	private TriIndex DrawTriangleEditElement(Rect rect, TriIndexType type, ushort vertexcode)
 	{
 		rect = VxlGUI.GetRightColumn(rect, 0, 0.95f);
@@ -386,76 +438,37 @@ public class TrianglePanel : PanelGUI
 		}
 		return new TriIndex(type, vertexcode);
 	}
-	private void DrawTriangleElement(Rect rect, int index, bool active, bool focus)
-	{
-		rect = VxlGUI.GetPaddedRect(rect, VxlGUI.SM_SPACE);
-		//draw indexed label
-		GUI.Label(
-			VxlGUI.GetAboveElement(rect, 0, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
-			"Tri: " + index,
-			GUI.skin.GetStyle("LeftListLabel")
-		);
-		EditorGUI.BeginChangeCheck();
-		//draw triangle index 0
-		TriIndex index0 = DrawTriangleEditElement(
-			VxlGUI.GetAboveElement(rect, 1, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
-			_triangles[index].type0, 
-			_triangles[index].vertex0
-		);
-		//draw triangle index 1
-		TriIndex index1 = DrawTriangleEditElement(
-			VxlGUI.GetAboveElement(rect, 2, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
-			_triangles[index].type1, 
-			_triangles[index].vertex1
-		);
-		//draw triangle index 2
-		TriIndex index2 = DrawTriangleEditElement(
-			VxlGUI.GetAboveElement(rect, 3, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0),
-			_triangles[index].type2, 
-			_triangles[index].vertex2
-		);
-
-		if (EditorGUI.EndChangeCheck()) {
-			if (target != null) {
-				if (target == null || target.triangles == null) {
-					return;
-				}
-				if (index < 0 || index >= target.triangles.Count) {
-					return;
-				}
-				Undo.RecordObject(target, "Update Triangle Build");
-				target.triangles[index] = new Triangle(index0, index1, index2);
-				_update_mesh = true;
-				_render_mesh = true;
-				_repaint_menu = true;
-				//dirty target object
-				EditorUtility.SetDirty(target);
-			}
-		}
-	}
-
 	private void ReorderTriangleElements(ReorderableList list, int old_index, int new_index)
 	{
-		if (target == null || target.triangles == null) {
+		if (target == null || !target.IsValid()) {
 			return;
 		}
-		int cnt = target.triangles.Count;
-		if (old_index < 0 || new_index < 0 || old_index >= cnt || new_index >= cnt || old_index == new_index) {
+		if (old_index < 0 || new_index < 0 || old_index == new_index) {
 			return;
 		}
-		Undo.RecordObject(target, "Reorder TriangleBuild List");
-		Triangle old_vertex = target.triangles[old_index];
-		Triangle new_vertex = target.triangles[new_index];
-		target.triangles[old_index] = new_vertex;
-		target.triangles[new_index] = old_vertex;
-		list.index = new_index;
-		_repaint_menu = true;
+		List<Triangle> triangles = target.triangles;
+		if (old_index >= triangles.Count || new_index >= triangles.Count) {
+			return;
+		}
+		Undo.RecordObject(target, "Reorder Triangles");
+		Triangle old_tri = triangles[old_index];
+		triangles.RemoveAt(old_index);
+		triangles.Insert(new_index, old_tri);
+		//maintain selection
+		ReorderMaintainSelection(old_index, new_index, selectlist, selectset);
 		//dirty target object
+		_repaint_menu = true;
 		EditorUtility.SetDirty(target);
 	}
-
 	private void SelectTriangle(ReorderableList list)
 	{
+		int index = list.index;
+		if (index < 0 || index >= _triangles.Count) {
+			selectset.Clear();
+			selectlist.Clear();
+			return;
+		}
+		SelectListElement(index, selectlist, selectset);
 		_update_mesh = true;
 		_render_mesh = true;
 	}

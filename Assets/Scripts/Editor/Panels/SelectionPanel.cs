@@ -82,12 +82,6 @@ public class SelectionPanel<T> : PanelGUI where T : VoxelObject
 		_unsaveds.Clear();
 	}
 
-	public override PreviewDrawMode previewMode {
-		get {
-			return PreviewDrawMode.Simple;
-		}
-	}
-
 	public override void DrawGUI(Rect rect)
 	{
 		UpdateRects(rect);

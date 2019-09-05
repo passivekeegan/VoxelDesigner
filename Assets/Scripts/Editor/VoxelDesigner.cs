@@ -10,9 +10,13 @@ public class VoxelDesigner : EditorWindow
 	private readonly static string[] MODES = new string[] {
 		"Corner", "Edge", "Face", "Mapping"
 	};
-
-	public Texture2D colourmap;
+	public Mesh vertex_mesh;
+	public Mesh axi_mesh;
+	public Mesh voxel_mesh;
 	public GUISkin skin;
+	public Material axi_material;
+	public Material vertex_material;
+	public Material mesh_material;
 
 	private bool _repaint_menu;
 	private bool _update_mesh;
@@ -25,7 +29,6 @@ public class VoxelDesigner : EditorWindow
 	private EdgeModeGUI _edgegui;
 	private FaceModeGUI _facegui;
 	private MappingModeGUI _mappinggui;
-	private PreviewPanel _preview;
 
 	[MenuItem("Window/Voxel Designer")]
 	public static void Initialize()
@@ -44,22 +47,44 @@ public class VoxelDesigner : EditorWindow
 	private void OnDisable()
 	{
 		Undo.undoRedoPerformed -= UndoRedoPerformed;
-		_preview.Disable();
+		DisableMode(_mode);
 	}
 
 	public void Intialize()
 	{
-		_repaint_menu = true;
-		_update_mesh = false;
-		_render_mesh = true;
 		_mode = 0;
 		_cornergui = new CornerModeGUI();
+		_cornergui.vertexMesh = vertex_mesh;
+		_cornergui.vertexMaterial = vertex_material;
+		_cornergui.meshMaterial = mesh_material;
+		_cornergui.axiMaterial = axi_material;
+		_cornergui.axiMesh = axi_mesh;
+		_cornergui.originMesh = vertex_mesh;
+		_cornergui.voxelMesh = voxel_mesh;
 		_edgegui = new EdgeModeGUI();
+		_edgegui.vertexMesh = vertex_mesh;
+		_edgegui.vertexMaterial = vertex_material;
+		_edgegui.meshMaterial = mesh_material;
+		_edgegui.axiMaterial = axi_material;
+		_edgegui.axiMesh = axi_mesh;
+		_edgegui.originMesh = vertex_mesh;
+		_edgegui.voxelMesh = voxel_mesh;
 		_facegui = new FaceModeGUI();
+		_facegui.vertexMesh = vertex_mesh;
+		_facegui.vertexMaterial = vertex_material;
+		_facegui.meshMaterial = mesh_material;
+		_facegui.axiMaterial = axi_material;
+		_facegui.axiMesh = axi_mesh;
+		_facegui.originMesh = vertex_mesh;
+		_facegui.voxelMesh = voxel_mesh;
 		_mappinggui = new MappingModeGUI();
-		_preview = new PreviewPanel(colourmap);
-		_preview.Enable();
-
+		_mappinggui.vertexMesh = vertex_mesh;
+		_mappinggui.vertexMaterial = vertex_material;
+		_mappinggui.meshMaterial = mesh_material;
+		_mappinggui.axiMaterial = axi_material;
+		_mappinggui.axiMesh = axi_mesh;
+		_mappinggui.originMesh = vertex_mesh;
+		_mappinggui.voxelMesh = voxel_mesh;
 
 		UpdateLayoutRects();
 		EnableMode(_mode);
@@ -70,9 +95,6 @@ public class VoxelDesigner : EditorWindow
 		GUI.skin = skin;
 		//update important rects
 		UpdateLayoutRects();
-		if (Event.current.type == EventType.MouseMove) {
-			_repaint_menu = true;
-		}
 		//draw mode toolbar
 		EditorGUI.BeginChangeCheck();
 		int newmode = GUI.Toolbar(_rect_mode, _mode, MODES, GUI.skin.GetStyle("ModeToolbar"));
@@ -84,39 +106,30 @@ public class VoxelDesigner : EditorWindow
 			DisableMode(_mode);
 			//switch mode indices
 			_mode = newmode;
+			_repaint_menu = true;
+			_update_mesh = true;
+			_render_mesh = true;
 		}
-		//draw mode menu
+		//draw mode menu and mode preview
 		switch (_mode) {
 			case 0:
-				DrawMode(_cornergui);
+				DrawMode(_cornergui, _rect_menucontent, _rect_preview);
 				break;
 			case 1:
-				DrawMode(_edgegui);
+				DrawMode(_edgegui, _rect_menucontent, _rect_preview);
 				break;
 			case 2:
-				DrawMode(_facegui);
+				DrawMode(_facegui, _rect_menucontent, _rect_preview);
 				break;
 			case 3:
-				DrawMode(_mappinggui);
+				DrawMode(_mappinggui, _rect_menucontent, _rect_preview);
 				break;
 		}
-		//process preview input
-		ProcessPreviewInput();
-		//refresh mesh if dirty
-		if (_update_mesh) {
-			_update_mesh = false;
-			_preview.updateMesh = true;
-		}
-		if (_render_mesh) {
-			_render_mesh = false;
-			_preview.renderMesh = true;
-		}
-		//update preview variables
-		UpdatePreviewVariables();
-		//draw preview panel
-		_preview.DrawGUI(_rect_preview);
-		if (_repaint_menu) {
+		if (Event.current.type == EventType.MouseMove) {
 			_repaint_menu = true;
+		}
+		if (_repaint_menu) {
+			_repaint_menu = false;
 			Repaint();
 		}
 	}
@@ -137,6 +150,9 @@ public class VoxelDesigner : EditorWindow
 				_mappinggui.Enable();
 				break;
 		}
+		_repaint_menu = true;
+		_update_mesh = true;
+		_render_mesh = true;
 	}
 
 	private void DisableMode(int mode)
@@ -157,84 +173,16 @@ public class VoxelDesigner : EditorWindow
 		}
 	}
 
-	private void DrawMode(PanelGUI modegui)
+	private void DrawMode(PanelGUI modegui, Rect rect, Rect preview_rect)
 	{
-		modegui.DrawGUI(_rect_menucontent);
+		modegui.updateMesh = modegui.updateMesh || _update_mesh;
+		_update_mesh = false;
+		modegui.renderMesh = modegui.renderMesh || _render_mesh;
+		_render_mesh = false;
+		modegui.DrawGUI(rect);
+		modegui.DrawPreview(preview_rect);
 		_repaint_menu = _repaint_menu || modegui.repaintMenu;
 		modegui.repaintMenu = false;
-		_update_mesh = _update_mesh || modegui.updateMesh;
-		modegui.updateMesh = false;
-		_render_mesh = _render_mesh || modegui.renderMesh;
-		modegui.renderMesh = false;
-	}
-
-	private void ProcessPreviewInput()
-	{
-		if (!_rect_preview.Contains(Event.current.mousePosition)) {
-			return;
-		}
-		switch (Event.current.type) {
-			case EventType.MouseDrag:
-				if (Event.current.button == 1) {
-					_preview.MoveVerticalPreview(Event.current.delta.y);
-					_repaint_menu = true;
-					_render_mesh = true;
-				}
-				if (Event.current.button == 2) {
-					_preview.RotatePreview(Event.current.delta.x);
-					_repaint_menu = true;
-					_render_mesh = true;
-				}
-				break;
-			case EventType.ScrollWheel:
-				_preview.ZoomPreview(Event.current.delta.y);
-				_repaint_menu = true;
-				_render_mesh = true;
-				break;
-			case EventType.MouseDown:
-				if (Event.current.button == 0) {
-					float x = Mathf.Clamp01((Event.current.mousePosition.x - _rect_preview.xMin) / _rect_preview.width);
-					float y = 1 - Mathf.Clamp01((Event.current.mousePosition.y - _rect_preview.yMin) / _rect_preview.height);
-					Vector2 viewport_point = new Vector2(x, y);
-					int index = _preview.VertexCast(viewport_point);
-					if (index < 0) {
-						return;
-					}
-				}
-				break;
-		}
-	}
-
-	private void UpdatePreviewVariables()
-	{
-		VoxelComponent target = null;
-		PreviewDrawMode prevmode = PreviewDrawMode.None;
-		int primary_index = -1;
-		int secondary_index = -1;
-		switch (_mode) {
-			case 0:
-				target = _cornergui.selected;
-				prevmode = _cornergui.previewMode;
-				primary_index = _cornergui.primary_index;
-				secondary_index = _cornergui.secondary_index;
-				break;
-			case 1:
-				target = _edgegui.selected;
-				prevmode = _edgegui.previewMode;
-				primary_index = _edgegui.primary_index;
-				secondary_index = _edgegui.secondary_index;
-				break;
-			case 2:
-				target = _facegui.selected;
-				prevmode = _facegui.previewMode;
-				primary_index = _facegui.primary_index;
-				secondary_index = _facegui.secondary_index;
-				break;
-		}
-		_preview.target = target;
-		_preview.SetDrawMode(prevmode);
-		_preview.SetPrimaryIndex(primary_index);
-		_preview.SetSecondaryIndex(secondary_index);
 	}
 
 	private void UpdateLayoutRects()

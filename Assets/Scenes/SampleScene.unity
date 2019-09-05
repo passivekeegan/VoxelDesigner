@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.450795, g: 0.50072426, b: 0.57473487, a: 1}
+  m_IndirectSpecularColor: {r: 0.4486997, g: 0.49875385, b: 0.57568145, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -193,7 +193,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 0, y: 4e-45, z: 3.416438e-24, w: 656.4008}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -204,13 +204,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: -0.20937681, y: -0.89442015, z: 0.250059, w: -0.3060138}
+  m_LocalRotation: {x: -0.503004, y: -0.49216908, z: 0.7103896, w: 0.010154929}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 35.132, y: -212.773, z: 15.714001}
+  m_LocalEulerAnglesHint: {x: 43.555, y: -89.248, z: 135.32301}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,15 +340,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flat_shade: 0
-  rand_seed: 0
-  voxel_samples: 556
-  range_radius: 5
-  cutoff: 0.547
+  rand_seed: 25
+  voxel_samples: 541
+  range_radius: 4
+  cutoff: 0.555
   bevel: 0.1
   space: 0.268
   filter: {fileID: 2137259898}
-  map: {fileID: 11400000, guid: b2b9e2bd5e8d5af46bb801ad41343ee8, type: 2}
-  customvoxels: []
+  map: {fileID: 11400000, guid: bea65ec1a1e583a42bfd45b4d883aefc, type: 2}
+  customvoxels:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: 0, z: 1}
 --- !u!33 &2137259898
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -365,7 +367,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137259895}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1

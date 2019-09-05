@@ -354,6 +354,24 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 		return vertex_index;
 	}
 
+	public List<int> GetSocket(SocketType type, int axi_index)
+	{
+		switch(type) {
+			case SocketType.Edge:
+				if (axi_index < 0 || axi_index >= _edgesocket_cnt) {
+					return null;
+				}
+				return edgesockets[axi_index];
+			case SocketType.Face:
+				if (axi_index < 0 || axi_index >= _facesocket_cnt) {
+					return null;
+				}
+				return facesockets[axi_index];
+			default:
+				return null;
+		}
+	}
+
 	#endregion
 
 	#region Serialization
@@ -467,4 +485,11 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 		}
 	}
 	#endregion
+}
+
+
+public enum SocketType
+{
+	Edge,
+	Face
 }

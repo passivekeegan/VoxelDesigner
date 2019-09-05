@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
 
 public class EdgeModeGUI : ModeGUI<EdgeDesign>
 {
@@ -15,17 +15,43 @@ public class EdgeModeGUI : ModeGUI<EdgeDesign>
 	public EdgeModeGUI()
 	{
 		_title = "Selected Edge";
+		_preview = new MeshPreview(1);
 		_mode = 0;
 		_modes = new PanelGUI[] {
 			new SelectionPanel<EdgeDesign>("Edge Selection"),
 			new VertexPanel("Vertices"),
-			new TrianglePanel("Triangles", TRIANGLE_CORNERPLUG_OPTIONS, new string[0]),
+			new TrianglePanel(_preview, "Triangles", TRIANGLE_CORNERPLUG_OPTIONS, new string[0]),
 			new PlugPanel("Corner Plugs", CORNERPLUG_LABELS, EdgeDesign.CORNERPLUG_CNT),
-			new SocketPanel("Face Sockets", FACESOCKET_LABELS, EdgeDesign.FACESOCKET_CNT, PreviewDrawMode.FaceSocket)
+			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS, EdgeDesign.FACESOCKET_CNT, SocketType.Face)
 		};
 		_mode_labels = new string[] {
 			"Select", "Vertex", "Triangle", "Corner Plug", "Face Socket"
 		};
+	}
+
+	protected override void UpdatePreview()
+	{
+		_preview.target = selected;
+		switch (_mode) {
+			case 1:
+				VertexPanel vertex = (VertexPanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySelect;
+				_preview.UpdatePrimarySelection(vertex.selectlist);
+				break;
+			case 2:
+				TrianglePanel tri = (TrianglePanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySelectTriangle;
+				_preview.UpdatePrimarySelection(tri.selectlist);
+				break;
+			case 4:
+				SocketPanel face = (SocketPanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
+				_preview.UpdatePrimarySocketSelection(face.selectedSocket, SocketType.Face, face.selectlist);
+				break;
+			default:
+				_preview.vertexMode = VertexMode.None;
+				break;
+		}
 	}
 
 	protected override void UpdateModes()
@@ -61,12 +87,6 @@ public class EdgeModeGUI : ModeGUI<EdgeDesign>
 			case 4:
 				SocketPanel face = (SocketPanel)_modes[_mode];
 				face.target = selected;
-				if (selected != null) {
-					face.sockets = selected.facesockets;
-				}
-				else {
-					face.sockets = null;
-				}
 				break;
 		}
 	}

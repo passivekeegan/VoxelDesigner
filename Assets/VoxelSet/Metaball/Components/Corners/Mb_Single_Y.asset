@@ -17,7 +17,7 @@ MonoBehaviour:
   - operations:
     - scale: 1
       vector_type: 0
-      vector: {x: 0.166002, y: 0.449767, z: -0.373726}
+      vector: {x: 0.324748, y: 0.449767, z: -0.425306}
   - operations:
     - scale: 1
       vector_type: 0
@@ -25,7 +25,7 @@ MonoBehaviour:
   - operations:
     - scale: 1
       vector_type: 0
-      vector: {x: 0.324748, y: 0.449767, z: -0.425306}
+      vector: {x: 0.166002, y: 0.449767, z: -0.373726}
   - operations:
     - scale: 1
       vector_type: 0
@@ -178,13 +178,13 @@ MonoBehaviour:
   - type0: 0
     type1: 0
     type2: 0
-    vertex0: 0
+    vertex0: 2
     vertex1: 1
-    vertex2: 2
+    vertex2: 0
   - type0: 0
     type1: 0
     type2: 0
-    vertex0: 0
+    vertex0: 2
     vertex1: 3
     vertex2: 1
   - type0: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
     type2: 0
     vertex0: 4
     vertex1: 3
-    vertex2: 0
+    vertex2: 2
   - type0: 0
     type1: 0
     type2: 0
@@ -517,7 +517,7 @@ MonoBehaviour:
   _cornerplug_cnt: 0
   edgeplugs: 
   _edgeplug_cnt: 0
-  _serial_edgecounts: 0000000000000000000000000000000000000000
-  _serial_edgesockets: 
-  _serial_facecounts: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  _serial_facesockets: 
+  _serial_edgecounts: 0500000000000000000000000800000008000000
+  _serial_edgesockets: 000000000200000004000000070000000b000000200000001d0000001c0000000f000000090000000500000001000000000000000b0000000c0000001100000014000000170000001a0000002600000027000000
+  _serial_facecounts: 000000000000000000000000000000000100000000000000000000000000000001000000000000000000000000000000050000000000000000000000
+  _serial_facesockets: 000000000b0000002700000024000000230000002100000020000000

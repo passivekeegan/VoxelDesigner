@@ -115,8 +115,13 @@ public struct Triangle
 		vertex_index = TriIndex.DecodeIndex(vertex2);
 		valid2 = valid2 || (type2 == TriIndexType.CornerPlug && cornerplugs != null && axis_index < cornerplugs.Count && vertex_index < cornerplugs[axis_index]);
 		valid2 = valid2 || (type2 == TriIndexType.EdgePlug && edgeplugs != null && axis_index < edgeplugs.Count && vertex_index < edgeplugs[axis_index]);
+		//difference validity check
+		bool valid = valid0 && valid1 && valid2;
+		valid = valid && !((type0 == type1) && (vertex0 == vertex1));
+		valid = valid && !((type0 == type2) && (vertex0 == vertex2));
+		valid = valid && !((type1 == type2) && (vertex1 == vertex2));
 		//return validity results
-		return valid0 && valid1 && valid2;
+		return valid;
 	}
 
 	/// <summary>
@@ -126,5 +131,10 @@ public struct Triangle
 		get {
 			return new Triangle(0, 0, 0);
 		}
+	}
+
+	public static Triangle Flip(Triangle tri)
+	{
+		return new Triangle(tri.type0, tri.type2, tri.type1, tri.vertex0, tri.vertex2, tri.vertex1);
 	}
 }

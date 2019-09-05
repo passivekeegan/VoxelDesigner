@@ -5,8 +5,16 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - colourmap: {fileID: 2800000, guid: 9e4dff37ce0150b43bd3459a580adfa8, type: 3}
+  - vertex_mesh: {fileID: -2961673720017555547, guid: 502c0038fbcb61845b8d72df5226f0eb,
+      type: 3}
+  - axi_mesh: {fileID: -3116219750261275149, guid: 849123c1a451e2e4c8283187c0843435,
+      type: 3}
+  - voxel_mesh: {fileID: 6435915961351985699, guid: 1a68d28012f286c4caaf53aa41844dce,
+      type: 3}
   - skin: {fileID: 11400000, guid: 1b3dd441e9a21a240ac12bbdf9dd5efc, type: 2}
+  - axi_material: {fileID: 2100000, guid: 7f285f8a97363574fa6723bd733f5bc8, type: 2}
+  - vertex_material: {fileID: 2100000, guid: de2dba6da61b33d4795df9d427959a69, type: 2}
+  - mesh_material: {fileID: 2100000, guid: d89252a368cc94e458785d1bfa93e19c, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
 
 public class FaceModeGUI : ModeGUI<FaceDesign>
 {
@@ -19,19 +19,40 @@ public class FaceModeGUI : ModeGUI<FaceDesign>
 	public FaceModeGUI()
 	{
 		_title = "Selected Face";
+		_preview = new MeshPreview(2);
 		_mode = 0;
 		_modes = new PanelGUI[] {
 			new SelectionPanel<FaceDesign>("Face Selection"),
 			new VertexPanel("Vertices"),
-			new TrianglePanel("Triangles", TRIANGLE_CORNERPLUG_OPTIONS, TRIANGLE_EDGEPLUG_OPTIONS),
+			new TrianglePanel(_preview , "Triangles", TRIANGLE_CORNERPLUG_OPTIONS, TRIANGLE_EDGEPLUG_OPTIONS),
 			new PlugPanel("Corner Plugs", CORNERPLUG_LABELS, FaceDesign.CORNERPLUG_CNT),
 			new PlugPanel("Edge Plugs", EDGEPLUG_LABELS, FaceDesign.EDGEPLUG_CNT)
 		};
 		_mode_labels = new string[] {
 			"Select", "Vertex", "Triangle", "Corner Plug", "Edge Plug"
 		};
+		
 	}
 
+	protected override void UpdatePreview()
+	{
+		_preview.target = selected;
+		switch (_mode) {
+			case 1:
+				VertexPanel vertex = (VertexPanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySelect;
+				_preview.UpdatePrimarySelection(vertex.selectlist);
+				break;
+			case 2:
+				TrianglePanel tri = (TrianglePanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySelectTriangle;
+				_preview.UpdatePrimarySelection(tri.selectlist);
+				break;
+			default:
+				_preview.vertexMode = VertexMode.None;
+				break;
+		}
+	}
 	protected override void UpdateModes()
 	{
 		if (_modes == null || _mode < 0 || _mode >= _modes.Length) {

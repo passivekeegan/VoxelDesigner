@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
 
 public class CornerModeGUI : ModeGUI<CornerDesign>
 {
@@ -20,17 +20,49 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 	public CornerModeGUI()
 	{
 		_title = "Selected Corner";
+		_preview = new MeshPreview(0);
 		_mode = 0;
 		_modes = new PanelGUI[] {
 			new SelectionPanel<CornerDesign>("Corner Selection"),
 			new VertexPanel("Vertices"),
-			new TrianglePanel("Triangles", new string[0], new string[0]),
-			new SocketPanel("Edge Sockets", EDGESOCKET_LABELS, CornerDesign.EDGESOCKET_CNT, PreviewDrawMode.EdgeSocket),
-			new SocketPanel("Face Sockets", FACESOCKET_LABELS, CornerDesign.FACESOCKET_CNT, PreviewDrawMode.FaceSocket)
+			new TrianglePanel(_preview, "Triangles", new string[0], new string[0]),
+			new SocketPanel(_preview, "Edge Sockets", EDGESOCKET_LABELS, CornerDesign.EDGESOCKET_CNT, SocketType.Edge),
+			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS, CornerDesign.FACESOCKET_CNT, SocketType.Face)
 		};
 		_mode_labels = new string[] {
 			"Selection", "Vertex", "Triangle", "Edge Socket", "Face Socket"
 		};
+		
+	}
+
+	protected override void UpdatePreview()
+	{
+		_preview.target = selected;
+		switch (_mode) {
+			case 1:
+				VertexPanel vertex = (VertexPanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySelect;
+				_preview.UpdatePrimarySelection(vertex.selectlist);
+				break;
+			case 2:
+				TrianglePanel tri = (TrianglePanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySelectTriangle;
+				_preview.UpdatePrimarySelection(tri.selectlist);
+				break;
+			case 3:
+				SocketPanel edge = (SocketPanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
+				_preview.UpdatePrimarySocketSelection(edge.selectedSocket, SocketType.Edge, edge.selectlist);
+				break;
+			case 4:
+				SocketPanel face = (SocketPanel)_modes[_mode];
+				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
+				_preview.UpdatePrimarySocketSelection(face.selectedSocket, SocketType.Face, face.selectlist);
+				break;
+			default:
+				_preview.vertexMode = VertexMode.None;
+				break;
+		}
 	}
 
 	protected override void UpdateModes()
@@ -56,22 +88,10 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 			case 3:
 				SocketPanel edge = (SocketPanel)_modes[_mode];
 				edge.target = selected;
-				if (selected != null) {
-					edge.sockets = selected.edgesockets;
-				}
-				else {
-					edge.sockets = null;
-				}
 				break;
 			case 4:
 				SocketPanel face = (SocketPanel)_modes[_mode];
 				face.target = selected;
-				if (selected != null) {
-					face.sockets = selected.facesockets;
-				}
-				else {
-					face.sockets = null;
-				}
 				break;
 		}
 	}

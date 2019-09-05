@@ -12,6 +12,7 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 	protected Rect _rect_content;
 	protected Rect _rect_selected;
 	protected PanelGUI[] _modes;
+	protected MeshPreview _preview;
 
 	public override void Enable()
 	{
@@ -19,6 +20,7 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		if (_mode >= 0 && _mode < _modes.Length) {
 			_modes[_mode].Enable();
 		}
+		_preview.Enable();
 	}
 
 	public override void Disable()
@@ -26,38 +28,53 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		for (int k = 0;k < _modes.Length;k++) {
 			_modes[k].Disable();
 		}
+		_preview.Disable();
 	}
 
-	public override PreviewDrawMode previewMode {
-		get {
-			if (_mode < 0 || _mode >= _modes.Length) {
-				return PreviewDrawMode.None;
-			}
-			return _modes[_mode].previewMode;
+	public Material axiMaterial {
+		set {
+			_preview.axiMaterial = value;
 		}
 	}
 
-	public override int primary_index {
-		get {
-			if (_mode < 0 || _mode >= _modes.Length) {
-				return -1;
-			}
-			return _modes[_mode].primary_index;
+	public Mesh originMesh {
+		set {
+			_preview.originMesh = value;
 		}
 	}
 
-	public override int secondary_index {
-		get {
-			if (_mode < 0 || _mode >= _modes.Length) {
-				return -1;
-			}
-			return _modes[_mode].secondary_index;
+	public Mesh axiMesh {
+		set {
+			_preview.axiMesh = value;
+		}
+	}
+
+	public Mesh voxelMesh {
+		set {
+			_preview.voxelMesh = value;
+		}
+	}
+
+	public Mesh vertexMesh {
+		set {
+			_preview.vertex_mesh = value;
+		}
+	}
+
+	public Material vertexMaterial {
+		set {
+			_preview.vertex_mat = value;
+		}
+	}
+	public Material meshMaterial {
+		set {
+			_preview.mesh_mat = value;
 		}
 	}
 
 	public override bool repaintMenu {
 		get {
-			if (_repaint_menu) {
+			if (_repaint_menu || _preview.repaintMenu) {
 				return true;
 			}
 			if (_mode >= 0 && _mode < _modes.Length) {
@@ -67,9 +84,6 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		}
 		set {
 			_repaint_menu = value;
-			if (_mode >= 0 && _mode < _modes.Length) {
-				_modes[_mode].repaintMenu = value;
-			}
 		}
 	}
 
@@ -85,9 +99,6 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		}
 		set {
 			_update_mesh = value;
-			if (_mode >= 0 && _mode < _modes.Length) {
-				_modes[_mode].updateMesh = value;
-			}
 		}
 	}
 
@@ -141,7 +152,43 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 			text = selected.objname;
 		}
 		GUI.Label(_rect_selected, _title + ":  " + text, GUI.skin.GetStyle("LeftLightHeader"));
+
 		UpdateModes();
+	}
+
+	protected virtual void UpdatePreview() {}
+
+	public override void DrawPreview(Rect rect)
+	{
+		UpdatePreview();
+		//calculate update mesh and render mesh values
+		bool update_mesh = _update_mesh || _preview.updateMesh;
+		bool render_mesh = _render_mesh || _preview.renderMesh;
+		if (_mode >= 0 && _mode < _modes.Length) {
+			update_mesh = update_mesh || _modes[_mode].updateMesh;
+			render_mesh = render_mesh || _modes[_mode].renderMesh;
+			_modes[_mode].updateMesh = false;
+			_modes[_mode].renderMesh = false;
+		}
+		_update_mesh = false;
+		_render_mesh = false;
+		//assign update mesh and render mesh to preview
+		_preview.updateMesh = update_mesh;
+		_preview.renderMesh = render_mesh;
+		//draw preview screen
+		_preview.DrawPreview(rect);
+		if (_mode >= 0 && _mode < _modes.Length) {
+			_modes[_mode].DrawPreview(rect);
+		}
+		//update repaint of mode and preview
+		_repaint_menu = _repaint_menu || _preview.repaintMenu;
+		//reset preview repaint flag
+		_preview.repaintMenu = false;
+		//if active submode then get and reset repaint menu flag
+		if (_mode >= 0 && _mode < _modes.Length) {
+			_repaint_menu = _repaint_menu || _modes[_mode].repaintMenu;
+			_modes[_mode].repaintMenu = false;
+		}
 	}
 
 	private void UpdateRects(Rect rect)

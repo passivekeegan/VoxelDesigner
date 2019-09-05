@@ -2,18 +2,10 @@
 public struct Voxel : System.IEquatable<Voxel>
 {
 	public readonly uint id;
-	public readonly VoxelAxi axi;
 
 	public Voxel(uint id)
 	{
 		this.id = id;
-		this.axi = VoxelAxi.AD0;
-	}
-
-	public Voxel(uint id, VoxelAxi axi)
-	{
-		this.id = id;
-		this.axi = axi;
 	}
 
 		
@@ -49,12 +41,12 @@ public struct Voxel : System.IEquatable<Voxel>
 
 	public bool IsEmpty()
 	{
-		return (id <= 0) || (axi == VoxelAxi.None);
+		return (id <= 0);
 	}
 
 	public static Voxel GetEmpty()
 	{
-		return new Voxel(0, VoxelAxi.None);
+		return new Voxel(0);
 	}
 	
 }

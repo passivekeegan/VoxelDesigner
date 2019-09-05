@@ -6,6 +6,8 @@ using UnityEditorInternal;
 public class VertexPanel : PanelGUI
 {
 	public VoxelComponent target;
+	public List<int> selectlist;
+	public HashSet<int> selectset;
 
 	private Rect _rect_vertex_title;
 	private Rect _rect_vertex_scrollview;
@@ -17,7 +19,6 @@ public class VertexPanel : PanelGUI
 	private Rect _rect_operations_panel;
 	private Rect _rect_import;
 
-	private int _secondary_index;
 	private Vector2 _vertex_scroll;
 	private Vector2 _operation_scroll;
 	private Mesh _importmesh;
@@ -29,6 +30,8 @@ public class VertexPanel : PanelGUI
 	public VertexPanel(string title)
 	{
 		_title = title;
+		selectlist = new List<int>();
+		selectset = new HashSet<int>();
 		_vertices = new List<VertexVector>();
 		_operations = new List<VectorOperation>();
 	}
@@ -41,7 +44,8 @@ public class VertexPanel : PanelGUI
 		_vertex_scroll = Vector2.zero;
 		_operation_scroll = Vector2.zero;
 		_importmesh = null;
-		_secondary_index = -1;
+		selectlist.Clear();
+		selectset.Clear();
 		//initialize vertex build list
 		_vertexlist = new ReorderableList(_vertices, typeof(VertexVector), true, false, false, false);
 		_vertexlist.showDefaultBackground = false;
@@ -50,8 +54,6 @@ public class VertexPanel : PanelGUI
 		_vertexlist.elementHeight = VxlGUI.MED_BAR;
 		_vertexlist.drawNoneElementCallback += DrawVertexNoneElement;
 		_vertexlist.drawElementBackgroundCallback += DrawVertexElementBackground;
-		_vertexlist.onAddCallback += AddVertexElement;
-		_vertexlist.onRemoveCallback += DeleteVertexElement;
 		_vertexlist.drawElementCallback += DrawVertexElement;
 		_vertexlist.onReorderCallbackWithDetails += ReorderVertexList;
 		_vertexlist.onSelectCallback += SelectVertex;
@@ -78,34 +80,15 @@ public class VertexPanel : PanelGUI
 		_operations.Clear();
 		_vertexlist = null;
 		_vertices.Clear();
+		selectlist.Clear();
+		selectset.Clear();
 		_update_mesh = false;
 		_repaint_menu = false;
 		_render_mesh = false;
 	}
 
-	public override int primary_index {
-		get {
-			return _vertexlist.index;
-		}
-	}
-
-	public override int secondary_index {
-		get {
-			return _secondary_index;
-		}
-	}
-
-	public override PreviewDrawMode previewMode {
-		get {
-			return PreviewDrawMode.Vertex;
-		}
-	}
-
 	public override void DrawGUI(Rect rect)
 	{
-		//reset variables
-		int old_secondary = _secondary_index;
-		_secondary_index = -1;
 		//update lists
 		UpdateVertexList();
 		UpdateOperationList();
@@ -126,13 +109,13 @@ public class VertexPanel : PanelGUI
 		VxlGUI.DrawRect(_rect_vertex_panel, "DarkGradient");
 		//draw vertex add button
 		if (GUI.Button(VxlGUI.GetRightElement(_rect_vertex_panel, 0, button_width), "Add", GUI.skin.GetStyle("LightButton"))) {
-			_vertexlist.onAddCallback(_vertexlist);
+			AddVertexElement();
 		}
 		//disable operation check
-		EditorGUI.BeginDisabledGroup(_vertexlist.index < 0 || _vertexlist.index >= _vertexlist.count);
+		EditorGUI.BeginDisabledGroup((_vertices.Count <= 0) || (selectlist.Count <= 0));
 		//draw vertex delete button
 		if (GUI.Button(VxlGUI.GetLeftElement(_rect_vertex_panel, 0, button_width), "Delete", GUI.skin.GetStyle("LightButton"))) {
-			_vertexlist.onRemoveCallback(_vertexlist);
+			DeleteSelectedVertex();
 		}
 		//draw operation title
 		VxlGUI.DrawRect(_rect_operation_title, "DarkGradient");
@@ -177,10 +160,6 @@ public class VertexPanel : PanelGUI
 		}
 		EditorGUI.EndDisabledGroup();
 		EditorGUI.EndDisabledGroup();
-		//if secondary index changed then mark render
-		if (_secondary_index != old_secondary) {
-			_render_mesh = true;
-		}
 	}
 
 	private void ImportVertexAndTriangle()
@@ -227,54 +206,105 @@ public class VertexPanel : PanelGUI
 		EditorUtility.SetDirty(target);
 	}
 
-	private void SwapTriangleVertexIndex(int index0, int index1)
+	private void ReorderMaintainTriangles(int old_index, int new_index)
 	{
-		if (target == null || target.vertices == null || target.triangles == null) {
-			return;
-		}
-		if (index0 == index1) {
+		if (target == null || !target.IsValid()) {
 			return;
 		}
 		List<Triangle> triangles = target.triangles;
 		for (int k = 0; k < triangles.Count; k++) {
+			bool changed = false;
 			Triangle tri = triangles[k];
-			bool swap_occurred = false;
 			ushort vertex0 = tri.vertex0;
 			if (tri.type0 == TriIndexType.Vertex) {
-				if (vertex0 == index0) {
-					vertex0 = (ushort)index1;
-					swap_occurred = true;
+				vertex0 = (ushort)ReinsertTriangleVertex(vertex0, old_index, new_index);
+				changed = changed || (vertex0 != tri.vertex0);
+			}
+			ushort vertex1 = tri.vertex1;
+			if (tri.type1 == TriIndexType.Vertex) {
+				vertex1 = (ushort)ReinsertTriangleVertex(vertex1, old_index, new_index);
+				changed = changed || (vertex1 != tri.vertex1);
+			}
+			ushort vertex2 = tri.vertex2;
+			if (tri.type2 == TriIndexType.Vertex) {
+				vertex2 = (ushort)ReinsertTriangleVertex(vertex2, old_index, new_index);
+				changed = changed || (vertex2 != tri.vertex2);
+			}
+			if (changed) {
+				triangles[k] = new Triangle(tri.type0, tri.type1, tri.type2, vertex0, vertex1, vertex2);
+				_repaint_menu = true;
+				_render_mesh = true;
+			}
+		}
+	}
+
+	private int ReinsertTriangleVertex(int index, int old_index, int new_index)
+	{
+		if (index < old_index) {
+			if (index >= new_index) {
+				return index + 1;
+			}
+		}
+		else if (index > old_index) {
+			if (index <= new_index) {
+				return index - 1;
+			}
+		}
+		else {
+			if (index != new_index) {
+				return new_index;
+			}
+		}
+		return index;
+	}
+
+	private void DeleteMaintainTriangles(List<int> deletions)
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
+		List<Triangle> triangles = target.triangles;
+		for (int k = 0; k < triangles.Count; k++) {
+			bool changed = false;
+			Triangle tri = triangles[k];
+			ushort vertex0 = tri.vertex0;
+			if (tri.type0 == TriIndexType.Vertex) {
+				if (selectset.Contains(vertex0)) {
+					//deleted
+					vertex0 = ushort.MaxValue;
+					changed = true;
 				}
-				else if (vertex0 == index1) {
-					vertex0 = (ushort)index0;
-					swap_occurred = true;
+				else if (vertex0 >= 0 && vertex0 < deletions.Count) {
+					vertex0 -= (ushort)deletions[vertex0];
+					changed = true;
 				}
 			}
 			ushort vertex1 = tri.vertex1;
 			if (tri.type1 == TriIndexType.Vertex) {
-				if (vertex1 == index0) {
-					vertex1 = (ushort)index1;
-					swap_occurred = true;
+				if (selectset.Contains(vertex1)) {
+					//deleted
+					vertex1 = ushort.MaxValue;
+					changed = true;
 				}
-				else if (vertex1 == index1) {
-					vertex1 = (ushort)index0;
-					swap_occurred = true;
+				else if (vertex1 >= 0 && vertex1 < deletions.Count) {
+					vertex1 -= (ushort)deletions[vertex1];
+					changed = true;
 				}
 			}
 			ushort vertex2 = tri.vertex2;
-			if (triangles[k].type2 == TriIndexType.Vertex) {
-				if (vertex2 == index0) {
-					vertex2 = (ushort)index1;
-					swap_occurred = true;
+			if (tri.type2 == TriIndexType.Vertex) {
+				if (selectset.Contains(vertex2)) {
+					//deleted
+					vertex2 = ushort.MaxValue;
+					changed = true;
 				}
-				else if (vertex2 == index1) {
-					vertex2 = (ushort)index0;
-					swap_occurred = true;
+				else if (vertex2 >= 0 && vertex2 < deletions.Count) {
+					vertex2 -= (ushort)deletions[vertex2];
+					changed = true;
 				}
 			}
-			if (swap_occurred) {
+			if (changed) {
 				triangles[k] = new Triangle(tri.type0, tri.type1, tri.type2, vertex0, vertex1, vertex2);
-				_repaint_menu = true;
 			}
 		}
 	}
@@ -336,74 +366,79 @@ public class VertexPanel : PanelGUI
 	}
 	private List<VectorOperation> GetSelectedOperation()
 	{
+		if (target == null || !target.IsValid()) {
+			return null;
+		}
+		List<VertexVector> vertices = target.vertices;
+		if (vertices.Count <= 0 || selectlist.Count <= 0) {
+			return null;
+		}
+		int vertex_index = selectlist[selectlist.Count - 1];
+		if (vertex_index < 0 || vertex_index >= vertices.Count) {
+			return null;
+		}
+		return vertices[vertex_index].operations;
+	}
+
+	private void AddVertexElement()
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
+		Undo.RecordObject(target, "Add New VertexVector");
+		target.vertices.Add(VertexVector.empty);
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
+	}
+	private void DeleteSelectedVertex()
+	{
 		if (target == null || target.vertices == null) {
-			return null;
+			return;
 		}
-		int vertex_index = _vertexlist.index;
-		if (vertex_index < 0 || vertex_index >= target.vertices.Count) {
-			return null;
+		List<VertexVector> vertices = target.vertices;
+		if (vertices.Count <= 0 || selectlist.Count <= 0) {
+			return;
 		}
-		return target.vertices[vertex_index].operations;
+		Undo.RecordObject(target, "Delete Selected VertexVectors");
+		List<int> deletions = new List<int>(vertices.Count);
+		int index = 0;
+		int deleted = 0;
+		while (index < vertices.Count) {
+			deletions.Add(deleted);
+			if (selectset.Contains(index + deleted)) {
+				//delete vertex
+				vertices.RemoveAt(index);
+				deleted += 1;
+			}
+			else {
+				index += 1;
+			}
+		}
+		//maintain triangles
+		DeleteMaintainTriangles(deletions);
+		//clear selection
+		selectset.Clear();
+		selectlist.Clear();
+		//dirty target object
+		_update_mesh = true;
+		_repaint_menu = true;
+		_render_mesh = true;
+		EditorUtility.SetDirty(target);
 	}
 
 	#region VertexBuild ReorderableList
 	private void DrawVertexNoneElement(Rect rect)
 	{
-		EditorGUI.LabelField(rect, "No VertexBuilds Found.", GUI.skin.GetStyle("RightListLabel"));
+		GUI.Label(rect, "No VertexVectors Found.", GUI.skin.GetStyle("RightListLabel"));
 	}
 	private void DrawVertexElementBackground(Rect rect, int index, bool active, bool focus)
 	{
 		bool hover = (_vertices.Count > 0) && rect.Contains(Event.current.mousePosition);
-		if (hover) {
-			_secondary_index = index;
-		}
-		bool on = (_vertices.Count > 0 && _vertexlist.index == index);
+		bool on = selectset.Contains(index);
 		VxlGUI.DrawRect(rect, "SelectableGrey", hover, active, on, focus);
-	}
-	private void AddVertexElement(ReorderableList list)
-	{
-		if (target == null || target.vertices == null) {
-			return;
-		}
-		Undo.RecordObject(target, "Insert New VertexBuild");
-		int index = list.index;
-		if (index < 0 || index >= target.vertices.Count) {
-			target.vertices.Add(VertexVector.empty);
-			list.index = target.vertices.Count - 1;
-		}
-		else {
-			target.vertices.Insert(index, VertexVector.empty);
-		}
-		_update_mesh = true;
-		_repaint_menu = true;
-		_render_mesh = true;
-		//dirty target object
-		EditorUtility.SetDirty(target);
-	}
-	private void DeleteVertexElement(ReorderableList list)
-	{
-		if (target == null || target.vertices == null) {
-			return;
-		}
-		int index = list.index;
-		if (index < 0 || index >= target.vertices.Count) {
-			return;
-		}
-		Undo.RecordObject(target, "Delete VertexBuild");
-		target.vertices.RemoveAt(index);
-		if (target.vertices.Count > 0) {
-			if (index > 0) {
-				list.index = list.index - 1;
-			}
-		}
-		else {
-			list.index = -1;
-		}
-		_update_mesh = true;
-		_repaint_menu = true;
-		_render_mesh = true;
-		//dirty target object
-		EditorUtility.SetDirty(target);
 	}
 	private void DrawVertexElement(Rect rect, int index, bool active, bool focus)
 	{
@@ -427,30 +462,39 @@ public class VertexPanel : PanelGUI
 			GUI.skin.GetStyle("RightListLabel")
 		);
 	}
-
 	private void ReorderVertexList(ReorderableList list, int old_index, int new_index)
 	{
-		if (target == null || target.vertices == null) {
+		if (target == null || !target.IsValid()) {
 			return;
 		}
-		int cnt = target.vertices.Count;
-		if (old_index < 0 || new_index < 0 || old_index >= cnt || new_index >= cnt || old_index == new_index) {
+		if (old_index < 0 || new_index < 0 || old_index == new_index) {
 			return;
 		}
-		Undo.RecordObject(target, "Reorder VertexBuild List");
-		VertexVector old_vertex = target.vertices[old_index];
-		VertexVector new_vertex = target.vertices[new_index];
-		target.vertices[old_index] = new_vertex;
-		target.vertices[new_index] = old_vertex;
-		SwapTriangleVertexIndex(old_index, new_index);
-		list.index = new_index;
-		_repaint_menu = true;
+		List<VertexVector> vertices = target.vertices;
+		if (old_index >= vertices.Count || new_index >= vertices.Count) {
+			return;
+		}
+		Undo.RecordObject(target, "Reorder Vertex List");
+		VertexVector vertex = vertices[old_index];
+		vertices.RemoveAt(old_index);
+		vertices.Insert(new_index, vertex);
+		//maintain selection
+		ReorderMaintainSelection(old_index, new_index, selectlist, selectset);
+		//maintain triangles
+		ReorderMaintainTriangles(old_index, new_index);
 		//dirty target object
+		_repaint_menu = true;
 		EditorUtility.SetDirty(target);
 	}
-
 	private void SelectVertex(ReorderableList list)
 	{
+		int index = list.index;
+		if (index < 0 || index >= _vertices.Count) {
+			selectset.Clear();
+			selectlist.Clear();
+			return;
+		}
+		SelectListElement(index, selectlist, selectset);
 		_render_mesh = true;
 	}
 	#endregion
@@ -512,9 +556,6 @@ public class VertexPanel : PanelGUI
 	}
 	private void DrawOperationElement(Rect rect, int index, bool isActive, bool isFocused)
 	{
-		if (target == null) {
-			return;
-		}
 		EditorGUI.BeginChangeCheck();
 		//row 0 
 		float element_width = rect.width / 3f;

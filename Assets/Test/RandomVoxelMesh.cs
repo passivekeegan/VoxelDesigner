@@ -27,7 +27,7 @@ public class RandomVoxelMesh : MonoBehaviour
 
 		if (customvoxels != null) {
 			for (int k = 0;k < customvoxels.Count;k++) {
-				data.UpdateVoxelData(new IJL(customvoxels[k]), new Voxel(1, VoxelAxi.AD0), true);
+				data.UpdateVoxelData(new IJL(customvoxels[k]), new Voxel(1), true);
 			}
 		}
 
@@ -38,7 +38,7 @@ public class RandomVoxelMesh : MonoBehaviour
 				continue;
 			}
 			IJL ijl = new IJL(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y), Mathf.RoundToInt(point.z));
-			data.UpdateVoxelData(ijl, new Voxel(1, VoxelAxi.AD0), true);
+			data.UpdateVoxelData(ijl, new Voxel(1), true);
 		}
 
 		data.UpdateDirtyComponents();

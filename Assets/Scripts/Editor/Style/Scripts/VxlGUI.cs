@@ -26,29 +26,9 @@ public static class VxlGUI
 	public const float POINT_RADIUS = 0.01f;
 	public const float POINT_RADIUSSQR = 0.0001f;
 
-	public readonly static Vector2 NORMAL_UV = new Vector2(0.125f, 0.125f);
-	public readonly static Vector2 SELECT_UV = new Vector2(0.875f, 0.125f);
-	public readonly static Vector2 GROUPSELECT_UV = new Vector2(0.625f, 0.375f);
-	public readonly static Vector2 NONSELECT_UV = new Vector2(0.875f, 0.625f);
-	public readonly static Vector2 ORIGIN_UV = new Vector2(0.125f, 0.875f);
-
-	public readonly static Mesh NormalVertex;
-	public readonly static Mesh SelectVertex;
-	public readonly static Mesh GroupSelectVertex;
-	public readonly static Mesh NonSelectVertex;
-
-	static VxlGUI()
-	{
-		GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		Mesh spheremesh = sphere.GetComponent<MeshFilter>().sharedMesh;
-
-		InitializeVertex(out NormalVertex, NORMAL_UV, spheremesh);
-		InitializeVertex(out SelectVertex, SELECT_UV, spheremesh);
-		InitializeVertex(out GroupSelectVertex, GROUPSELECT_UV, spheremesh);
-		InitializeVertex(out NonSelectVertex, NONSELECT_UV, spheremesh);
-
-		GameObject.DestroyImmediate(sphere);
-	}
+	public readonly static Vector2 NORMAL_UV = new Vector2(0f, 0f);
+	public readonly static Vector2 SELECT_UV = new Vector2(0.25f, 0f);
+	public readonly static Vector2 GROUPSELECT_UV = new Vector2(0.55f, 0f);
 
 	private static void InitializeVertex(out Mesh vertexmesh, Vector2 uv, Mesh copymesh)
 	{
@@ -303,5 +283,14 @@ public static class VxlGUI
 			width -= vscroll_style.fixedWidth;
 		}
 		return new Rect(0, 0, width, height);
+	}
+
+	public static Rect GetScrollViewRect(float width, float scrollheight, float content_height)
+	{
+		GUIStyle vscroll_style = GUI.skin.verticalScrollbar;
+		if (vscroll_style != null && content_height > scrollheight) {
+			width -= vscroll_style.fixedWidth;
+		}
+		return new Rect(0, 0, width, content_height);
 	}
 }

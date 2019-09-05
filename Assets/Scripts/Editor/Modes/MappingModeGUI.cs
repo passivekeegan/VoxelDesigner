@@ -1,4 +1,6 @@
-﻿public class MappingModeGUI : ModeGUI<MappingObject>
+﻿using UnityEngine;
+
+public class MappingModeGUI : ModeGUI<MappingObject>
 {
 	public MappingModeGUI()
 	{
@@ -14,6 +16,7 @@
 		_mode_labels = new string[] {
 			"Select", "Designs", "Corner", "Edge", "Face"
 		};
+		_preview = new MeshPreview(3);
 	}
 	protected override void UpdateModes()
 	{

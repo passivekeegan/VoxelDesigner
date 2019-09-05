@@ -137,6 +137,8 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 		GUI.EndScrollView();
 	}
 
+	public override void DrawPreview(Rect rect) { }
+
 	public void UpdateLists()
 	{
 		//record list guids
