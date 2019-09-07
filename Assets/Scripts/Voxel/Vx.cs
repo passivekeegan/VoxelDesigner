@@ -25,6 +25,7 @@ public static class Vx
 	public readonly static Vector3[] HexagonUnit;
 	public readonly static Vector3[] HexagonFrame;
 	public readonly static Vector3[] HexagonSpace;
+	public readonly static Vector3[] AdjHexagon;
 
 	public readonly static Quaternion[] AxiRot;
 
@@ -39,7 +40,8 @@ public static class Vx
 	private readonly static IJL[] Key_BelowEdge;
 	private readonly static IJL[] Key_Face;
 	
-	private readonly static IJL[] AdjVoxelIJL;
+	public readonly static IJL[] AdjVoxelIJL;
+	public readonly static IJL[] AdjBlockIJL;
 
 	private readonly static IJL[] KeyTransform_Edge;
 	private readonly static IJL[] KeyTransform_HexagonFaceCorner;
@@ -112,6 +114,17 @@ public static class Vx
 			new Vector3(-1, 0.5f, -SQRT3_R1),
 			new Vector3(-1, 0.5f, SQRT3_R1),
 			new Vector3(0, 0.5f, SQRT3_R2)
+		};
+		AdjHexagon = new Vector3[]
+		{
+			new Vector3(0, 1, 0),
+			new Vector3(0, -1, 0),
+			new Vector3(2,0,0),
+			new Vector3(1,0,-SQRT3),
+			new Vector3(-1,0,-SQRT3),
+			new Vector3(-2,0,0),
+			new Vector3(-1,0,SQRT3),
+			new Vector3(1,0,SQRT3)
 		};
 		HexagonSpace = new Vector3[] {
 			VXLSPACE * Hexagon[0].normalized,
@@ -267,6 +280,28 @@ public static class Vx
 			new IJL(0, -1, 0),
 			new IJL(1, -1, 0),
 			new IJL(1, 0, 0)
+		};
+		AdjBlockIJL = new IJL[] {
+			AdjVoxelIJL[0],
+			AdjVoxelIJL[0] + AdjVoxelIJL[2],
+			AdjVoxelIJL[0] + AdjVoxelIJL[3],
+			AdjVoxelIJL[0] + AdjVoxelIJL[4],
+			AdjVoxelIJL[0] + AdjVoxelIJL[5],
+			AdjVoxelIJL[0] + AdjVoxelIJL[6],
+			AdjVoxelIJL[0] + AdjVoxelIJL[7],
+			AdjVoxelIJL[2],
+			AdjVoxelIJL[3],
+			AdjVoxelIJL[4],
+			AdjVoxelIJL[5],
+			AdjVoxelIJL[6],
+			AdjVoxelIJL[7],
+			AdjVoxelIJL[1],
+			AdjVoxelIJL[1] + AdjVoxelIJL[2],
+			AdjVoxelIJL[1] + AdjVoxelIJL[3],
+			AdjVoxelIJL[1] + AdjVoxelIJL[4],
+			AdjVoxelIJL[1] + AdjVoxelIJL[5],
+			AdjVoxelIJL[1] + AdjVoxelIJL[6],
+			AdjVoxelIJL[1] + AdjVoxelIJL[7]
 		};
 
 		InvAxis = new byte[256];
@@ -582,5 +617,57 @@ public static class Vx
 			);
 			return;
 		}
+	}
+	private static float SquaredDistanceXZ(Vector3 a, Vector3 b)
+	{
+		return Mathf.Pow(a.x - b.x, 2) + Mathf.Pow(a.z - b.z, 2);
+	}
+	//assuming normalized point
+	public static IJL GetVoxelIJL(Vector3 point)
+	{
+		Vector3 trfm_point = InverseTransform(point);
+		int min_i = Mathf.FloorToInt(trfm_point.z);
+		int max_i = Mathf.CeilToInt(trfm_point.z);
+		int min_j = Mathf.FloorToInt(trfm_point.x);
+		int max_j = Mathf.CeilToInt(trfm_point.x);
+		int l = Mathf.FloorToInt(point.y);
+		IJL ijl0 = new IJL(min_i, min_j, l);
+		float d0 = SquaredDistanceXZ(point, VoxelVertex(ijl0));
+		IJL ijl1 = new IJL(min_i, max_j, l);
+		float d1 = SquaredDistanceXZ(point, VoxelVertex(ijl1));
+		IJL ijl2 = new IJL(max_i, min_j, l);
+		float d2 = SquaredDistanceXZ(point, VoxelVertex(ijl2));
+		IJL ijl3 = new IJL(max_i, max_j, l);
+		float d3 = SquaredDistanceXZ(point, VoxelVertex(ijl3));
+		float min = Mathf.Min(d0, d1, d2, d3);
+		if (d0 <= min) {
+			return new IJL(min_i, min_j, l);
+		}
+		else if (d1 <= min) {
+			return new IJL(min_i, max_j, l);
+		}
+		else if (d2 <= min) {
+			return new IJL(max_i, min_j, l);
+		}
+		else {
+			return new IJL(max_i, max_j, l);
+		}
+	}
+	private static Vector3 InverseTransform(Vector3 point)
+	{
+		Vector3 pos = point;	
+		pos.x = (point.x / 2f) + ((-SQRT3_R1 / 2f) * point.z);
+		pos.z = (SQRT3_R1 * point.z);
+		return pos;
+	}
+
+	public static IJL ChunkVoxelIJL(IJL chunk, int radius)
+	{
+		return ((2 * radius) - 1) * chunk;
+	}
+
+	public static IJL ChunkIJL(IJL voxelijl, int radius)
+	{
+		return voxelijl / radius;
 	}
 }

@@ -222,6 +222,53 @@ public struct IJL
 	}
 	#endregion
 
+	#region Division
+	public static IJL operator /(IJL a, IJL b)
+	{
+		return new IJL(a.i / b.i, a.j / b.j, a.l / b.l);
+	}
+	public static IJL operator /(int c, IJL a)
+	{
+		return new IJL(c / a.i, c / a.j, c / a.l);
+	}
+	public static IJL operator /(IJL a, int c)
+	{
+		return new IJL(a.i / c, a.j / c, a.l / c);
+	}
+	public static IJL operator /(Vector2Int v, IJL a)
+	{
+		return new IJL(v.x / a.i, v.y / a.j, a.l);
+	}
+	public static IJL operator /(IJL a, Vector2Int v)
+	{
+		return new IJL(a.i / v.x, a.j / v.y, a.l);
+	}
+	public static IJL operator /(Vector3Int v, IJL a)
+	{
+		return new IJL(v.x / a.i, v.y / a.j, v.z / a.l);
+	}
+	public static IJL operator /(IJL a, Vector3Int v)
+	{
+		return new IJL(a.i / v.x, a.j / v.y, a.l / v.z);
+	}
+	public static Vector3 operator /(float c, IJL a)
+	{
+		return new Vector3(c / a.i, c / a.j, c / a.l);
+	}
+	public static Vector3 operator /(IJL a, float c)
+	{
+		return new Vector3(a.i / c, a.j / c, a.l / c);
+	}
+	public static IJL operator /(IJL a, IJ b)
+	{
+		return new IJL(a.i / b.i, a.j / b.j, a.l);
+	}
+	public static IJL operator /(IJ a, IJL b)
+	{
+		return new IJL(a.i / b.i, a.j / b.j, b.l);
+	}
+	#endregion
+
 	#region Conversions
 	public static explicit operator IJL(IJ a)
 	{

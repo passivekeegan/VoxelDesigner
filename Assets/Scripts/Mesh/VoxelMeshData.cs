@@ -50,7 +50,22 @@ public class VoxelMeshData
 
 	public void Clear()
 	{
+		vertices.Clear();
+		triangles.Clear();
 
+		_voxelslots.Clear();
+		_cornerdata.Clear();
+		_edgedata.Clear();
+		_facedata.Clear();
+
+		_dirtycorners.Clear();
+		_dirtyedges.Clear();
+		_dirtyfaces.Clear();
+
+		_vertexslots.Clear();
+		_cornertable.Clear();
+		_edgetable.Clear();
+		_facetable.Clear();
 	}
 
 	//Create multi-update version of this
@@ -192,7 +207,6 @@ public class VoxelMeshData
 		Vector3 vertex = Vx.CornerVertex(corner_key, topheavy);
 		return new CornerData(draw, id, d, vertex);
 	}
-
 	private CornerPattern GetCornerPattern(IJL corner_key, bool topheavy)
 	{
 		//find voxel keys in proper order
@@ -241,28 +255,10 @@ public class VoxelMeshData
 		}
 		return new CornerPattern(a0, a1, a2, b0, b1, b2);
 	}
-
 	private bool ShouldDrawCorner(IJL corner_key, bool topheavy)
 	{
 		//find above voxel keys in proper order
 		IJL voxel_key0, voxel_key1, voxel_key2;
-		if (topheavy) {
-			voxel_key0 = Vx.CornerInvKey_Above(corner_key, 4);
-			voxel_key1 = Vx.CornerInvKey_Above(corner_key, 0);
-			voxel_key2 = Vx.CornerInvKey_Above(corner_key, 2);
-		}
-		else {
-			voxel_key0 = Vx.CornerInvKey_Above(corner_key, 5);
-			voxel_key1 = Vx.CornerInvKey_Above(corner_key, 1);
-			voxel_key2 = Vx.CornerInvKey_Above(corner_key, 3);
-		}
-		//encode above level
-		int encoding = EncodeCornerLevel(voxel_key0, voxel_key1, voxel_key2);
-		//if encoding isn't zero then return ShouldDrawCornerLevel
-		if (encoding != 0) {
-			return ShouldDrawCornerLevel(encoding, topheavy);
-		}
-		//find below voxel keys in proper order
 		if (topheavy) {
 			voxel_key0 = Vx.CornerInvKey_Below(corner_key, 4);
 			voxel_key1 = Vx.CornerInvKey_Below(corner_key, 0);
@@ -273,86 +269,29 @@ public class VoxelMeshData
 			voxel_key1 = Vx.CornerInvKey_Below(corner_key, 1);
 			voxel_key2 = Vx.CornerInvKey_Below(corner_key, 3);
 		}
+		//encode above level
+		int encoding = EncodeVoxelLevel(voxel_key0, voxel_key1, voxel_key2);
+		//if encoding isn't zero then return ShouldDrawCornerLevel
+		if (encoding != 0) {
+			return ShouldDrawTripleLevel(encoding, topheavy);
+		}
+		//find below voxel keys in proper order
+		if (topheavy) {
+			voxel_key0 = Vx.CornerInvKey_Above(corner_key, 4);
+			voxel_key1 = Vx.CornerInvKey_Above(corner_key, 0);
+			voxel_key2 = Vx.CornerInvKey_Above(corner_key, 2);
+		}
+		else {
+			voxel_key0 = Vx.CornerInvKey_Above(corner_key, 5);
+			voxel_key1 = Vx.CornerInvKey_Above(corner_key, 1);
+			voxel_key2 = Vx.CornerInvKey_Above(corner_key, 3);
+		}
 		//encode below level
-		encoding = EncodeCornerLevel(voxel_key0, voxel_key1, voxel_key2);
+		encoding = EncodeVoxelLevel(voxel_key0, voxel_key1, voxel_key2);
 		//return ShouldDrawCornerLevel
-		return ShouldDrawCornerLevel(encoding, topheavy);
+		return ShouldDrawTripleLevel(encoding, topheavy);
 	}
-
-	private int EncodeCornerLevel(IJL voxel_key0, IJL voxel_key1, IJL voxel_key2)
-	{
-		int encoding = 0;
-		IJL voxel_ijl0 = Vx.IJLFromVoxelKey(voxel_key0);
-		if (_voxelslots.ContainsKey(voxel_ijl0)) {
-			if (_voxelslots[voxel_ijl0].draw) {
-				encoding += 9;
-			}
-			else {
-				encoding += 18;
-			}
-		}
-		IJL voxel_ijl1 = Vx.IJLFromVoxelKey(voxel_key1);
-		if (_voxelslots.ContainsKey(voxel_ijl1)) {
-			if (_voxelslots[voxel_ijl1].draw) {
-				encoding += 3;
-			}
-			else {
-				encoding += 6;
-			}
-		}
-		IJL voxel_ijl2 = Vx.IJLFromVoxelKey(voxel_key2);
-		if (_voxelslots.ContainsKey(voxel_ijl2)) {
-			if (_voxelslots[voxel_ijl2].draw) {
-				encoding += 1;
-			}
-			else {
-				encoding += 2;
-			}
-		}
-		return encoding;
-	}
-
-	private bool ShouldDrawCornerLevel(int encoded_level, bool topheavy)
-	{
-		switch (encoded_level) {
-			case 1:
-				return true;
-			case 3:
-				return true;
-			case 4:
-				return true;
-			case 5:
-				return topheavy;
-			case 7:
-				return !topheavy;
-			case 9:
-				return true;
-			case 10:
-				return true;
-			case 11:
-				return topheavy;
-			case 12:
-				return true;
-			case 13:
-				return true;
-			case 14:
-				return topheavy;
-			case 15:
-				return true;
-			case 16:
-				return true;
-			case 17:
-				return topheavy;
-			case 19:
-				return !topheavy;
-			case 22:
-				return !topheavy;
-			case 25:
-				return !topheavy;
-			default:
-				return false;
-		}
-	}
+	
 	#endregion
 
 	#region Classify Edge
@@ -388,7 +327,7 @@ public class VoxelMeshData
 			axi = Vx.OPPAXI[axi];
 		}
 		//calculate draw
-		bool draw = true;//FIX THIS
+		bool draw = ShouldDrawEdge(edge_key, Vx.NROTAXI[2, axi]);
 		//calculate vertex
 		Vector3 vertex = Vector3.Lerp(Vx.CornerVertex(corner0_key), Vx.CornerVertex(corner1_key), 0.5f);//MAKE THIS BETTER
 		return new EdgeData(draw, id, axi, shift, vertex);
@@ -474,6 +413,50 @@ public class VoxelMeshData
 		}
 		return new EdgePattern(vertical, p0, p1, data0.id, data1.id, v0, v1, v2, v3);
 	}
+	private bool ShouldDrawEdge(IJL edge_key, int axi)
+	{
+		if (axi < 0 || axi >= 8) {
+			return false;
+		}
+		if (axi < 2) {
+			bool topheavy = Vx.IsEdgeTopHeavy(edge_key);
+			//find voxel keys in proper order
+			IJL voxel_key0, voxel_key1, voxel_key2;
+			if (topheavy) {
+				voxel_key0 = Vx.EdgeInvKey_Middle(edge_key, 4);
+				voxel_key1 = Vx.EdgeInvKey_Middle(edge_key, 0);
+				voxel_key2 = Vx.EdgeInvKey_Middle(edge_key, 2);
+			}
+			else {
+				voxel_key0 = Vx.EdgeInvKey_Middle(edge_key, 5);
+				voxel_key1 = Vx.EdgeInvKey_Middle(edge_key, 1);
+				voxel_key2 = Vx.EdgeInvKey_Middle(edge_key, 3);
+			}
+			//encode above level
+			int encoding = EncodeVoxelLevel(voxel_key0, voxel_key1, voxel_key2);
+			return ShouldDrawTripleLevel(encoding, topheavy);
+		}
+		else {
+			int d = axi - 2;
+			int oppd = Vx.D[3, d];
+			IJL voxel_key0 = Vx.EdgeInvKey_Below(edge_key, d);
+			IJL voxel_key1 = Vx.EdgeInvKey_Below(edge_key, oppd);
+			//encode above level
+			int encoding = EncodeVoxelLevel(voxel_key0, voxel_key1);
+			//if encoding isn't zero then return ShouldDrawCornerLevel
+			if (encoding != 0) {
+				return ShouldDrawDoubleLevel(encoding, axi);
+			}
+			//find below voxel keys in proper order
+			voxel_key0 = Vx.EdgeInvKey_Above(edge_key, d);
+			voxel_key1 = Vx.EdgeInvKey_Above(edge_key, oppd);
+			//encode below level
+			encoding = EncodeVoxelLevel(voxel_key0, voxel_key1);
+			//return ShouldDrawCornerLevel
+			return ShouldDrawDoubleLevel(encoding, axi);
+		}
+	}
+	
 	#endregion
 
 	#region Classify Face
@@ -494,10 +477,10 @@ public class VoxelMeshData
 		if (id <= 0) {
 			return new FaceData();
 		}
-		//draw
-		bool draw = true;
 		//axi
 		int axi = packet.axi;
+		//draw
+		bool draw = ShouldDrawFace(face_key, axi);
 		//shift
 		int shift = FacePattern.CalculateShift(map_pat, face_pat);
 		if (shift < 0) {
@@ -513,7 +496,6 @@ public class VoxelMeshData
 		Vector3 vertex = Vx.FaceVertex(face_key, packet.axi);
 		return new FaceData(draw, id, axi, shift, vertex);
 	}
-
 	private FacePattern GetFacePattern(IJL face_key, ref FacePacket packet)
 	{
 		if (packet.hexagon) {
@@ -523,7 +505,6 @@ public class VoxelMeshData
 			return GetRectPattern(face_key, ref packet);
 		}
 	}
-
 	private FacePattern GetRectPattern(IJL face_key, ref FacePacket packet)
 	{
 		if (map == null || packet.axi < 2 || packet.axi >= 8 || packet.hexagon) {
@@ -593,7 +574,6 @@ public class VoxelMeshData
 		}
 		return new FacePattern(p0, p1, p2, p3, v0, v1);
 	}
-
 	private FacePattern GetHexagonPattern(IJL face_key, ref FacePacket packet)
 	{
 		if (map == null || packet.axi < 0 || packet.axi > 1 || !packet.hexagon) {
@@ -691,8 +671,161 @@ public class VoxelMeshData
 		}
 		return new FacePattern(p0, p1, p2, p3, p4, p5, v0, v1);
 	}
+	private bool ShouldDrawFace(IJL face_key, int axi)
+	{
+		if (axi < 0 || axi >= 8) {
+			return false;
+		}
+		IJL voxel_key = Vx.FaceInvKey(face_key, axi);
+		IJL voxel0 = Vx.IJLFromVoxelKey(voxel_key);
+		bool is_voxel0 = _voxelslots.ContainsKey(voxel0);
+		bool is_draw0 = false;
+		if (is_voxel0) {
+			is_draw0 = _voxelslots[voxel0].draw;
+		}
+		voxel_key = Vx.FaceInvKey(face_key, Vx.OPPAXI[axi]);
+		IJL voxel1 = Vx.IJLFromVoxelKey(voxel_key);
+		bool is_voxel1 = _voxelslots.ContainsKey(voxel1);
+		bool is_draw1 = false;
+		if (is_voxel1) {
+			is_draw1 = _voxelslots[voxel1].draw;
+		}
+		if (is_draw0 && is_draw1) {
+			return true;
+		}
+		else if (!is_draw0 && !is_draw1) {
+			return false;
+		}
+		if ((is_draw0 && is_voxel1) || (is_draw1 && is_voxel0)) {
+			switch (axi) {
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+					return (is_draw0 && is_voxel1);
+				default:
+					return (is_draw1 && is_voxel0);
+			}
+		}
+		else {
+			return true;
+		}
+	}
 	#endregion
 
+	#region Classify General
+	private int EncodeVoxelLevel(IJL voxel_key0, IJL voxel_key1)
+	{
+		int encoding = 0;
+		IJL voxel_ijl0 = Vx.IJLFromVoxelKey(voxel_key0);
+		if (_voxelslots.ContainsKey(voxel_ijl0)) {
+			if (_voxelslots[voxel_ijl0].draw) {
+				encoding += 1;
+			}
+			else {
+				encoding += 2;
+			}
+		}
+		IJL voxel_ijl1 = Vx.IJLFromVoxelKey(voxel_key1);
+		if (_voxelslots.ContainsKey(voxel_ijl1)) {
+			if (_voxelslots[voxel_ijl1].draw) {
+				encoding += 3;
+			}
+			else {
+				encoding += 6;
+			}
+		}
+		return encoding;
+	}
+	private int EncodeVoxelLevel(IJL voxel_key0, IJL voxel_key1, IJL voxel_key2)
+	{
+		int encoding = 0;
+		IJL voxel_ijl0 = Vx.IJLFromVoxelKey(voxel_key0);
+		if (_voxelslots.ContainsKey(voxel_ijl0)) {
+			if (_voxelslots[voxel_ijl0].draw) {
+				encoding += 9;
+			}
+			else {
+				encoding += 18;
+			}
+		}
+		IJL voxel_ijl1 = Vx.IJLFromVoxelKey(voxel_key1);
+		if (_voxelslots.ContainsKey(voxel_ijl1)) {
+			if (_voxelslots[voxel_ijl1].draw) {
+				encoding += 3;
+			}
+			else {
+				encoding += 6;
+			}
+		}
+		IJL voxel_ijl2 = Vx.IJLFromVoxelKey(voxel_key2);
+		if (_voxelslots.ContainsKey(voxel_ijl2)) {
+			if (_voxelslots[voxel_ijl2].draw) {
+				encoding += 1;
+			}
+			else {
+				encoding += 2;
+			}
+		}
+		return encoding;
+	}
+	private bool ShouldDrawDoubleLevel(int encoded_level, int axi)
+	{
+		switch(encoded_level) {
+			case 1:
+			case 3:
+			case 4:
+				return true;
+			case 5:
+				return (axi == 1) || (axi == 2) || (axi == 3) || (axi == 4);
+			case 7:
+				return (axi == 0) || (axi == 5) || (axi == 6) || (axi == 7);
+			default:
+				return false;
+		}
+	}
+	private bool ShouldDrawTripleLevel(int encoded_level, bool topheavy)
+	{
+		switch (encoded_level) {
+			case 1:
+				return true;
+			case 3:
+				return true;
+			case 4:
+				return true;
+			case 5:
+				return topheavy;
+			case 7:
+				return !topheavy;
+			case 9:
+				return true;
+			case 10:
+				return true;
+			case 11:
+				return topheavy;
+			case 12:
+				return true;
+			case 13:
+				return true;
+			case 14:
+				return topheavy;
+			case 15:
+				return true;
+			case 16:
+				return true;
+			case 17:
+				return topheavy;
+			case 19:
+				return !topheavy;
+			case 22:
+				return !topheavy;
+			case 25:
+				return !topheavy;
+			default:
+				return false;
+		}
+	}
+	#endregion
 
 
 	public void GenerateMesh()
@@ -711,6 +844,7 @@ public class VoxelMeshData
 		GenerateFaceMeshes();
 
 		//finish processing things like normals
+
 	}
 
 	private void GenerateCornerMeshes()
