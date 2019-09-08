@@ -8,6 +8,7 @@ public class VoxelMeshData
 	public MappingObject map;
 
 	public List<Vector3> vertices;
+	public List<Vector3> normals;
 	public List<int> triangles;
 
 	//(voxel ijl => VoxelSlot)
@@ -22,7 +23,9 @@ public class VoxelMeshData
 	private HashSet<IJL> _dirtyfaces;
 
 	//(vertices index)
-	private List<VertexSlot> _vertexslots;
+	private List<VertexData> _vertexslots;
+	private List<TriangleData> _trislots;
+
 	//(corner key => vertex slot index)
 	private Dictionary<IJL, int> _cornertable;
 	private Dictionary<IJL, int> _edgetable;
@@ -31,18 +34,21 @@ public class VoxelMeshData
 	public VoxelMeshData()
 	{
 		vertices = new List<Vector3>();
+		normals = new List<Vector3>();
 		triangles = new List<int>();
 
 		_voxelslots = new Dictionary<IJL, VoxelSlot>();
 		_cornerdata = new Dictionary<IJL, CornerData>();
 		_edgedata = new Dictionary<IJL, EdgeData>();
 		_facedata = new Dictionary<IJL, FaceData>();
-		
+
 		_dirtycorners = new HashSet<IJL>();
 		_dirtyedges = new HashSet<IJL>();
 		_dirtyfaces = new HashSet<IJL>();
 
-		_vertexslots = new List<VertexSlot>();
+		_vertexslots = new List<VertexData>();
+		_trislots = new List<TriangleData>();
+
 		_cornertable = new Dictionary<IJL, int>();
 		_edgetable = new Dictionary<IJL, int>();
 		_facetable = new Dictionary<IJL, int>();
@@ -51,6 +57,7 @@ public class VoxelMeshData
 	public void Clear()
 	{
 		vertices.Clear();
+		normals.Clear();
 		triangles.Clear();
 
 		_voxelslots.Clear();
@@ -63,6 +70,8 @@ public class VoxelMeshData
 		_dirtyfaces.Clear();
 
 		_vertexslots.Clear();
+		_trislots.Clear();
+
 		_cornertable.Clear();
 		_edgetable.Clear();
 		_facetable.Clear();
@@ -87,30 +96,28 @@ public class VoxelMeshData
 			}
 		}
 	}
-
 	private void DirtyVoxel(IJL ijl)
 	{
 		IJL voxel_key = Vx.VoxelKey(ijl);
 		//dirty corners
-		for (int d = 0;d < 6;d++) {
+		for (int d = 0; d < 6; d++) {
 			_dirtycorners.Add(Vx.CornerKey_Above(voxel_key, d));
 			_dirtycorners.Add(Vx.CornerKey_Below(voxel_key, d));
 			//dirty ajacent edges
 			//dirty adjacent faces
 		}
 		//dirty edges
-		for (int d = 0;d < 6;d++) {
+		for (int d = 0; d < 6; d++) {
 			_dirtyedges.Add(Vx.EdgeKey_Above(voxel_key, d));
 			_dirtyedges.Add(Vx.EdgeKey_Middle(voxel_key, d));
 			_dirtyedges.Add(Vx.EdgeKey_Below(voxel_key, d));
 			//dirty adjacent faces
 		}
 		//dirty faces
-		for (int axi = 0;axi < 8;axi++) {
+		for (int axi = 0; axi < 8; axi++) {
 			_dirtyfaces.Add(Vx.FaceKey(voxel_key, axi));
 		}
 	}
-
 	public void UpdateDirtyComponents()
 	{
 		//process dirty corners
@@ -188,7 +195,7 @@ public class VoxelMeshData
 		if (map != null) {
 			CornerPattern corner_pat = GetCornerPattern(corner_key, topheavy);
 			//get id
-			id =  map.GetCornerID(corner_pat);
+			id = map.GetCornerID(corner_pat);
 			if (id > 0) {
 				//get rotation shift
 				CornerPattern map_pat = map.GetCornerPattern(corner_pat);
@@ -291,9 +298,8 @@ public class VoxelMeshData
 		//return ShouldDrawCornerLevel
 		return ShouldDrawTripleLevel(encoding, topheavy);
 	}
-	
-	#endregion
 
+	#endregion
 	#region Classify Edge
 	private EdgeData ClassifyEdge(IJL edge_key)
 	{
@@ -456,9 +462,8 @@ public class VoxelMeshData
 			return ShouldDrawDoubleLevel(encoding, axi);
 		}
 	}
-	
-	#endregion
 
+	#endregion
 	#region Classify Face
 	private FaceData ClassifyFace(IJL face_key)
 	{
@@ -712,7 +717,6 @@ public class VoxelMeshData
 		}
 	}
 	#endregion
-
 	#region Classify General
 	private int EncodeVoxelLevel(IJL voxel_key0, IJL voxel_key1)
 	{
@@ -771,7 +775,7 @@ public class VoxelMeshData
 	}
 	private bool ShouldDrawDoubleLevel(int encoded_level, int axi)
 	{
-		switch(encoded_level) {
+		switch (encoded_level) {
 			case 1:
 			case 3:
 			case 4:
@@ -827,24 +831,59 @@ public class VoxelMeshData
 	}
 	#endregion
 
-
 	public void GenerateMesh()
 	{
-		vertices.Clear();
-		triangles.Clear();
 		_vertexslots.Clear();
+		_trislots.Clear();
 		_cornertable.Clear();
-
 		if (map == null) {
 			return;
 		}
-
 		GenerateCornerMeshes();
 		GenerateEdgeMeshes();
 		GenerateFaceMeshes();
 
-		//finish processing things like normals
+		ExtractMeshData();
+	}
 
+	private void ExtractMeshData()
+	{
+		vertices.Clear();
+		normals.Clear();
+		triangles.Clear();
+		for (int k = 0; k < _vertexslots.Count; k++) {
+			VertexData data = _vertexslots[k];
+			if (data.hastri) {
+				vertices.Add(data.vertex);
+				normals.Add(data.normal.normalized);
+				_vertexslots[k] = new VertexData(data.hastri, vertices.Count - 1, data.vertex, data.normal);
+			}
+		}
+		int vertex_count = vertices.Count;
+		for (int k = 0; k < _trislots.Count; k++) {
+			TriangleData data = _trislots[k];
+			int slot0_index = data.vertex0;
+			int slot1_index = data.vertex1;
+			int slot2_index = data.vertex2;
+			if (slot0_index < 0 || slot1_index < 0 || slot2_index < 0) {
+				continue;
+			}
+			int tri_index0 = _vertexslots[data.vertex0].index;
+			if (tri_index0 < 0 || tri_index0 >= vertex_count) {
+				continue;
+			}
+			int tri_index1 = _vertexslots[data.vertex1].index;
+			if (tri_index1 < 0 || tri_index1 >= vertex_count) {
+				continue;
+			}
+			int tri_index2 = _vertexslots[data.vertex2].index;
+			if (tri_index2 < 0 || tri_index2 >= vertex_count) {
+				continue;
+			}
+			triangles.Add(tri_index0);
+			triangles.Add(tri_index1);
+			triangles.Add(tri_index2);
+		}
 	}
 
 	private void GenerateCornerMeshes()
@@ -859,49 +898,30 @@ public class VoxelMeshData
 				_cornertable.Add(data.Key, corner_index);
 			}
 			//add vertices
+			bool draw = data.Value.draw;
 			int shift = data.Value.shift;
 			Vector3 corner_vertex = data.Value.vertex;
-			for (int k = 0; k < design.vertices.Count; k++) {
-				Vector3 vertex = corner_vertex + design.vertices[k].GenerateVertexVector(shift);
-				int index = -1;
-				if (data.Value.draw && !flat_shaded) {
-					vertices.Add(vertex);
-					index = vertices.Count - 1;
-				}
-				_vertexslots.Add(new VertexSlot(index, vertex));
+			List<VertexVector> vertex_vectors = design.vertices;
+			int vertex_count = vertex_vectors.Count;
+			for (int k = 0; k < vertex_count; k++) {
+				Vector3 vertex = corner_vertex + vertex_vectors[k].GenerateVertexVector(shift);
+				_vertexslots.Add(new VertexData(vertex));
+			}
+			if (flat_shaded && !draw) {
+				continue;
 			}
 			//add triangles
-			int slot_count = _vertexslots.Count;
-			for (int k = 0; k < design.triangles.Count; k++) {
-				Triangle tri = design.triangles[k];
+			List<Triangle> corner_triangles = design.triangles;
+			for (int k = 0; k < corner_triangles.Count; k++) {
+				Triangle tri = corner_triangles[k];
+				//check validity
+				if (!tri.IsValid(vertex_count, null, null)) {
+					continue;
+				}
 				int slot0_index = corner_index + tri.vertex0;
 				int slot1_index = corner_index + tri.vertex1;
 				int slot2_index = corner_index + tri.vertex2;
-				if (slot0_index >= slot_count || slot1_index >= slot_count || slot2_index >= slot_count) {
-					continue;
-				}
-				VertexSlot slot0 = _vertexslots[slot0_index];
-				VertexSlot slot1 = _vertexslots[slot1_index];
-				VertexSlot slot2 = _vertexslots[slot2_index];
-				//add triangle
-				if (data.Value.draw) {
-					if (flat_shaded) {
-						//add triangle and its vertices
-						int vertex_index = vertices.Count;
-						vertices.Add(slot0.vertex);
-						vertices.Add(slot1.vertex);
-						vertices.Add(slot2.vertex);
-						triangles.Add(vertex_index);
-						triangles.Add(vertex_index + 1);
-						triangles.Add(vertex_index + 2);
-					}
-					else if (slot0.index >= 0 && slot1.index >= 0 && slot2.index >= 0) {
-						triangles.Add(slot0.index);
-						triangles.Add(slot1.index);
-						triangles.Add(slot2.index);
-					}
-				}
-				//calculate normal and update normals
+				AddTriangle(slot0_index, slot1_index, slot2_index, draw);
 			}
 		}
 	}
@@ -920,77 +940,33 @@ public class VoxelMeshData
 
 			//ADD IN EDGE INDEX REGISTRY LATER FOR EDGE PLUGS
 			//add vertices
+			bool draw = data.Value.draw;
 			int shift = data.Value.shift;
 			int edge_index = _vertexslots.Count;
 			Vector3 edge_vertex = data.Value.vertex;
 			List<VertexVector> edge_vertices = design.vertices;
-			for (int k = 0; k < edge_vertices.Count; k++) {
+			int vertex_count = edge_vertices.Count;
+			for (int k = 0; k < vertex_count; k++) {
 				Vector3 vertex = edge_vertex + edge_vertices[k].GenerateVertexVector(shift);
-				int index = -1;
-				if (data.Value.draw && !flat_shaded) {
-					vertices.Add(vertex);
-					index = vertices.Count - 1;
-				}
-				_vertexslots.Add(new VertexSlot(index, vertex));
+				_vertexslots.Add(new VertexData(vertex));
+			}
+			if (flat_shaded && !draw) {
+				continue;
 			}
 			//add triangles
-			List<int> edge_cornerplugs = design.cornerplugs;
-			List<int> edge_edgeplugs = design.edgeplugs;
-			List<Triangle> edge_tris = design.triangles;
-			for (int k = 0; k < edge_tris.Count; k++) {
-				Triangle tri = edge_tris[k];
-				//check triangle validity
-				if (!tri.IsValid(edge_vertices.Count, edge_cornerplugs, edge_edgeplugs)) {
+			List<int> cornerplugs = design.cornerplugs;
+			List<int> edgeplugs = design.edgeplugs;
+			List<Triangle> edge_triangles = design.triangles;
+			for (int k = 0; k < edge_triangles.Count; k++) {
+				Triangle tri = edge_triangles[k];
+				//check validity
+				if (!tri.IsValid(vertex_count, cornerplugs, edgeplugs)) {
 					continue;
 				}
 				int slot0_index = TriangleSlotIndex(edge_index, tri.type0, tri.vertex0, true, ref edgecorners);
 				int slot1_index = TriangleSlotIndex(edge_index, tri.type1, tri.vertex1, true, ref edgecorners);
 				int slot2_index = TriangleSlotIndex(edge_index, tri.type2, tri.vertex2, true, ref edgecorners);
-				if (slot0_index < 0 || slot1_index < 0 || slot2_index < 0) {
-					continue;
-				}
-				//get vertex slots
-				VertexSlot slot0 = _vertexslots[slot0_index];
-				VertexSlot slot1 = _vertexslots[slot1_index];
-				VertexSlot slot2 = _vertexslots[slot2_index];
-				if (data.Value.draw) {
-					if (flat_shaded) {
-						//add triangle and its vertices
-						int vertex_index = vertices.Count;
-						vertices.Add(slot0.vertex);
-						vertices.Add(slot1.vertex);
-						vertices.Add(slot2.vertex);
-						triangles.Add(vertex_index);
-						triangles.Add(vertex_index + 1);
-						triangles.Add(vertex_index + 2);
-					}
-					else {
-						//vertex slot 0
-						if (slot0.index < 0) {
-							vertices.Add(slot0.vertex);
-							_vertexslots[slot0_index] = new VertexSlot(vertices.Count - 1, slot0.vertex);
-							slot0 = _vertexslots[slot0_index];
-						}
-						//vertex slot 1
-						if (slot1.index < 0) {
-							vertices.Add(slot1.vertex);
-							_vertexslots[slot1_index] = new VertexSlot(vertices.Count - 1, slot1.vertex);
-							slot1 = _vertexslots[slot1_index];
-						}
-						//vertex slot 2
-						if (slot2.index < 0) {
-							vertices.Add(slot2.vertex);
-							_vertexslots[slot2_index] = new VertexSlot(vertices.Count - 1, slot2.vertex);
-							slot2 = _vertexslots[slot2_index];
-						}
-						//add triangle
-						triangles.Add(slot0.index);
-						triangles.Add(slot1.index);
-						triangles.Add(slot2.index);
-					}
-				}
-
-				//calculate normal and update normals
+				AddTriangle(slot0_index, slot1_index, slot2_index, draw);
 			}
 		}
 	}
@@ -1012,28 +988,27 @@ public class VoxelMeshData
 				continue;
 			}
 			//add face vertices
+			bool draw = data.Value.draw;
 			int shift = data.Value.shift;
 			int face_index = _vertexslots.Count;
 			Vector3 face_vertex = data.Value.vertex;
 			List<VertexVector> face_vertices = design.vertices;
-			for (int k = 0; k < design.vertices.Count; k++) {
+			int vertex_count = face_vertices.Count;
+			for (int k = 0; k < vertex_count; k++) {
 				Vector3 vertex = face_vertex + face_vertices[k].GenerateVertexVector(shift);
-				int index = -1;
-				if (data.Value.draw && !flat_shaded) {
-					vertices.Add(vertex);
-					index = vertices.Count - 1;
-				}
-				_vertexslots.Add(new VertexSlot(index, vertex));
+				_vertexslots.Add(new VertexData(vertex));
 			}
-
+			if (flat_shaded && !draw) {
+				continue;
+			}
 			//add triangles
-			List<int> face_cornerplugs = design.cornerplugs;
-			List<int> face_edgeplugs = design.edgeplugs;
-			List<Triangle> face_tris = design.triangles;
-			for (int k = 0; k < face_tris.Count; k++) {
-				Triangle tri = face_tris[k];
-				//check triangle validity
-				if (!tri.IsValid(face_vertices.Count, face_cornerplugs, face_edgeplugs)) {
+			List<int> cornerplugs = design.cornerplugs;
+			List<int> edgeplugs = design.edgeplugs;
+			List<Triangle> face_triangles = design.triangles;
+			for (int k = 0; k < face_triangles.Count; k++) {
+				Triangle tri = face_triangles[k];
+				//check validity
+				if (!tri.IsValid(vertex_count, cornerplugs, edgeplugs)) {
 					continue;
 				}
 				int slot0_index, slot1_index, slot2_index;
@@ -1047,55 +1022,86 @@ public class VoxelMeshData
 					slot1_index = TriangleSlotIndex(face_index, tri.type1, tri.vertex1, false, ref rectcorners);
 					slot2_index = TriangleSlotIndex(face_index, tri.type2, tri.vertex2, false, ref rectcorners);
 				}
-				if (slot0_index < 0 || slot1_index < 0 || slot2_index < 0) {
-					continue;
-				}
-				//get vertex slots
-				VertexSlot slot0 = _vertexslots[slot0_index];
-				VertexSlot slot1 = _vertexslots[slot1_index];
-				VertexSlot slot2 = _vertexslots[slot2_index];
-				if (data.Value.draw) {
-					if (flat_shaded) {
-						//add triangle and its vertices
-						int vertex_index = vertices.Count;
-						vertices.Add(slot0.vertex);
-						vertices.Add(slot1.vertex);
-						vertices.Add(slot2.vertex);
-						triangles.Add(vertex_index);
-						triangles.Add(vertex_index + 1);
-						triangles.Add(vertex_index + 2);
-					}
-					else {
-						//vertex slot 0
-						if (slot0.index < 0) {
-							vertices.Add(slot0.vertex);
-							_vertexslots[slot0_index] = new VertexSlot(vertices.Count - 1, slot0.vertex);
-							slot0 = _vertexslots[slot0_index];
-						}
-						//vertex slot 1
-						if (slot1.index < 0) {
-							vertices.Add(slot1.vertex);
-							_vertexslots[slot1_index] = new VertexSlot(vertices.Count - 1, slot1.vertex);
-							slot1 = _vertexslots[slot1_index];
-						}
-						//vertex slot 2
-						if (slot2.index < 0) {
-							vertices.Add(slot2.vertex);
-							_vertexslots[slot2_index] = new VertexSlot(vertices.Count - 1, slot2.vertex);
-							slot2 = _vertexslots[slot2_index];
-						}
-						//add triangle
-						triangles.Add(slot0.index);
-						triangles.Add(slot1.index);
-						triangles.Add(slot2.index);
-					}
-				}
-
-				//calculate normal and update normals
+				AddTriangle(slot0_index, slot1_index, slot2_index, draw);
 			}
 		}
 	}
-
+	private void AddTriangle(int slot0_index, int slot1_index, int slot2_index, bool draw)
+	{
+		if (flat_shaded && !draw) {
+			return;
+		}
+		int slot_count = _vertexslots.Count;
+		if (slot0_index >= slot_count || slot1_index >= slot_count || slot2_index >= slot_count) {
+			return;
+		}
+		VertexData slot0 = _vertexslots[slot0_index];
+		VertexData slot1 = _vertexslots[slot1_index];
+		VertexData slot2 = _vertexslots[slot2_index];
+		Vector3 v0 = slot1.vertex - slot0.vertex;
+		Vector3 v1 = slot2.vertex - slot1.vertex;
+		Vector3 v2 = slot0.vertex - slot2.vertex;
+		Vector3 normal = Vector3.Cross(v0, -v2).normalized;
+		if (flat_shaded) {
+			//vertex slot 0
+			if (slot0.hastri) {
+				_vertexslots.Add(new VertexData(
+					true, -1, slot0.vertex, normal)
+				);
+				slot0_index = _vertexslots.Count - 1;
+			}
+			else {
+				_vertexslots[slot0_index] = new VertexData(
+					true, slot0.index, slot0.vertex, normal
+				);
+			}
+			//vertex slot 1
+			if (slot1.hastri) {
+				_vertexslots.Add(new VertexData(
+					true, -1, slot1.vertex, normal)
+				);
+				slot1_index = _vertexslots.Count - 1;
+			}
+			else {
+				_vertexslots[slot1_index] = new VertexData(
+					true, slot1.index, slot1.vertex, normal
+				);
+			}
+			//vertex slot 2
+			if (slot2.hastri) {
+				_vertexslots.Add(new VertexData(
+					true, -1, slot2.vertex, normal)
+				);
+				slot2_index = _vertexslots.Count - 1;
+			}
+			else {
+				_vertexslots[slot2_index] = new VertexData(
+					true, slot2.index, slot2.vertex, normal
+				);
+			}
+		}
+		else {
+			//vertex slot 0
+			float factor = Vector3.Angle(v0, -v2) / 180f;
+			_vertexslots[slot0_index] = new VertexData(
+				 draw || slot0.hastri, slot0.index, slot0.vertex, slot0.normal + (factor * normal)
+			);
+			//vertex slot 1
+			factor = Vector3.Angle(v1, -v0) / 180f;
+			_vertexslots[slot1_index] = new VertexData(
+				 draw || slot1.hastri, slot1.index, slot1.vertex, slot1.normal + (factor * normal)
+			);
+			//vertex slot 2
+			factor = Vector3.Angle(v2, -v1) / 180f;
+			_vertexslots[slot2_index] = new VertexData(
+				 draw || slot2.hastri, slot2.index, slot2.vertex, slot2.normal + (factor * normal)
+			);
+		}
+		//add triangle
+		if (draw) {
+			_trislots.Add(new TriangleData(slot0_index, slot1_index, slot2_index));
+		}
+	}
 	private int TriangleSlotIndex(int base_index, TriIndexType type, ushort vertex, bool is_edge, ref EdgePacket packet)
 	{
 		int axi_index, socket_index, slot_index;
@@ -1177,7 +1183,6 @@ public class VoxelMeshData
 		}
 		return slot_index;
 	}
-
 	private int GetSocketSlotIndex(bool is_edgesocket, int socket_index, ref CornerPacket packet)
 	{
 		int offset_index;
@@ -1192,7 +1197,6 @@ public class VoxelMeshData
 		}
 		return packet.index + offset_index;
 	}
-
 	private bool GetEdgePacket(IJL edge_key, int axi, out EdgePacket edgecorners)
 	{
 		if (map == null || axi < 0 || axi >= 8) {
@@ -1206,7 +1210,7 @@ public class VoxelMeshData
 			edgecorners = EdgePacket.empty;
 			return false;
 		}
-		
+
 		int slot_index = _cornertable[corner_key];
 		CornerData data = _cornerdata[corner_key];
 		CornerDesign design = map.GetCorner(data.id);
@@ -1434,126 +1438,5 @@ public class VoxelMeshData
 
 		rectcorners = new HexagonPacket(packet0, packet1, packet2, packet3, packet4, packet5);
 		return true;
-	}
-}
-
-
-public struct VoxelSlot
-{
-	public readonly bool draw;
-	public readonly Voxel voxel;
-
-	public VoxelSlot(bool draw, Voxel voxel)
-	{
-		this.draw = draw;
-		this.voxel = voxel;
-	}
-}
-
-public struct CornerData
-{
-	public readonly bool draw;
-	public readonly int id;
-	public readonly int shift;
-	public readonly Vector3 vertex;
-
-	public CornerData(bool draw, int id, int shift, Vector3 vertex)
-	{
-		this.draw = draw;
-		this.id = id;
-		this.shift = Mathf.Clamp(shift, 0, 5);
-		this.vertex = vertex;
-	}
-}
-
-public struct EdgeData
-{
-	public readonly bool draw;
-	public readonly int id;
-	public readonly int axi;
-	public readonly int shift;
-	public readonly Vector3 vertex;
-
-	public EdgeData(bool draw, int id, int axi, int shift, Vector3 vertex)
-	{
-		this.draw = draw;
-		this.id = id;
-		this.axi = Mathf.Clamp(axi, 0, 7);
-		this.shift = Mathf.Clamp(shift, 0, 5);
-		this.vertex = vertex;
-	}
-}
-
-public struct FacePacket
-{
-	public readonly bool hexagon;
-	public readonly int axi;
-	public readonly IJL ckey0;
-	public readonly IJL ckey1;
-	public readonly IJL ckey2;
-	public readonly IJL ckey3;
-	public readonly IJL ckey4;
-	public readonly IJL ckey5;
-
-	public FacePacket(int axi, IJL ckey0, IJL ckey1, IJL ckey2, IJL ckey3, IJL ckey4, IJL ckey5)
-	{
-		this.hexagon = true;
-		this.axi = axi;
-		this.ckey0 = ckey0;
-		this.ckey1 = ckey1;
-		this.ckey2 = ckey2;
-		this.ckey3 = ckey3;
-		this.ckey4 = ckey4;
-		this.ckey5 = ckey5;
-	}
-
-	public FacePacket(int axi, IJL ckey0, IJL ckey1, IJL ckey2, IJL ckey3)
-	{
-		this.hexagon = false;
-		this.axi = axi;
-		this.ckey0 = ckey0;
-		this.ckey1 = ckey1;
-		this.ckey2 = ckey2;
-		this.ckey3 = ckey3;
-		this.ckey4 = IJL.zero;
-		this.ckey5 = IJL.zero;
-	}
-}
-
-public struct FaceData
-{
-	public readonly bool draw;
-	public readonly int id;
-	public readonly int axi;
-	public readonly int shift;
-	public readonly Vector3 vertex;
-
-	public FaceData(bool draw, int id, int axi, int shift, Vector3 vertex)
-	{
-		this.draw = draw;
-		this.id = id;
-		this.axi = Mathf.Clamp(axi, 0, 8);
-		this.shift = Mathf.Clamp(shift, 0, 5);
-		this.vertex = vertex;
-	}
-
-	public bool isHexagon
-	{
-		get {
-			return (axi == 0 || axi == 1);
-		}
-	}
-}
-
-
-public struct VertexSlot
-{
-	public readonly int index;
-	public readonly Vector3 vertex;
-
-	public VertexSlot(int index, Vector3 vertex)
-	{
-		this.index = index;
-		this.vertex = vertex;
 	}
 }

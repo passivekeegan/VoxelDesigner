@@ -337,11 +337,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 681165c417a3d4548902791a447ff6d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flat_shaded: 0
+  flat_shaded: 1
   rand_seed: 12
-  height: 14
-  perlin_scale: 0.06
-  heightmap_radius: 60
+  height: 10
+  perlin_scale: 0.08
+  heightmap_radius: 40
   chunk_radius: 3
   material: {fileID: 2100000, guid: 0a130760d8128ad4fa068cffca7cddea, type: 2}
   voxelstyle: {fileID: 11400000, guid: bea65ec1a1e583a42bfd45b4d883aefc, type: 2}

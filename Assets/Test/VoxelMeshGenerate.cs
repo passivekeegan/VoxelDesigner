@@ -107,9 +107,9 @@ public class VoxelMeshGenerate : MonoBehaviour
 			filter.mesh = new Mesh();
 		}
 		filter.mesh.SetVertices(_data.vertices);
+		filter.mesh.SetNormals(_data.normals);
 		filter.mesh.SetTriangles(_data.triangles, 0);
 		filter.mesh.RecalculateBounds();
-		filter.mesh.RecalculateNormals();
 		filter.mesh.RecalculateTangents();
 		filter.mesh.UploadMeshData(false);
 	}
