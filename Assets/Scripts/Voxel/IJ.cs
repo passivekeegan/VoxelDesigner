@@ -112,6 +112,10 @@ public struct IJ
 	#endregion
 
 	#region Subtraction
+	public static IJ operator -(IJ a)
+	{
+		return new IJ(-a.i, -a.j);
+	}
 	public static IJ operator -(IJ a, IJ b)
 	{
 		return new IJ(a.i - b.i, a.j - b.j);

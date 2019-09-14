@@ -11,7 +11,7 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 {
 	//vertices variables
 	[SerializeField]
-	public List<VertexVector> vertices;
+	public List<Vector3> vertices;
 	//triangles variables
 	[SerializeField]
 	public List<Triangle> triangles;
@@ -43,7 +43,7 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	protected void InitializeComponentLists()
 	{
 		//geometry
-		vertices = new List<VertexVector>();
+		vertices = new List<Vector3>();
 		triangles = new List<Triangle>();
 		//edge sockets
 		_edgesocket_cnt = Mathf.Max(0, _edgesocket_cnt);
@@ -193,7 +193,12 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// </returns>
 	public int GetEdgeSocketCount(int axi)
 	{
-		int axi_index = EdgeSocketIndex(axi);
+		return GetEdgeSocketCountByIndex(EdgeSocketIndex(axi));
+	}
+
+
+	public int GetEdgeSocketCountByIndex(int axi_index)
+	{
 		if (axi_index < 0 || axi_index >= edgesockets.Count || edgesockets[axi_index] == null) {
 			return -1;
 		}

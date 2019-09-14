@@ -10,13 +10,17 @@ public class MappingModeGUI : ModeGUI<MappingObject>
 			new SelectionPanel<MappingObject>("Mapping Selection"),
 			new DesignMapPanel("Design Selection"),
 			new CornerMapPanel("Corner Mapping"),
-			new EdgeMapPanel("Edge Mapping"),
-			new FaceMapPanel("Face Mapping")
+			new LateralMapPanel("Lateral Mapping"),
+			new LongitudeMapPanel("Longitude Mapping"),
+			new RectMapPanel("Rect Mapping"),
+			new HexagonMapPanel("Hexagon Mapping")
 		};
 		_mode_labels = new string[] {
-			"Select", "Designs", "Corner", "Edge", "Face"
+			"Select", "Designs", "Corner", "Lateral", "Longitude", "Rect", "Hexagon"
 		};
-		_preview = new MeshPreview(3);
+		_preview = new MeshPreview();
+		_preview.setVoxelFrame = false;
+		_preview.setVoxelFlip = false;
 	}
 	protected override void UpdateModes()
 	{
@@ -39,12 +43,20 @@ public class MappingModeGUI : ModeGUI<MappingObject>
 				cmpanel.target = selected;
 				break;
 			case 3:
-				EdgeMapPanel empanel = (EdgeMapPanel)_modes[_mode];
+				LateralMapPanel empanel = (LateralMapPanel)_modes[_mode];
 				empanel.target = selected;
 				break;
 			case 4:
-				FaceMapPanel fmpanel = (FaceMapPanel)_modes[_mode];
-				fmpanel.target = selected;
+				LongitudeMapPanel lgmpanel = (LongitudeMapPanel)_modes[_mode];
+				lgmpanel.target = selected;
+				break;
+			case 5:
+				RectMapPanel rmpanel = (RectMapPanel)_modes[_mode];
+				rmpanel.target = selected;
+				break;
+			case 6:
+				HexagonMapPanel hmpanel = (HexagonMapPanel)_modes[_mode];
+				hmpanel.target = selected;
 				break;
 		}
 	}

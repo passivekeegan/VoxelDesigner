@@ -1,8 +1,0 @@
-# Blender v2.80 (sub 59) OBJ File: 'basicvoxelset.blend'
-# www.blender.org
-g Bsc_Flat1_Y
-v -0.000000 0.000000 -0.270170
-v 0.086603 0.100000 -0.204700
-v -0.086603 0.100000 -0.204700
-s off
-f 1 2 3

@@ -137,6 +137,10 @@ public struct IJL
 	#endregion
 
 	#region Subtraction
+	public static IJL operator -(IJL a)
+	{
+		return new IJL(-a.i, -a.j, -a.l);
+	}
 	public static IJL operator -(IJL a, IJL b)
 	{
 		return new IJL(a.i - b.i, a.j - b.j, a.l - b.l);

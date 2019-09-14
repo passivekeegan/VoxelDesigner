@@ -20,14 +20,18 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 	public CornerModeGUI()
 	{
 		_title = "Selected Corner";
-		_preview = new MeshPreview(0);
+		_preview = new MeshPreview();
+		_preview.setVoxelFrame = true;
+		_preview.setVoxelFlip = true;
+		_preview.setFramePos = new Vector3(-1, -0.5f, -Vx.SQRT3_R1);
+		_preview.setFrameAltPos = new Vector3(-1, 0.5f, -Vx.SQRT3_R1);
 		_mode = 0;
 		_modes = new PanelGUI[] {
 			new SelectionPanel<CornerDesign>("Corner Selection"),
-			new VertexPanel("Vertices"),
+			new VertexPanel("Vertices", Quaternion.Euler(0, 60f, 0)),
 			new TrianglePanel(_preview, "Triangles", new string[0], new string[0]),
-			new SocketPanel(_preview, "Edge Sockets", EDGESOCKET_LABELS, CornerDesign.EDGESOCKET_CNT, SocketType.Edge),
-			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS, CornerDesign.FACESOCKET_CNT, SocketType.Face)
+			new SocketPanel(_preview, "Edge Sockets", EDGESOCKET_LABELS, EDGESOCKET_LABELS.Length, SocketType.Edge),
+			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS,  FACESOCKET_LABELS.Length, SocketType.Face)
 		};
 		_mode_labels = new string[] {
 			"Selection", "Vertex", "Triangle", "Edge Socket", "Face Socket"

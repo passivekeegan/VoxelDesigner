@@ -121,7 +121,7 @@ public class VoxelMeshGenerate : MonoBehaviour
 		}
 		IJL chunk = _chunksobj_ijls[index];
 		_chunkobjs[index] = new GameObject("Chunk " + chunk.ToString());
-		_chunkobjs[index].transform.localPosition = Vx.VoxelVertex(Vx.ChunkVoxelIJL(chunk, chunk_radius));
+		_chunkobjs[index].transform.localPosition = VMD.VoxelVertex(Vx.ChunkVoxelIJL(chunk, chunk_radius));
 
 		_chunkobjs[index].AddComponent<MeshFilter>();
 		MeshRenderer renderer = _chunkobjs[index].AddComponent<MeshRenderer>();
@@ -142,8 +142,8 @@ public class VoxelMeshGenerate : MonoBehaviour
 		for (int i = -max; i <= max; i++) {
 			for (int j = -max; j <= max; j++) {
 				//distance validity check
-				Vector3 v = Vx.VoxelVertex(new IJL(i, j, 0));
-				if (Vx.VoxelVertex(new IJL(i, j, 0)).sqrMagnitude > sqdist) {
+				Vector3 v = VMD.VoxelVertex(new IJL(i, j, 0));
+				if (VMD.VoxelVertex(new IJL(i, j, 0)).sqrMagnitude > sqdist) {
 					continue;
 				}
 				float h = height * Mathf.PerlinNoise(perlin_scale * (j + 0.1f), perlin_scale * (i + 0.1f));

@@ -34,7 +34,7 @@ public class PreviewVertexDisplay : PanelGUI
 		float height = (2 * VxlGUI.MED_BAR) + VxlGUI.SM_SPACE;
 		Rect superrect = VxlGUI.GetAboveElement(rect, 0, VxlGUI.MED_BAR);
 		Rect selectrect = VxlGUI.GetAboveElement(rect, 1, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-		Rect content_rect = VxlGUI.GetScrollViewRect(rect.width, rect.height, height);
+		Rect content_rect = VxlGUI.GetVerticalScrollViewRect(rect.width, rect.height, height);
 
 		_scroll = GUI.BeginScrollView(rect, _scroll, content_rect);
 		GUI.Label(VxlGUI.GetAboveElement(content_rect, 0, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0), "Selected Vertex: " + superselected.ToString(), GUI.skin.GetStyle("SecondarySuperLabel"));

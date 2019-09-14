@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990b25e0791ffa545bfe289915c9c1df, type: 3}
+  m_Name: CornerTwo
+  m_EditorClassIdentifier: 
+  objname: CornerTwo
+  vertices:
+  - {x: -0.0000004556688, y: 0, z: 0.27017078}
+  - {x: 0.0866021, y: -0.1, z: 0.20470075}
+  - {x: -0.050000835, y: -0.1, z: 0.06809799}
+  - {x: -0.1366031, y: 0, z: 0.118097514}
+  - {x: -0.17057736, y: 0, z: 0.059252664}
+  - {x: -0.0839746, y: -0.1, z: 0.00925227}
+  - {x: -0.23397493, y: 0, z: -0.1350855}
+  - {x: -0.13397527, y: -0.1, z: -0.17735003}
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 1
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 2
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 3
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 2
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 4
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 5
+    vertex2: 7
+  _edgesocket_cnt: 5
+  _facesocket_cnt: 15
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0
+  _serial_edgecounts: 0000000004000000020000000200000004000000
+  _serial_edgesockets: 010000000200000005000000070000000000000001000000070000000600000006000000040000000300000000000000
+  _serial_facecounts: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _serial_facesockets: 
