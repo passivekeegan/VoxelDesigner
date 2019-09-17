@@ -3,18 +3,15 @@
 public class CornerModeGUI : ModeGUI<CornerDesign>
 {
 	private readonly string[] EDGESOCKET_LABELS = new string[] {
-		"Above Socket", "Below Socket", "D0 Socket", "D2 Socket", "D4 Socket"
+		"Above", "Below", "D0", "D2", "D4"
 	};
 	private readonly string[] FACESOCKET_LABELS = new string[] {
-		"Above D0 Socket", "Below D0 Socket",
-		"Above D1 Socket", "Below D1 Socket",
-		"Above D2 Socket", "Below D2 Socket",
-		"Above D3 Socket", "Below D3 Socket",
-		"Above D4 Socket", "Below D4 Socket",
-		"Above D5 Socket", "Below D5 Socket",
-		"Middle D3 Socket",
-		"Middle D5 Socket",
-		"Middle D1 Socket"
+		"Above D0", "Below D0",
+		"Above D2", "Below D2",
+		"Above D4", "Below D4",
+		"Middle D3",
+		"Middle D5",
+		"Middle D1"
 	};
 
 	public CornerModeGUI()
@@ -30,8 +27,8 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 			new SelectionPanel<CornerDesign>("Corner Selection"),
 			new VertexPanel("Vertices", Quaternion.Euler(0, 60f, 0)),
 			new TrianglePanel(_preview, "Triangles", new string[0], new string[0]),
-			new SocketPanel(_preview, "Edge Sockets", EDGESOCKET_LABELS, EDGESOCKET_LABELS.Length, SocketType.Edge),
-			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS,  FACESOCKET_LABELS.Length, SocketType.Face)
+			new SocketPanel(_preview, "Edge Sockets", true, EDGESOCKET_LABELS),
+			new SocketPanel(_preview, "Face Sockets", false, FACESOCKET_LABELS)
 		};
 		_mode_labels = new string[] {
 			"Selection", "Vertex", "Triangle", "Edge Socket", "Face Socket"
@@ -56,12 +53,12 @@ public class CornerModeGUI : ModeGUI<CornerDesign>
 			case 3:
 				SocketPanel edge = (SocketPanel)_modes[_mode];
 				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
-				_preview.UpdatePrimarySocketSelection(edge.selectedSocket, SocketType.Edge, edge.selectlist);
+				_preview.UpdatePrimarySocketSelection(edge.inverseX, edge.inverseY, true, edge.axiSocket, edge.selectlist);
 				break;
 			case 4:
 				SocketPanel face = (SocketPanel)_modes[_mode];
 				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
-				_preview.UpdatePrimarySocketSelection(face.selectedSocket, SocketType.Face, face.selectlist);
+				_preview.UpdatePrimarySocketSelection(face.inverseX, face.inverseY, false, face.axiSocket, face.selectlist);
 				break;
 			default:
 				_preview.vertexMode = VertexMode.None;

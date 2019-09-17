@@ -339,30 +339,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flat_shaded: 1
   rand_seed: 12
-  height: 0
-  perlin_scale: 1
-  heightmap_radius: 0
-  chunk_radius: 3
+  height: 8
+  perlin_scale: 0.2
+  heightmap_radius: 20
+  chunk_radius: 6
   material: {fileID: 2100000, guid: 0a130760d8128ad4fa068cffca7cddea, type: 2}
-  voxelstyle: {fileID: 11400000, guid: 9bcceeeaf50449e4595643c4514c0fca, type: 2}
-  customvoxels:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 1, y: 0, z: 1}
-  - {x: 1, y: 0, z: 2}
-  - {x: 0, y: 0, z: 2}
-  - {x: 0, y: 0, z: 3}
-  - {x: 1, y: 0, z: 3}
-  - {x: -1, y: 0, z: 0}
-  - {x: -2, y: 0, z: 0}
-  - {x: -2, y: 0, z: 1}
-  - {x: -2, y: 1, z: 0}
-  - {x: -3, y: 1, z: 0}
-  - {x: -3, y: 1, z: 1}
-  - {x: -3, y: 1, z: 2}
-  - {x: -2, y: 0, z: 2}
-  - {x: -2, y: 1, z: 2}
-  - {x: -1, y: 0, z: 2}
+  voxelstyle: {fileID: 11400000, guid: 3f49b747ecbae444fb805d58f880bd82, type: 2}
+  customvoxels: []
 --- !u!1 &1472310114
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,7 +433,7 @@ Transform:
   m_GameObject: {fileID: 1472310114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

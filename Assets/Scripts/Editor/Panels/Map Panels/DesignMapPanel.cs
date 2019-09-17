@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class DesignMapPanel : PanelGUI
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Vector2 _scroll;
 	private Rect _rect_header;
@@ -17,20 +17,20 @@ public class DesignMapPanel : PanelGUI
 	private Rect _rect_rect;
 	private Rect _rect_hexagon;
 	private DesignMapTypePanel<CornerDesign> _corner_col;
-	private DesignMapTypePanel<LatEdgeDesign> _lat_col;
-	private DesignMapTypePanel<LongEdgeDesign> _long_col;
-	private DesignMapTypePanel<RectFaceDesign> _rect_col;
-	private DesignMapTypePanel<HexagonFaceDesign> _hex_col;
+	private DesignMapTypePanel<LateralDesign> _lat_col;
+	private DesignMapTypePanel<LongitudeDesign> _long_col;
+	private DesignMapTypePanel<RectDesign> _rect_col;
+	private DesignMapTypePanel<HexagonDesign> _hex_col;
 
 
 	public DesignMapPanel(string title)
 	{
 		_title = title;
 		_corner_col = new DesignMapTypePanel<CornerDesign>("Corner");
-		_lat_col = new DesignMapTypePanel<LatEdgeDesign>("Lateral");
-		_long_col = new DesignMapTypePanel<LongEdgeDesign>("Longitude");
-		_rect_col = new DesignMapTypePanel<RectFaceDesign>("Rect");
-		_hex_col = new DesignMapTypePanel<HexagonFaceDesign>("Hexagon");
+		_lat_col = new DesignMapTypePanel<LateralDesign>("Lateral");
+		_long_col = new DesignMapTypePanel<LongitudeDesign>("Longitude");
+		_rect_col = new DesignMapTypePanel<RectDesign>("Rect");
+		_hex_col = new DesignMapTypePanel<HexagonDesign>("Hexagon");
 		
 	}
 

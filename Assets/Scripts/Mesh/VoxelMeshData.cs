@@ -5,7 +5,7 @@ using UnityEngine;
 public class VoxelMeshData
 {
 	public bool flat_shaded;
-	public MappingObject map;
+	public MapObject map;
 
 	public List<Vector3> vertices;
 	public List<Vector3> normals;
@@ -117,9 +117,9 @@ public class VoxelMeshData
 		//process dirty longitude edges
 		UpdateDirtyLongitudes();
 		//process dirty rect faces
-		//UpdateDirtyRectFaces();
+		UpdateDirtyRectFaces();
 		//process dirty hexagon faces
-		//UpdateDirtyHexagonFaces();
+		UpdateDirtyHexagonFaces();
 	}
 	private void DirtyVoxel(IJL ijl)
 	{
@@ -378,16 +378,16 @@ public class VoxelMeshData
 			return ComponentData.empty;
 		}
 		//get pattern from voxel data
-		LatEdgePattern edge_pat = GetLateralPattern(edge_key, axi);
+		LateralPattern edge_pat = GetLateralPattern(edge_key, axi);
 		//get pattern from map
-		LatEdgePattern map_pat = map.GetLateralPattern(edge_pat);
+		LateralPattern map_pat = map.GetLateralPattern(edge_pat);
 		//get id
 		int id = map.GetLateralID(map_pat);
 		if (id <= 0) {
 			return ComponentData.empty;
 		}
 		//calculate shift
-		PatternMatch match = LatEdgePattern.CalculateTransform(map_pat, edge_pat, axi - 2);
+		PatternMatch match = LateralPattern.CalculateTransform(map_pat, edge_pat, axi - 2);
 		if (match.shift < 0) {
 			return ComponentData.empty;
 		}
@@ -397,15 +397,15 @@ public class VoxelMeshData
 		Vector3 vertex = VMD.KeyVertex(edge_key);
 		return new ComponentData(draw, id, vertex, match);
 	}
-	private LatEdgePattern GetLateralPattern(IJL edge_key, int axi)
+	private LateralPattern GetLateralPattern(IJL edge_key, int axi)
 	{
 		if (map == null || axi < 2 || axi > 7) {
-			return LatEdgePattern.empty;
+			return LateralPattern.empty;
 		}
 		//corner plugs
 		KeyPacket2 cornerpacket = VMD.GetLateralCornerKeys(edge_key, axi);
 		if (!cornerpacket.valid) {
-			return LatEdgePattern.empty;
+			return LateralPattern.empty;
 		}
 		int p0 = GetEdgeSocketPlug(0, ref cornerpacket);
 		int p1 = GetEdgeSocketPlug(1, ref cornerpacket);
@@ -424,7 +424,7 @@ public class VoxelMeshData
 		//Below 1
 		voxel_key = VMD.VoxelKeyIJL(edge_key + VMD.KeyTransform_LateralVoxel[d, 1]);
 		int b1 = GetVoxelID(voxel_key);
-		return new LatEdgePattern(false, false, p0, p1, a0, b0, a1, b1);
+		return new LateralPattern(false, false, p0, p1, a0, b0, a1, b1);
 	}
 	private bool ShouldDrawLateral(IJL edge_key, int axi)
 	{
@@ -458,16 +458,16 @@ public class VoxelMeshData
 			return ComponentData.empty;
 		}
 		//get pattern from voxel data
-		LongEdgePattern edge_pat = GetLongitudePattern(edge_key, 0);
+		LongitudePattern edge_pat = GetLongitudePattern(edge_key, 0);
 		//get pattern from map
-		LongEdgePattern map_pat = map.GetLongitudePattern(edge_pat);
+		LongitudePattern map_pat = map.GetLongitudePattern(edge_pat);
 		//get id
 		int id = map.GetLongitudeID(map_pat);
 		if (id <= 0) {
 			return ComponentData.empty;
 		}
 		//calculate shift
-		PatternMatch match = LongEdgePattern.CalculateTransform(map_pat, edge_pat, VMD.IsKeyTopHeavy(edge_key));
+		PatternMatch match = LongitudePattern.CalculateTransform(map_pat, edge_pat, VMD.IsKeyTopHeavy(edge_key));
 		if (match.shift < 0) {
 			return ComponentData.empty;
 		}
@@ -477,15 +477,15 @@ public class VoxelMeshData
 		Vector3 vertex = VMD.KeyVertex(edge_key);
 		return new ComponentData(draw, id, vertex, match);
 	}
-	private LongEdgePattern GetLongitudePattern(IJL edge_key, int axi)
+	private LongitudePattern GetLongitudePattern(IJL edge_key, int axi)
 	{
 		if (map == null || axi < 0 || axi > 1) {
-			return LongEdgePattern.empty;
+			return LongitudePattern.empty;
 		}
 		//corner plugs
 		KeyPacket2 cornerpacket = VMD.GetLongitudeCornerKeys(edge_key, axi);
 		if (!cornerpacket.valid) {
-			return LongEdgePattern.empty;
+			return LongitudePattern.empty;
 		}
 		int p0 = GetEdgeSocketPlug(0, ref cornerpacket);
 		int p1 = GetEdgeSocketPlug(1, ref cornerpacket);
@@ -503,7 +503,7 @@ public class VoxelMeshData
 		//Outside 1
 		voxel_ijl = VMD.VoxelKeyIJL(edge_key + VMD.KeyTransform_LongitudeVoxel[d2]);
 		int vout1 = GetVoxelID(voxel_ijl);
-		return new LongEdgePattern(false, false, p0, p1, vin, vout0, vout1);
+		return new LongitudePattern(false, false, p0, p1, vin, vout0, vout1);
 	}
 	private bool ShouldDrawLongitude(IJL edge_key)
 	{
@@ -533,37 +533,36 @@ public class VoxelMeshData
 			return ComponentData.empty;
 		}
 		//get pattern from voxel data
-		RectFacePattern face_pat = GetRectPattern(face_key, axi);
+		RectPattern face_pat = GetRectPattern(face_key, axi);
 		//get pattern from map
-		RectFacePattern map_pat = map.GetRectPattern(face_pat);
+		RectPattern map_pat = map.GetRectPattern(face_pat);
 		//get id
 		int id = map.GetRectID(map_pat);
 		if (id <= 0) {
 			return ComponentData.empty;
 		}
 		//pattern match
-		PatternMatch match = RectFacePattern.CalculateTransform(map_pat, face_pat);
+		PatternMatch match = RectPattern.CalculateTransform(map_pat, face_pat, axi - 2);
 		if (match.shift < 0) {
 			return ComponentData.empty;
 		}
 		//draw
-		//FIX AXI
-		bool draw = ShouldDrawRect(face_key, axi);
+		bool draw = ShouldDrawRect(face_key, match.shift + 2);
 		//vertex
 		Vector3 vertex = VMD.KeyVertex(face_key);
 		return new ComponentData(draw, id, vertex, match);
 	}
-	private RectFacePattern GetRectPattern(IJL face_key, int axi)
+	private RectPattern GetRectPattern(IJL face_key, int axi)
 	{
 		if (map == null || axi < 2 || axi > 7) {
-			return RectFacePattern.empty;
+			return RectPattern.empty;
 		}
 		//corner plugs
 		KeyPacket4 cornerpacket = VMD.GetRectCornerKeys(face_key, axi);
 		int a0 = GetRectSocketPlug(0, ref cornerpacket);
 		int b0 = GetRectSocketPlug(1, ref cornerpacket);
-		int a1 = GetRectSocketPlug(2, ref cornerpacket);
-		int b1 = GetRectSocketPlug(3, ref cornerpacket);
+		int b1 = GetRectSocketPlug(2, ref cornerpacket);
+		int a1 = GetRectSocketPlug(3, ref cornerpacket);
 
 		int d = axi - 2;
 		int oppd = Vx.D[3, d];
@@ -573,7 +572,7 @@ public class VoxelMeshData
 		//outside voxel
 		voxel_key = VMD.VoxelKeyIJL(face_key + VMD.KeyTransform_RectVoxel[d]);
 		int vout = GetVoxelID(voxel_key);
-		return new RectFacePattern(false, false, a0, b0, a1, b1, vin, vout);
+		return new RectPattern(false, false, a0, b0, a1, b1, vin, vout);
 	}
 	private int GetRectSocketPlug(int index, ref KeyPacket4 cornerpacket)
 	{
@@ -602,7 +601,7 @@ public class VoxelMeshData
 			return -1;
 		}
 		int socketaxi = Vx.NROTAXI[data.match.shift, packet.socketaxi];
-		return design.GetFaceSocketCount(packet.socketlevel, socketaxi);
+		return design.GetFaceSocketCount(data.match.invx, data.match.invy, packet.socketlevel, socketaxi);
 	}
 	private bool ShouldDrawRect(IJL face_key, int axi)
 	{
@@ -627,16 +626,16 @@ public class VoxelMeshData
 			return ComponentData.empty;
 		}
 		//get pattern from voxel data
-		HexagonFacePattern face_pat = GetHexagonPattern(face_key, 0);
+		HexagonPattern face_pat = GetHexagonPattern(face_key, 0);
 		//get pattern from map
-		HexagonFacePattern map_pat = map.GetHexagonPattern(face_pat);
+		HexagonPattern map_pat = map.GetHexagonPattern(face_pat);
 		//get id
 		int id = map.GetHexagonID(map_pat);
 		if (id <= 0) {
 			return ComponentData.empty;
 		}
 		//pattern match
-		PatternMatch match = HexagonFacePattern.CalculateTransform(map_pat, face_pat);
+		PatternMatch match = HexagonPattern.CalculateTransform(map_pat, face_pat);
 		if (match.shift < 0) {
 			return ComponentData.empty;
 		}
@@ -646,10 +645,10 @@ public class VoxelMeshData
 		Vector3 vertex = VMD.KeyVertex(face_key);
 		return new ComponentData(draw, id, vertex, match);
 	}
-	private HexagonFacePattern GetHexagonPattern(IJL face_key, int axi)
+	private HexagonPattern GetHexagonPattern(IJL face_key, int axi)
 	{
 		if (map == null || axi < 0 || axi > 1) {
-			return HexagonFacePattern.empty;
+			return HexagonPattern.empty;
 		}
 		//corner plugs
 		KeyPacket6 cornerpacket = VMD.GetHexagonCornerKeys(face_key, axi);
@@ -665,7 +664,7 @@ public class VoxelMeshData
 		//below voxel
 		voxel_key = VMD.VoxelKeyIJL(face_key + VMD.KeyTransform_HexagonVoxel[1]);
 		int vb = GetVoxelID(voxel_key);
-		return new HexagonFacePattern(false, false, p0, p1, p2, p3, p4, p5, va, vb);
+		return new HexagonPattern(false, false, p0, p1, p2, p3, p4, p5, va, vb);
 	}
 	private int GetHexagonSocketPlug(int index, ref KeyPacket6 cornerpacket)
 	{
@@ -700,7 +699,7 @@ public class VoxelMeshData
 			return -1;
 		}
 		int socketaxi = Vx.NROTAXI[data.match.shift, packet.socketaxi];
-		return design.GetFaceSocketCount(packet.socketlevel, socketaxi);
+		return design.GetFaceSocketCount(data.match.invx, data.match.invy, packet.socketlevel, socketaxi);
 	}
 	private bool ShouldDrawHexagon(IJL face_key)
 	{
@@ -817,8 +816,8 @@ public class VoxelMeshData
 			return -1;
 		}
 		PatternMatch match = data.match;
-		int socketaxi = TransformAxi(packet.socketaxi, ref match);
-		return design.GetEdgeSocketCount(socketaxi);
+		int socketaxi = Vx.NROTAXI[match.shift, packet.socketaxi];
+		return design.GetEdgeSocketCount(data.match.invx, data.match.invy, socketaxi);
 	}
 	private bool ShouldDrawDoubleLevel(int encoded_level, int axi)
 	{
@@ -889,8 +888,8 @@ public class VoxelMeshData
 		GenerateCornerMesh();
 		GenerateLateralMesh();
 		GenerateLongitudeMesh();
-		//GenerateRectMesh();
-		//GenerateHexagonMesh();
+		GenerateRectMesh();
+		GenerateHexagonMesh();
 
 		ExtractMeshData();
 	}
@@ -935,17 +934,6 @@ public class VoxelMeshData
 		}
 	}
 
-	private int TransformAxi(int axi, ref PatternMatch match)
-	{
-		axi = Vx.NROTAXI[match.shift, axi];
-		if (match.invx) {
-			axi = Vx.XREFLAXI[2, axi];
-		}
-		if (match.invy) {
-			axi = Vx.YREFLAXI[axi];
-		}
-		return axi;
-	}
 
 	private Vector3 TransformVertex(Vector3 vertex, Vector3 refl, ref PatternMatch match)
 	{
@@ -1010,7 +998,7 @@ public class VoxelMeshData
 	{
 		CornerPacket2 edgecorners;
 		foreach (KeyValuePair<IJL, ComponentData> data in _lateraldata) {
-			LatEdgeDesign design = map.GetLateralEdge(data.Value.id);
+			LateralDesign design = map.GetLateral(data.Value.id);
 			if (design == null || !design.IsValid()) {
 				continue;
 			}
@@ -1055,7 +1043,7 @@ public class VoxelMeshData
 	{
 		CornerPacket2 edgecorners;
 		foreach (KeyValuePair<IJL, ComponentData> data in _longitudedata) {
-			LongEdgeDesign design = map.GetLongitudeEdge(data.Value.id);
+			LongitudeDesign design = map.GetLongitude(data.Value.id);
 			if (design == null || !design.IsValid()) {
 				continue;
 			}
@@ -1096,15 +1084,136 @@ public class VoxelMeshData
 		}
 	}
 
+	private void GenerateRectMesh()
+	{
+		CornerPacket4 rectcorners;
+		foreach (KeyValuePair<IJL, ComponentData> data in _rectdata) {
+			RectDesign design = map.GetRect(data.Value.id);
+			if (design == null || !design.IsValid()) {
+				continue;
+			}
+			bool draw = data.Value.draw;
+			Vector3 rect_vertex = data.Value.vertex;
+			PatternMatch match = data.Value.match;
+			List<Vector3> rect_vertices = design.vertices;
+			int vertex_count = rect_vertices.Count;
+			int rect_index = _vertexslots.Count;
+			//add vertices
+			for (int k = 0; k < vertex_count; k++) {
+				Vector3 vertex = TransformVertex(rect_vertices[k], Vector3.right, ref match);
+				_vertexslots.Add(new VertexData(rect_vertex + vertex));
+			}
+			if (flat_shaded && !draw) {
+				continue;
+			}
+			GetRectCornerPackets(data.Key, ref match, out rectcorners);
+			if (!rectcorners.valid) {
+				continue;
+			}
+			//add triangles
+			bool fliptri = (!match.invx && match.invy) || (match.invx && !match.invy);
+			List<Triangle> rect_triangles = design.triangles;
+			for (int k = 0; k < rect_triangles.Count; k++) {
+				Triangle tri = rect_triangles[k];
+				//check validity
+				if (!tri.IsValid(vertex_count, design.cornerplugs, design.edgeplugs)) {
+					continue;
+				}
+				int slot0_index = TriangleSlotIndex(rect_index, tri.type0, tri.vertex0, fliptri, ref match, ref rectcorners);
+				int slot1_index = TriangleSlotIndex(rect_index, tri.type1, tri.vertex1, fliptri, ref match, ref rectcorners);
+				int slot2_index = TriangleSlotIndex(rect_index, tri.type2, tri.vertex2, fliptri, ref match, ref rectcorners);
+				AddTriangle(slot0_index, slot1_index, slot2_index, fliptri, draw);
+			}
+		}
+	}
+
+	private void GenerateHexagonMesh()
+	{
+		CornerPacket6 hexagoncorners;
+		foreach (KeyValuePair<IJL, ComponentData> data in _hexagondata) {
+			HexagonDesign design = map.GetHexagon(data.Value.id);
+			if (design == null || !design.IsValid()) {
+				continue;
+			}
+			bool draw = data.Value.draw;
+			Vector3 hexagon_vertex = data.Value.vertex;
+			PatternMatch match = data.Value.match;
+			List<Vector3> hexagon_vertices = design.vertices;
+			int vertex_count = hexagon_vertices.Count;
+			int hexagon_index = _vertexslots.Count;
+			//add vertices
+			for (int k = 0; k < vertex_count; k++) {
+				Vector3 vertex = TransformVertex(hexagon_vertices[k], Vx.ReflVector, ref match);
+				_vertexslots.Add(new VertexData(hexagon_vertex + vertex));
+			}
+			if (flat_shaded && !draw) {
+				continue;
+			}
+			GetHexagonCornerPackets(data.Key, ref match, out hexagoncorners);
+			if (!hexagoncorners.valid) {
+				continue;
+			}
+			//add triangles
+			bool fliptri = (match.invx && !match.invy) || (!match.invx && match.invy);
+			List<Triangle> hexagon_triangles = design.triangles;
+			for (int k = 0; k < hexagon_triangles.Count; k++) {
+				Triangle tri = hexagon_triangles[k];
+				//check validity
+				if (!tri.IsValid(vertex_count, design.cornerplugs, design.edgeplugs)) {
+					continue;
+				}
+				int slot0_index = TriangleSlotIndex(hexagon_index, tri.type0, tri.vertex0, fliptri, ref hexagoncorners);
+				int slot1_index = TriangleSlotIndex(hexagon_index, tri.type1, tri.vertex1, fliptri, ref hexagoncorners);
+				int slot2_index = TriangleSlotIndex(hexagon_index, tri.type2, tri.vertex2, fliptri, ref hexagoncorners);
+				AddTriangle(slot0_index, slot1_index, slot2_index, fliptri, draw);
+			}
+		}
+	}
+
+
+	private void GetHexagonCornerPackets(IJL hexagon_key, ref PatternMatch match, out CornerPacket6 packets)
+	{
+		int axi = 0;
+		if (match.invy) {
+			axi = 1;
+		}
+		KeyPacket6 hexagon_packet = VMD.GetHexagonCornerKeys(hexagon_key, axi);
+		KeyPacket packet = hexagon_packet.pk0;
+		CornerPacket cp0 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = hexagon_packet.pk1;
+		CornerPacket cp1 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = hexagon_packet.pk2;
+		CornerPacket cp2 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = hexagon_packet.pk3;
+		CornerPacket cp3 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = hexagon_packet.pk4;
+		CornerPacket cp4 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = hexagon_packet.pk5;
+		CornerPacket cp5 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packets = new CornerPacket6(true, cp0, cp1, cp2, cp3, cp4, cp5);
+	}
+
+	private void GetRectCornerPackets(IJL rect_key, ref PatternMatch match, out CornerPacket4 packets)
+	{
+		KeyPacket4 corner_packets = VMD.GetRectCornerKeys(rect_key, match.shift + 2);
+		KeyPacket packet = corner_packets.pk0;
+		CornerPacket cp0 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = corner_packets.pk1;
+		CornerPacket cp1 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = corner_packets.pk2;
+		CornerPacket cp2 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packet = corner_packets.pk3;
+		CornerPacket cp3 = GetFaceCornerPacket(packet.key, packet.socketlevel, packet.socketaxi);
+		packets = new CornerPacket4(true, cp0, cp1, cp2, cp3);
+	}
+
 	private void GetLateralCornerPackets(IJL edge_key, ref PatternMatch match, out CornerPacket2 packets)
 	{
-		//transform this
-		int d = match.shift;
-		int axi = Vx.D[2, d] + 2;
-		IJL corner_key = edge_key + VMD.KeyTransform_LateralCorner[d, 0];
-		CornerPacket cp0 = GetEdgeCornerPacket(corner_key, axi);
-		corner_key = edge_key + VMD.KeyTransform_LateralCorner[d, 1];
-		CornerPacket cp1 = GetEdgeCornerPacket(corner_key, Vx.OPPAXI[axi]);
+		KeyPacket2 corner_packets = VMD.GetLateralCornerKeys(edge_key, match.shift + 2);
+		KeyPacket packet = corner_packets.pk0;
+		CornerPacket cp0 = GetEdgeCornerPacket(packet.key, packet.socketaxi);
+		packet = corner_packets.pk1;
+		CornerPacket cp1 = GetEdgeCornerPacket(packet.key, packet.socketaxi);
 		packets = new CornerPacket2(true, cp0, cp1);
 	}
 
@@ -1115,10 +1224,11 @@ public class VoxelMeshData
 		if (match.invy) {
 			axi = 1;
 		}
-		IJL corner_key = edge_key + VMD.KeyTransform_LongitudeCorner[axi,0];
-		CornerPacket cp0 = GetEdgeCornerPacket(corner_key, 0);
-		corner_key = edge_key + VMD.KeyTransform_LongitudeCorner[axi, 1];
-		CornerPacket cp1 = GetEdgeCornerPacket(corner_key, 1);
+		KeyPacket2 corner_packets = VMD.GetLongitudeCornerKeys(edge_key, axi);
+		KeyPacket packet = corner_packets.pk0;
+		CornerPacket cp0 = GetEdgeCornerPacket(packet.key, packet.socketaxi);
+		packet = corner_packets.pk1;
+		CornerPacket cp1 = GetEdgeCornerPacket(packet.key, packet.socketaxi);
 		packets = new CornerPacket2(true, cp0, cp1);
 	}
 
@@ -1143,7 +1253,7 @@ public class VoxelMeshData
 		int slotindex = _cornertable[corner_key];
 		//get axi
 		PatternMatch match = data.match;
-		axi = TransformAxi(axi, ref match);
+		axi = Vx.NROTAXI[match.shift, axi];
 		int socketaxi_index = design.EdgeSocketIndex(axi);
 		if (socketaxi_index < 0) {
 			return CornerPacket.empty;
@@ -1172,7 +1282,7 @@ public class VoxelMeshData
 		int slotindex = _cornertable[corner_key];
 		//get axi
 		PatternMatch match = data.match;
-		axi = TransformAxi(axi, ref match);
+		axi = Vx.NROTAXI[match.shift, axi];
 		int socketaxi_index = design.FaceSocketIndex(axilevel, axi);
 		if (socketaxi_index < 0) {
 			return CornerPacket.empty;
@@ -1207,7 +1317,7 @@ public class VoxelMeshData
 		}
 		return slot_index;
 	}
-	private int TriangleSlotIndex(int base_index, TriIndexType type, ushort vertex, ref CornerPacket4 packet4)
+	private int TriangleSlotIndex(int base_index, TriIndexType type, ushort vertex, bool flip, ref PatternMatch match, ref CornerPacket4 packet4)
 	{
 		if (base_index < 0 || !packet4.valid) {
 			return -1;
@@ -1217,11 +1327,43 @@ public class VoxelMeshData
 			case TriIndexType.CornerPlug:
 				axi_index = TriIndex.DecodeAxiIndex(vertex);
 				socket_index = TriIndex.DecodeIndex(vertex);
+				if (match.invx) {
+					switch(axi_index) {
+						case 0:
+							axi_index = 3;
+							break;
+						case 1:
+							axi_index = 2;
+							break;
+						case 2:
+							axi_index = 1;
+							break;
+						case 3:
+							axi_index = 0;
+							break;
+					}
+				}
+				if (match.invy) {
+					switch (axi_index) {
+						case 0:
+							axi_index = 1;
+							break;
+						case 1:
+							axi_index = 0;
+							break;
+						case 2:
+							axi_index = 3;
+							break;
+						case 3:
+							axi_index = 2;
+							break;
+					}
+				}
 				CornerPacket corner = packet4[axi_index];
 				if (!corner.isValid) {
 					return -1;
 				}
-				slot_index = corner.GetFaceSocketSlotIndex(socket_index);
+				slot_index = corner.GetFaceSocketSlotIndex(socket_index, flip);
 				break;
 			case TriIndexType.EdgePlug:
 				return -1;
@@ -1234,7 +1376,7 @@ public class VoxelMeshData
 		}
 		return slot_index;
 	}
-	private int TriangleSlotIndex(int base_index, TriIndexType type, ushort vertex, ref CornerPacket6 packet6)
+	private int TriangleSlotIndex(int base_index, TriIndexType type, ushort vertex, bool flip, ref CornerPacket6 packet6)
 	{
 		if (base_index < 0 || !packet6.valid) {
 			return -1;
@@ -1248,7 +1390,7 @@ public class VoxelMeshData
 				if (!corner.isValid) {
 					return -1;
 				}
-				slot_index = corner.GetFaceSocketSlotIndex(socket_index);
+				slot_index = corner.GetFaceSocketSlotIndex(socket_index, flip);
 				break;
 			case TriIndexType.EdgePlug:
 				return -1;

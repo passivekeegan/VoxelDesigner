@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexagonModeGUI : ModeGUI<HexagonFaceDesign>
+public class HexagonModeGUI : ModeGUI<HexagonDesign>
 {
 	private readonly string[] TRIANGLE_CORNERPLUG_OPTIONS = new string[] {
 		"D0", "D1", "D2", "D3", "D4", "D5"
@@ -11,11 +11,10 @@ public class HexagonModeGUI : ModeGUI<HexagonFaceDesign>
 		"D0", "D1", "D2", "D3", "D4", "D5"
 	};
 	private readonly string[] CORNERPLUG_LABELS = new string[] {
-		"D0 Plug", "D1 Plug", "D2 Plug", "D3 Plug", "D4 Plug", "D5 Plug"
+		"D0", "D1", "D2", "D3", "D4", "D5"
 	};
-
 	private readonly string[] EDGEPLUG_LABELS = new string[] {
-		"D0 Plug", "D1 Plug", "D2 Plug", "D3 Plug", "D4 Plug", "D5 Plug"
+		"D0", "D1", "D2", "D3", "D4", "D5"
 	};
 
 	public HexagonModeGUI()
@@ -28,7 +27,7 @@ public class HexagonModeGUI : ModeGUI<HexagonFaceDesign>
 		_preview.setFrameAltPos = new Vector3(0, 0.5f, 0);
 		_mode = 0;
 		_modes = new PanelGUI[] {
-			new SelectionPanel<HexagonFaceDesign>("Face Selection"),
+			new SelectionPanel<HexagonDesign>("Face Selection"),
 			new VertexPanel("Vertices", Quaternion.identity),
 			new TrianglePanel(_preview , "Triangles", TRIANGLE_CORNERPLUG_OPTIONS, TRIANGLE_EDGEPLUG_OPTIONS),
 			new PlugPanel("Corner Plugs", CORNERPLUG_LABELS, CORNERPLUG_LABELS.Length),
@@ -66,7 +65,7 @@ public class HexagonModeGUI : ModeGUI<HexagonFaceDesign>
 		}
 		switch (_mode) {
 			case 0:
-				SelectionPanel<HexagonFaceDesign> select = (SelectionPanel<HexagonFaceDesign>)_modes[_mode];
+				SelectionPanel<HexagonDesign> select = (SelectionPanel<HexagonDesign>)_modes[_mode];
 				if (selected != select.selected) {
 					selected = select.selected;
 				}

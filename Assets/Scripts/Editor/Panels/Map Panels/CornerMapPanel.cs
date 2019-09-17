@@ -6,7 +6,7 @@ using UnityEditorInternal;
 
 public class CornerMapPanel : PanelGUI
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Rect _rect_selectheader;
 	private Rect _rect_selectscroll;

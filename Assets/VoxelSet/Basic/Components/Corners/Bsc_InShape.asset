@@ -1,0 +1,171 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990b25e0791ffa545bfe289915c9c1df, type: 3}
+  m_Name: Bsc_InShape
+  m_EditorClassIdentifier: 
+  objname: Bsc_InShape
+  vertices:
+  - {x: 0.0926946, y: 0.3, z: 0.19414823}
+  - {x: 0.14536694, y: 0.175162, z: 0.12649105}
+  - {x: 0.03028577, y: 0.175162, z: 0.014589509}
+  - {x: -0.035858043, y: 0.3, z: 0.059749953}
+  - {x: 0.1872701, y: 0.074582, z: 0.030338665}
+  - {x: -0.069673516, y: 0.3, z: 0.0011780728}
+  - {x: 0.092411056, y: 0.074582, z: -0.05335464}
+  - {x: 0.23397453, y: 0, z: -0.13508578}
+  - {x: 0.06735979, y: 0.074582, z: -0.17735058}
+  - {x: 0.0025076894, y: 0.175162, z: -0.033523444}
+  - {x: -0.12179047, y: 0.3, z: -0.17735073}
+  - {x: -0.036860917, y: 0.175162, z: -0.18913701}
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 1
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 2
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 2
+    vertex2: 1
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 5
+    vertex1: 3
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 6
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 7
+    vertex1: 6
+    vertex2: 4
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 7
+    vertex1: 8
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 5
+    vertex1: 2
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 6
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 9
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 9
+    vertex1: 10
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 11
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 9
+    vertex1: 11
+    vertex2: 10
+  edgesockets:
+  - normal: 0a000000050000000300000000000000
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 0000000003000000050000000a000000
+    invxy: 
+  - normal: 00000000010000000400000007000000
+    invx: 
+    invy: 07000000040000000100000000000000
+    invxy: 
+  - normal: 07000000080000000b0000000a000000
+    invx: 
+    invy: 0a0000000b0000000800000007000000
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  _edgesocket_cnt: 5
+  facesockets:
+  - normal: 00000000
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 00000000
+    invxy: 
+  - normal: 0a000000
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 0a000000
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 07000000
+    invx: 
+    invy: 07000000
+    invxy: 
+  _facesocket_cnt: 9
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0

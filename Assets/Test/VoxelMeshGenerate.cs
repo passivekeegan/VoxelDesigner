@@ -12,7 +12,7 @@ public class VoxelMeshGenerate : MonoBehaviour
 	[Range(1, 10)]
 	public int chunk_radius = 4;
 	public Material material;
-	public MappingObject voxelstyle;
+	public MapObject voxelstyle;
 	public List<Vector3Int> customvoxels;
 
 	private VoxelMeshData _data;
@@ -25,6 +25,8 @@ public class VoxelMeshGenerate : MonoBehaviour
 
 	public void Start()
 	{
+		voxelstyle.Start();
+
 		_data = new VoxelMeshData();
 		_chunklist = new List<IJL>();
 		_sampleset = new HashSet<IJL>();

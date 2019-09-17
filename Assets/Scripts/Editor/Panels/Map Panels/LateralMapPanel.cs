@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LateralMapPanel : PanelGUI
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Rect _rect_selectheader;
 	private Rect _rect_selectscroll;
@@ -21,20 +21,20 @@ public class LateralMapPanel : PanelGUI
 	private Vector2 _patscroll;
 
 	//Mapping CornerDesign List
-	private List<LatEdgeDesign> _edges;
+	private List<LateralDesign> _edges;
 	private ReorderableList _edgelist;
 
 	//Pattern List
-	private LatEdgePattern _addpat;
-	private List<LatEdgePattern> _patterns;
+	private LateralPattern _addpat;
+	private List<LateralPattern> _patterns;
 	private ReorderableList _patternlist;
 
 
 	public LateralMapPanel(string title)
 	{
 		_title = title;
-		_edges = new List<LatEdgeDesign>();
-		_patterns = new List<LatEdgePattern>();
+		_edges = new List<LateralDesign>();
+		_patterns = new List<LateralPattern>();
 	}
 
 	public override void Enable()
@@ -42,11 +42,11 @@ public class LateralMapPanel : PanelGUI
 		_update_mesh = true;
 		_render_mesh = true;
 		_repaint_menu = true;
-		_addpat = LatEdgePattern.empty;
+		_addpat = LateralPattern.empty;
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
 
-		_edgelist = new ReorderableList(_edges, typeof(LatEdgeDesign), false, false, false, false);
+		_edgelist = new ReorderableList(_edges, typeof(LateralDesign), false, false, false, false);
 		_edgelist.showDefaultBackground = false;
 		_edgelist.headerHeight = 0;
 		_edgelist.footerHeight = 0;
@@ -55,7 +55,7 @@ public class LateralMapPanel : PanelGUI
 		_edgelist.drawElementCallback += DrawEdgeElement;
 		_edgelist.drawElementBackgroundCallback += DrawEdgeElementBackground;
 
-		_patternlist = new ReorderableList(_patterns, typeof(LatEdgePattern), false, false, false, false);
+		_patternlist = new ReorderableList(_patterns, typeof(LateralPattern), false, false, false, false);
 		_patternlist.showDefaultBackground = false;
 		_patternlist.headerHeight = 0;
 		_patternlist.footerHeight = 0;
@@ -125,7 +125,7 @@ public class LateralMapPanel : PanelGUI
 
 		//apply change
 		if (EditorGUI.EndChangeCheck()) {
-			_addpat = new LatEdgePattern(flipx, flipy, p0, p1, a0, b0, a1, b1);
+			_addpat = new LateralPattern(flipx, flipy, p0, p1, a0, b0, a1, b1);
 			_repaint_menu = false;
 		}
 		//draw pattern header
@@ -200,7 +200,7 @@ public class LateralMapPanel : PanelGUI
 			return;
 		}
 		//fill list
-		target.AddLateralEdgesToList(_edges);
+		target.AddLateralsToList(_edges);
 	}
 
 	private void DrawEdgeNoneElement(Rect rect)

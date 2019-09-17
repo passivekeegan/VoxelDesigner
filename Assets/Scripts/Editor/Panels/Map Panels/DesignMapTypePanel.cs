@@ -7,7 +7,7 @@ using System.IO;
 
 public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Rect _rect_header;
 	private Rect _rect_guidscroll;
@@ -156,17 +156,17 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			if (typeof(T) == typeof(CornerDesign)) {
 				target.AddCornersToList(_libobjs);
 			}
-			else if (typeof(T) == typeof(LatEdgeDesign)) {
-				target.AddLateralEdgesToList(_libobjs);
+			else if (typeof(T) == typeof(LateralDesign)) {
+				target.AddLateralsToList(_libobjs);
 			}
-			else if (typeof(T) == typeof(LongEdgeDesign)) {
-				target.AddLongitudeEdgesToList(_libobjs);
+			else if (typeof(T) == typeof(LongitudeDesign)) {
+				target.AddLongitudesToList(_libobjs);
 			}
-			else if (typeof(T) == typeof(RectFaceDesign)) {
-				target.AddRectFacesToList(_libobjs);
+			else if (typeof(T) == typeof(RectDesign)) {
+				target.AddRectsToList(_libobjs);
 			}
-			else if (typeof(T) == typeof(HexagonFaceDesign)) {
-				target.AddHexagonFacesToList(_libobjs);
+			else if (typeof(T) == typeof(HexagonDesign)) {
+				target.AddHexagonsToList(_libobjs);
 			}
 		}
 		HashSet<string> lib_guids = new HashSet<string>();
@@ -221,43 +221,43 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
-		else if (typeof(T) == typeof(LatEdgeDesign)) {
-			LatEdgeDesign asset = (LatEdgeDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LatEdgeDesign));
+		else if (typeof(T) == typeof(LateralDesign)) {
+			LateralDesign asset = (LateralDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LateralDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Added LatEdgeDesign to MappingObject");
-			target.AddLateralEdge(asset);
+			target.AddLateral(asset);
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
-		else if (typeof(T) == typeof(LongEdgeDesign)) {
-			LongEdgeDesign asset = (LongEdgeDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LongEdgeDesign));
+		else if (typeof(T) == typeof(LongitudeDesign)) {
+			LongitudeDesign asset = (LongitudeDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LongitudeDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Added LongEdgeDesign to MappingObject");
-			target.AddLongitudeEdge(asset);
+			target.AddLongitude(asset);
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
-		else if (typeof(T) == typeof(RectFaceDesign)) {
-			RectFaceDesign asset = (RectFaceDesign)AssetDatabase.LoadAssetAtPath(path, typeof(RectFaceDesign));
+		else if (typeof(T) == typeof(RectDesign)) {
+			RectDesign asset = (RectDesign)AssetDatabase.LoadAssetAtPath(path, typeof(RectDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Added RectFaceDesign to MappingObject");
-			target.AddRectFace(asset);
+			target.AddRect(asset);
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
-		else if (typeof(T) == typeof(HexagonFaceDesign)) {
-			HexagonFaceDesign asset = (HexagonFaceDesign)AssetDatabase.LoadAssetAtPath(path, typeof(HexagonFaceDesign));
+		else if (typeof(T) == typeof(HexagonDesign)) {
+			HexagonDesign asset = (HexagonDesign)AssetDatabase.LoadAssetAtPath(path, typeof(HexagonDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Added HexagonFaceDesign to MappingObject");
-			target.AddHexagonFace(asset);
+			target.AddHexagon(asset);
 			//dirty target object
 			EditorUtility.SetDirty(target);
 		}
@@ -279,21 +279,21 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			Undo.RecordObject(target, "Deleted " + typeof(T).ToString() + " from MappingObject");
 			target.DeleteCorner((CornerDesign)_libobjs[_libobjlist.index]);
 		}
-		else if (typeof(T) == typeof(LatEdgeDesign)) {
+		else if (typeof(T) == typeof(LateralDesign)) {
 			Undo.RecordObject(target, "Deleted " + typeof(T).ToString() + " from MappingObject");
-			target.DeleteLateralEdge((LatEdgeDesign)_libobjs[_libobjlist.index]);
+			target.DeleteLateral((LateralDesign)_libobjs[_libobjlist.index]);
 		}
-		else if (typeof(T) == typeof(LongEdgeDesign)) {
+		else if (typeof(T) == typeof(LongitudeDesign)) {
 			Undo.RecordObject(target, "Deleted " + typeof(T).ToString() + " from MappingObject");
-			target.DeleteLongitudeEdge((LongEdgeDesign)_libobjs[_libobjlist.index]);
+			target.DeleteLongitude((LongitudeDesign)_libobjs[_libobjlist.index]);
 		}
-		else if (typeof(T) == typeof(RectFaceDesign)) {
+		else if (typeof(T) == typeof(RectDesign)) {
 			Undo.RecordObject(target, "Deleted " + typeof(T).ToString() + " from MappingObject");
-			target.DeleteRectFace((RectFaceDesign)_libobjs[_libobjlist.index]);
+			target.DeleteRect((RectDesign)_libobjs[_libobjlist.index]);
 		}
-		else if (typeof(T) == typeof(HexagonFaceDesign)) {
+		else if (typeof(T) == typeof(HexagonDesign)) {
 			Undo.RecordObject(target, "Deleted " + typeof(T).ToString() + " from MappingObject");
-			target.DeleteHexagonFace((HexagonFaceDesign)_libobjs[_libobjlist.index]);
+			target.DeleteHexagon((HexagonDesign)_libobjs[_libobjlist.index]);
 		}
 		else {
 			return;
@@ -323,37 +323,37 @@ public class DesignMapTypePanel<T> : PanelGUI where T : VoxelComponent
 			Undo.RecordObject(target, "Replaced " + typeof(T).ToString() + "'s in MappingObject");
 			target.ReplaceCorner((CornerDesign)_libobjs[_libobjlist.index], asset);
 		}
-		else if (typeof(T) == typeof(LatEdgeDesign)) {
-			LatEdgeDesign asset = (LatEdgeDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LatEdgeDesign));
+		else if (typeof(T) == typeof(LateralDesign)) {
+			LateralDesign asset = (LateralDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LateralDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Replaced " + typeof(T).ToString() + "'s in MappingObject");
-			target.ReplaceLateralEdge((LatEdgeDesign)_libobjs[_libobjlist.index], asset);
+			target.ReplaceLateral((LateralDesign)_libobjs[_libobjlist.index], asset);
 		}
-		else if (typeof(T) == typeof(LongEdgeDesign)) {
-			LongEdgeDesign asset = (LongEdgeDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LongEdgeDesign));
+		else if (typeof(T) == typeof(LongitudeDesign)) {
+			LongitudeDesign asset = (LongitudeDesign)AssetDatabase.LoadAssetAtPath(path, typeof(LongitudeDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Replaced " + typeof(T).ToString() + "'s in MappingObject");
-			target.ReplaceLongitudeEdge((LongEdgeDesign)_libobjs[_libobjlist.index], asset);
+			target.ReplaceLongitude((LongitudeDesign)_libobjs[_libobjlist.index], asset);
 		}
-		else if (typeof(T) == typeof(RectFaceDesign)) {
-			RectFaceDesign asset = (RectFaceDesign)AssetDatabase.LoadAssetAtPath(path, typeof(RectFaceDesign));
+		else if (typeof(T) == typeof(RectDesign)) {
+			RectDesign asset = (RectDesign)AssetDatabase.LoadAssetAtPath(path, typeof(RectDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Replaced " + typeof(T).ToString() + "'s in MappingObject");
-			target.ReplaceRectFace((RectFaceDesign)_libobjs[_libobjlist.index], asset);
+			target.ReplaceRect((RectDesign)_libobjs[_libobjlist.index], asset);
 		}
-		else if (typeof(T) == typeof(HexagonFaceDesign)) {
-			HexagonFaceDesign asset = (HexagonFaceDesign)AssetDatabase.LoadAssetAtPath(path, typeof(HexagonFaceDesign));
+		else if (typeof(T) == typeof(HexagonDesign)) {
+			HexagonDesign asset = (HexagonDesign)AssetDatabase.LoadAssetAtPath(path, typeof(HexagonDesign));
 			if (asset == null) {
 				return;
 			}
 			Undo.RecordObject(target, "Replaced " + typeof(T).ToString() + "'s in MappingObject");
-			target.ReplaceHexagonFace((HexagonFaceDesign)_libobjs[_libobjlist.index], asset);
+			target.ReplaceHexagon((HexagonDesign)_libobjs[_libobjlist.index], asset);
 		}
 		else {
 			return;

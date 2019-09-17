@@ -28,10 +28,13 @@ public class PreviewAxiDisplay : PanelGUI
 	public Mesh voxel_mesh;
 	public Material material;
 
+	public bool invx;
+	public bool invy;
 	public bool enable_voxelframe;
 	public bool enable_voxelflip;
 	public Vector3 voxelpos;
 	public Vector3 altvoxelpos;
+	public Vector3 refl_vector;
 
 	public bool expanded;
 	public bool origin_enabled;

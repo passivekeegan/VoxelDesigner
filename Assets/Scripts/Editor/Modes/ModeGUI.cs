@@ -131,10 +131,10 @@ public abstract class ModeGUI<T> : PanelGUI where T : VoxelObject
 		int newmode = GUI.SelectionGrid(VxlGUI.CenterInvertRect(_rect_submodes), _mode, _mode_labels, _modes.Length, GUI.skin.GetStyle("SubModeToolbar"));
 		//mode switch
 		if (newmode != _mode) {
-			//enable new mode
-			_modes[newmode].Enable();
 			//disable old mode
 			_modes[_mode].Disable();
+			//enable new mode
+			_modes[newmode].Enable();
 			_mode = newmode;
 			//update new mode
 			UpdateModes();

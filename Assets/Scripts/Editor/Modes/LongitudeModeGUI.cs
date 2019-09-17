@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LongitudeModeGUI : ModeGUI<LongEdgeDesign>
+public class LongitudeModeGUI : ModeGUI<LongitudeDesign>
 {
 	private readonly string[] TRIANGLE_CORNERPLUG_OPTIONS = new string[] {
-		"Forward", "Backward"
+		"Below", "Above"
 	};
 	private readonly string[] CORNERPLUG_LABELS = new string[] {
-		"Forwards Plug", "Backwards Plug"
+		"Below", "Above"
 	};
 	private readonly string[] FACESOCKET_LABELS = new string[] {
-		"Above Socket", "Below Socket", "D0 Socket", "D2 Socket", "D4 Socket"
+		"D0", "D2", "D4"
 	};
 	public LongitudeModeGUI()
 	{
@@ -22,11 +22,11 @@ public class LongitudeModeGUI : ModeGUI<LongEdgeDesign>
 		_preview.setFramePos = new Vector3(-1, 0, -Vx.SQRT3_R1);
 		_mode = 0;
 		_modes = new PanelGUI[] {
-			new SelectionPanel<LongEdgeDesign>("Edge Selection"),
+			new SelectionPanel<LongitudeDesign>("Edge Selection"),
 			new VertexPanel("Vertices", Quaternion.Euler(0, 60f, 0)),
 			new TrianglePanel(_preview, "Triangles", TRIANGLE_CORNERPLUG_OPTIONS, new string[0]),
 			new PlugPanel("Corner Plugs", CORNERPLUG_LABELS, CORNERPLUG_LABELS.Length),
-			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS, FACESOCKET_LABELS.Length, SocketType.Face)
+			new SocketPanel(_preview, "Face Sockets", false, FACESOCKET_LABELS)
 		};
 		_mode_labels = new string[] {
 			"Select", "Vertex", "Triangle", "Corner Plug", "Face Socket"
@@ -50,7 +50,7 @@ public class LongitudeModeGUI : ModeGUI<LongEdgeDesign>
 			case 4:
 				SocketPanel face = (SocketPanel)_modes[_mode];
 				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
-				_preview.UpdatePrimarySocketSelection(face.selectedSocket, SocketType.Face, face.selectlist);
+				_preview.UpdatePrimarySocketSelection(face.inverseX, face.inverseY, false, face.axiSocket, face.selectlist);
 				break;
 			default:
 				_preview.vertexMode = VertexMode.None;
@@ -65,7 +65,7 @@ public class LongitudeModeGUI : ModeGUI<LongEdgeDesign>
 		}
 		switch (_mode) {
 			case 0:
-				SelectionPanel<LongEdgeDesign> select = (SelectionPanel<LongEdgeDesign>)_modes[_mode];
+				SelectionPanel<LongitudeDesign> select = (SelectionPanel<LongitudeDesign>)_modes[_mode];
 				if (selected != select.selected) {
 					selected = select.selected;
 				}

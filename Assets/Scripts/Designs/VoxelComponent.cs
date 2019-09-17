@@ -7,7 +7,8 @@ using UnityEngine;
 /// construction of a voxel. It contains geometry information as well as concepts 
 /// such as sockets and plugs ment to help voxel components hook up to one another.
 /// </summary>
-public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiver
+[System.Serializable]
+public abstract class VoxelComponent : VoxelObject
 {
 	//vertices variables
 	[SerializeField]
@@ -16,11 +17,13 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	[SerializeField]
 	public List<Triangle> triangles;
 	//edge sockets variables
-	public List<List<int>> edgesockets;
+	[SerializeField]
+	public List<AxiSocket> edgesockets;
 	[SerializeField]
 	protected int _edgesocket_cnt;
 	//face sockets variables
-	public List<List<int>> facesockets;
+	[SerializeField]
+	public List<AxiSocket> facesockets;
 	[SerializeField]
 	protected int _facesocket_cnt;
 	//corner plugs variables
@@ -47,15 +50,15 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 		triangles = new List<Triangle>();
 		//edge sockets
 		_edgesocket_cnt = Mathf.Max(0, _edgesocket_cnt);
-		edgesockets = new List<List<int>>(_edgesocket_cnt);
+		edgesockets = new List<AxiSocket>(_edgesocket_cnt);
 		for (int k = 0; k < _edgesocket_cnt; k++) {
-			edgesockets.Add(new List<int>());
+			edgesockets.Add(new AxiSocket(new List<int>(), new List<int>(), new List<int>(), new List<int>()));
 		}
 		//face sockets
 		_facesocket_cnt = Mathf.Max(0, _facesocket_cnt);
-		facesockets = new List<List<int>>(_facesocket_cnt);
+		facesockets = new List<AxiSocket>(_facesocket_cnt);
 		for (int k = 0; k < _facesocket_cnt; k++) {
-			facesockets.Add(new List<int>());
+			facesockets.Add(new AxiSocket(new List<int>(), new List<int>(), new List<int>(), new List<int>()));
 		}
 		//corner plugs
 		_cornerplug_cnt = Mathf.Max(0, _cornerplug_cnt);
@@ -191,18 +194,22 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// Returns an integer representing the socket vertex count. Returns -1 
 	/// if the object doesn't have an edge socket at that axi.
 	/// </returns>
-	public int GetEdgeSocketCount(int axi)
+	public int GetEdgeSocketCount(bool invx, bool invy, int axi)
 	{
-		return GetEdgeSocketCountByIndex(EdgeSocketIndex(axi));
+		return GetEdgeSocketCountByIndex(invx, invy, EdgeSocketIndex(axi));
 	}
 
 
-	public int GetEdgeSocketCountByIndex(int axi_index)
+	public int GetEdgeSocketCountByIndex(bool invx, bool invy, int axi_index)
 	{
-		if (axi_index < 0 || axi_index >= edgesockets.Count || edgesockets[axi_index] == null) {
+		if (axi_index < 0 || axi_index >= edgesockets.Count || !edgesockets[axi_index].IsValid()) {
 			return -1;
 		}
-		return edgesockets[axi_index].Count;
+		List<int> sockets = edgesockets[axi_index][invx, invy];
+		if (sockets == null) {
+			return -1;
+		}
+		return sockets.Count;
 	}
 
 	/// <summary>
@@ -223,14 +230,23 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// Returns -1 if the object doesn't have a face socket at 
 	/// that level and axi.
 	/// </returns>
-	public int GetFaceSocketCount(int level, int axi)
+	public int GetFaceSocketCount(bool invx, bool invy, int level, int axi)
 	{
-		int axi_index = FaceSocketIndex(level, axi);
-		if (axi_index < 0 || axi_index >= facesockets.Count || facesockets[axi_index] == null) {
+		return GetFaceSocketCountByIndex(invx, invy, FaceSocketIndex(level, axi));
+	}
+
+	public int GetFaceSocketCountByIndex(bool invx, bool invy, int axi_index)
+	{
+		if (axi_index < 0 || axi_index >= facesockets.Count || !facesockets[axi_index].IsValid()) {
 			return -1;
 		}
-		return facesockets[axi_index].Count;
+		List<int> sockets = facesockets[axi_index][invx, invy];
+		if (sockets == null) {
+			return -1;
+		}
+		return sockets.Count;
 	}
+
 
 	/// <summary>
 	/// Gets a vertex index from an edge socket by axi.
@@ -247,9 +263,9 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// that axi, if the socket index is out of bounds, or if the vertex 
 	/// index in the edge socket is out of bounds.
 	/// </returns>
-	public int GetEdgeSocketByAxi(int axi, int socket_index)
+	public int GetEdgeSocketByAxi(bool invx, bool invy, int axi, int socket_index)
 	{
-		return GetSocket(EdgeSocketIndex(axi), socket_index, edgesockets);
+		return GetSocket(invx, invy, EdgeSocketIndex(axi), socket_index, edgesockets);
 	}
 
 
@@ -268,9 +284,9 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// edge socket. Returns -1 if the axi index or socket index is out of 
 	/// bounds, or if the vertex index in the edge socket is out of bounds.
 	/// </returns>
-	public int GetEdgeSocketByIndex(int axi_index, int socket_index)
+	public int GetEdgeSocketByIndex(bool invx, bool invy, int axi_index, int socket_index)
 	{
-		return GetSocket(axi_index, socket_index, edgesockets);
+		return GetSocket(invx, invy, axi_index, socket_index, edgesockets);
 	}
 
 	/// <summary>
@@ -294,9 +310,9 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// that level and axi, the socket index is out of bounds or if the 
 	/// vertex index in the face socket is out of bounds.
 	/// </returns>
-	public int GetFaceSocketByAxi(int level, int axi, int socket_index)
+	public int GetFaceSocketByAxi(bool invx, bool invy, int level, int axi, int socket_index)
 	{
-		return GetSocket(FaceSocketIndex(level, axi), socket_index, facesockets);
+		return GetSocket(invx, invy, FaceSocketIndex(level, axi), socket_index, facesockets);
 	}
 
 	/// <summary>
@@ -314,9 +330,9 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// face socket. Returns -1 if the axi index or socket index is out of 
 	/// bounds, or if the vertex index in the face socket is out of bounds.
 	/// </returns>
-	public int GetFaceSocketByIndex(int axi_index, int socket_index)
+	public int GetFaceSocketByIndex(bool invx, bool invy, int axi_index, int socket_index)
 	{
-		return GetSocket(axi_index, socket_index, facesockets);
+		return GetSocket(invx, invy, axi_index, socket_index, facesockets);
 	}
 
 	/// <summary>
@@ -340,18 +356,22 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 	/// improperly formated, or if the vertex index in the socket is out 
 	/// of bounds.
 	/// </returns>
-	private int GetSocket(int axi_index, int socket_index, List<List<int>> sockets)
+	private int GetSocket(bool invx, bool invy, int axi_index, int socket_index, List<AxiSocket> axisockets)
 	{
 		//validate that axi index is within bounds and socket is not null
-		if (axi_index < 0 || axi_index >= sockets.Count || sockets[axi_index] == null) {
+		if (axi_index < 0 || axi_index >= axisockets.Count || !axisockets[axi_index].IsValid()) {
+			return -1;
+		}
+		List<int> sockets = axisockets[axi_index][invx, invy];
+		if (sockets == null) {
 			return -1;
 		}
 		//validate that the socket index is within bounds
-		if (socket_index < 0 || socket_index >= sockets[axi_index].Count) {
+		if (socket_index < 0 || socket_index >= sockets.Count) {
 			return -1;
 		}
 		//get the vertex index in the socket
-		int vertex_index = sockets[axi_index][socket_index];
+		int vertex_index = sockets[socket_index];
 		//validate the vertex index is within bounds
 		if (vertex_index < 0 || vertex_index >= vertices.Count) {
 			return -1;
@@ -359,142 +379,24 @@ public abstract class VoxelComponent : VoxelObject, ISerializationCallbackReceiv
 		return vertex_index;
 	}
 
-	public List<int> GetSocket(SocketType type, int axi_index)
+	public List<int> GetEdgeSocketList(bool invx, bool invy, int axi_index)
 	{
-		switch(type) {
-			case SocketType.Edge:
-				if (axi_index < 0 || axi_index >= _edgesocket_cnt) {
-					return null;
-				}
-				return edgesockets[axi_index];
-			case SocketType.Face:
-				if (axi_index < 0 || axi_index >= _facesocket_cnt) {
-					return null;
-				}
-				return facesockets[axi_index];
-			default:
-				return null;
-		}
+		return GetSocketList(invx, invy, axi_index, edgesockets);
 	}
 
-	#endregion
-
-	#region Serialization
-	[SerializeField]
-	private List<int> _serial_edgecounts;
-	[SerializeField]
-	private List<int> _serial_edgesockets;
-	[SerializeField]
-	private List<int> _serial_facecounts;
-	[SerializeField]
-	private List<int> _serial_facesockets;
-
-	public void OnBeforeSerialize()
+	public List<int> GetFaceSocketList(bool invx, bool invy, int axi_index)
 	{
-		//edge socket serialization
-		if (edgesockets == null) {
-			edgesockets = new List<List<int>>();
-		}
-		if (_serial_edgecounts == null) {
-			_serial_edgecounts = new List<int>();
-		}
-		else {
-			_serial_edgecounts.Clear();
-		}
-		if (_serial_edgesockets == null) {
-			_serial_edgesockets = new List<int>();
-		}
-		else {
-			_serial_edgesockets.Clear();
-		}
-		for (int i = 0; i < _edgesocket_cnt; i++) {
-			_serial_edgecounts.Add(0);
-			if (i >= edgesockets.Count || edgesockets[i] == null) {
-				continue;
-			}
-			_serial_edgecounts[i] = edgesockets[i].Count;
-			for (int j = 0; j < _serial_edgecounts[i]; j++) {
-				_serial_edgesockets.Add(edgesockets[i][j]);
-			}
-		}
-		//face socket serialization
-		if (facesockets == null) {
-			facesockets = new List<List<int>>();
-		}
-		if (_serial_facecounts == null) {
-			_serial_facecounts = new List<int>();
-		}
-		else {
-			_serial_facecounts.Clear();
-		}
-		if (_serial_facesockets == null) {
-			_serial_facesockets = new List<int>();
-		}
-		else {
-			_serial_facesockets.Clear();
-		}
-		for (int i = 0; i < _facesocket_cnt; i++) {
-			_serial_facecounts.Add(0);
-			if (i >= facesockets.Count || facesockets[i] == null) {
-				continue;
-			}
-			_serial_facecounts[i] = facesockets[i].Count;
-			for (int j = 0; j < _serial_facecounts[i]; j++) {
-				_serial_facesockets.Add(facesockets[i][j]);
-			}
-		}
+		return GetSocketList(invx, invy, axi_index, facesockets);
 	}
-	public void OnAfterDeserialize()
+
+	private List<int> GetSocketList(bool invx, bool invy, int axi_index, List<AxiSocket> axisockets)
 	{
-		//edge socket deserialization
-		if (_serial_edgecounts == null || _serial_edgesockets == null) {
-			_serial_edgecounts = new List<int>();
-			_serial_edgesockets = new List<int>();
+
+		//validate that axi index is within bounds and socket is not null
+		if (axi_index < 0 || axi_index >= axisockets.Count || !axisockets[axi_index].IsValid()) {
+			return null;
 		}
-		if (edgesockets == null) {
-			edgesockets = new List<List<int>>(_edgesocket_cnt);
-		}
-		else {
-			edgesockets.Clear();
-		}
-		for (int i = 0, index = 0; i < _edgesocket_cnt; i++) {
-			edgesockets.Add(new List<int>());
-			if (i >= _serial_edgecounts.Count) {
-				continue;
-			}
-			int cnt = Mathf.Max(0, _serial_edgecounts[i]);
-			for (int j = 0; j < cnt && index < _serial_edgesockets.Count; j++, index += 1) {
-				edgesockets[i].Add(_serial_edgesockets[index]);
-			}
-		}
-		//face socket deserialization
-		if (_serial_facecounts == null || _serial_facesockets == null) {
-			_serial_facecounts = new List<int>();
-			_serial_facesockets = new List<int>();
-		}
-		if (facesockets == null) {
-			facesockets = new List<List<int>>(_facesocket_cnt);
-		}
-		else {
-			facesockets.Clear();
-		}
-		for (int i = 0, index = 0; i < _facesocket_cnt; i++) {
-			facesockets.Add(new List<int>());
-			if (i >= _serial_facecounts.Count) {
-				continue;
-			}
-			int cnt = Mathf.Max(0, _serial_facecounts[i]);
-			for (int j = 0; j < cnt && index < _serial_facesockets.Count; j++, index += 1) {
-				facesockets[i].Add(_serial_facesockets[index]);
-			}
-		}
+		return axisockets[axi_index][invx, invy];
 	}
 	#endregion
-}
-
-
-public enum SocketType
-{
-	Edge,
-	Face
 }

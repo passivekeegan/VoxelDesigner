@@ -164,7 +164,23 @@ public static class Vx
 		};
 	}
 
-	
+	public static Vector3 TransformVertex(Vector3 vertex, Vector3 refl, PatternMatch match)
+	{
+		//reflect x
+		if (match.invx) {
+			float y = vertex.y;
+			vertex = (2 * Vector3.Dot(refl, vertex) * refl) - vertex;
+			vertex = new Vector3(vertex.x, y, vertex.z);
+		}
+		//reflect y
+		if (match.invy) {
+			vertex = Vector3.Scale(new Vector3(1, -1, 1), vertex);
+		}
+		//rotate
+		vertex = Vx.AxiRot[match.shift] * vertex;
+		return vertex;
+	}
+
 	public static IJL ChunkVoxelIJL(IJL chunk, int radius)
 	{
 		return ((2 * radius) - 1) * chunk;
@@ -174,4 +190,7 @@ public static class Vx
 	{
 		return voxelijl / radius;
 	}
+
+
+	//public static Matrix4x4 
 }

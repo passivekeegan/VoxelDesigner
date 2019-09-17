@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 
-public class RectModeGUI : ModeGUI<RectFaceDesign>
+public class RectModeGUI : ModeGUI<RectDesign>
 {
 	private readonly string[] TRIANGLE_CORNERPLUG_OPTIONS = new string[] {
-		"D0", "D1", "D2", "D3", "D4", "D5"
+		"A0", "B0", "B1", "A1"
 	};
 	private readonly string[] TRIANGLE_EDGEPLUG_OPTIONS = new string[] {
-		"D0", "D1", "D2", "D3", "D4", "D5"
+		"Backward", "Below", "Forward", "Above"
 	};
 	private readonly string[] CORNERPLUG_LABELS = new string[] {
-		"D0 Plug", "D1 Plug", "D2 Plug", "D3 Plug", "D4 Plug", "D5 Plug"
+		"Above Backward", "Below Backward", "Below Forward", "Above Forward"
 	};
 
 	private readonly string[] EDGEPLUG_LABELS = new string[] {
-		"D0 Plug", "D1 Plug", "D2 Plug", "D3 Plug", "D4 Plug", "D5 Plug"
+		"Backward", "Below", "Forward", "Above"
 	};
 
 	public RectModeGUI()
@@ -26,7 +26,7 @@ public class RectModeGUI : ModeGUI<RectFaceDesign>
 		_preview.setFrameAltPos = new Vector3(1, 0, 0);
 		_mode = 0;
 		_modes = new PanelGUI[] {
-			new SelectionPanel<RectFaceDesign>("Face Selection"),
+			new SelectionPanel<RectDesign>("Face Selection"),
 			new VertexPanel("Vertices", Quaternion.Euler(0, 90f, 0)),
 			new TrianglePanel(_preview , "Triangles", TRIANGLE_CORNERPLUG_OPTIONS, TRIANGLE_EDGEPLUG_OPTIONS),
 			new PlugPanel("Corner Plugs", CORNERPLUG_LABELS, CORNERPLUG_LABELS.Length),
@@ -51,11 +51,6 @@ public class RectModeGUI : ModeGUI<RectFaceDesign>
 				_preview.vertexMode = VertexMode.PrimarySelectTriangle;
 				_preview.UpdatePrimarySelection(tri.selectlist);
 				break;
-			case 4:
-				SocketPanel face = (SocketPanel)_modes[_mode];
-				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
-				_preview.UpdatePrimarySocketSelection(face.selectedSocket, SocketType.Face, face.selectlist);
-				break;
 			default:
 				_preview.vertexMode = VertexMode.None;
 				break;
@@ -69,7 +64,7 @@ public class RectModeGUI : ModeGUI<RectFaceDesign>
 		}
 		switch (_mode) {
 			case 0:
-				SelectionPanel<RectFaceDesign> select = (SelectionPanel<RectFaceDesign>)_modes[_mode];
+				SelectionPanel<RectDesign> select = (SelectionPanel<RectDesign>)_modes[_mode];
 				if (selected != select.selected) {
 					selected = select.selected;
 				}
@@ -93,8 +88,14 @@ public class RectModeGUI : ModeGUI<RectFaceDesign>
 				}
 				break;
 			case 4:
-				SocketPanel face = (SocketPanel)_modes[_mode];
-				face.target = selected;
+				PlugPanel edge = (PlugPanel)_modes[_mode];
+				edge.target = selected;
+				if (selected != null) {
+					edge.plugs = selected.edgeplugs;
+				}
+				else {
+					edge.plugs = null;
+				}
 				break;
 		}
 	}

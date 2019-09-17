@@ -232,38 +232,38 @@ public static class VMD
 			{
 				new IJL(2, 0, 1),
 				new IJL(2, 0, -1),
-				new IJL(-2, 0, 1),
-				new IJL(-2, 0, -1)
+				new IJL(-2, 0, -1),
+				new IJL(-2, 0, 1)
 			},
 			{
 				new IJL(1, 1, 1),
 				new IJL(1, 1, -1),
-				new IJL(-1, -1, 1),
-				new IJL(-1, -1, -1)
+				new IJL(-1, -1, -1),
+				new IJL(-1, -1, 1)
 			},
 			{
 				new IJL(-1, 1, 1),
 				new IJL(-1, 1, -1),
-				new IJL(1, -1, 1),
-				new IJL(1, -1, -1)
+				new IJL(1, -1, -1),
+				new IJL(1, -1, 1)
 			},
 			{
 				new IJL(-2, 0, 1),
 				new IJL(-2, 0, -1),
-				new IJL(2, 0, 1),
-				new IJL(2, 0, -1)
+				new IJL(2, 0, -1),
+				new IJL(2, 0, 1)
 			},
 			{
 				new IJL(-1, -1, 1),
 				new IJL(-1, -1, -1),
-				new IJL(1, 1, 1),
-				new IJL(1, 1, -1)
+				new IJL(1, 1, -1),
+				new IJL(1, 1, 1)
 			},
 			{
 				new IJL(1, -1, 1),
 				new IJL(1, -1, -1),
-				new IJL(-1, 1, 1),
-				new IJL(-1, 1, -1)
+				new IJL(-1, 1, -1),
+				new IJL(-1, 1, 1)
 			}
 		};
 		KeyTransform_RectLateral = new IJL[] {
@@ -449,8 +449,8 @@ public static class VMD
 		return new KeyPacket4(true,
 			new KeyPacket(-1, forward_axi, face_key + KeyTransform_RectCorner[d, 0]),
 			new KeyPacket(1, forward_axi, face_key + KeyTransform_RectCorner[d, 1]),
-			new KeyPacket(-1, backward_axi, face_key + KeyTransform_RectCorner[d, 2]),
-			new KeyPacket(1, backward_axi, face_key + KeyTransform_RectCorner[d, 3])
+			new KeyPacket(1, backward_axi, face_key + KeyTransform_RectCorner[d, 2]),
+			new KeyPacket(-1, backward_axi, face_key + KeyTransform_RectCorner[d, 3])
 		);
 	}
 	public static KeyPacket6 GetHexagonCornerKeys(IJL face_key, int axi)

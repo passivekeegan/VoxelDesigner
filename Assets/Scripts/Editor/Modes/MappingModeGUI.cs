@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class MappingModeGUI : ModeGUI<MappingObject>
+public class MappingModeGUI : ModeGUI<MapObject>
 {
 	public MappingModeGUI()
 	{
 		_title = "Selected Mapping";
 		_mode = 0;
 		_modes = new PanelGUI[] {
-			new SelectionPanel<MappingObject>("Mapping Selection"),
+			new SelectionPanel<MapObject>("Mapping Selection"),
 			new DesignMapPanel("Design Selection"),
 			new CornerMapPanel("Corner Mapping"),
 			new LateralMapPanel("Lateral Mapping"),
@@ -29,7 +29,7 @@ public class MappingModeGUI : ModeGUI<MappingObject>
 		}
 		switch (_mode) {
 			case 0:
-				SelectionPanel<MappingObject> select = (SelectionPanel<MappingObject>)_modes[_mode];
+				SelectionPanel<MapObject> select = (SelectionPanel<MapObject>)_modes[_mode];
 				if (selected != select.selected) {
 					selected = select.selected;
 				}

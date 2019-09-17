@@ -9,7 +9,7 @@ public class CornerDesign : VoxelComponent
 		objname = "";
 		//setup list arguments
 		_edgesocket_cnt = 5;
-		_facesocket_cnt = 15;
+		_facesocket_cnt = 9;
 		_cornerplug_cnt = 0;
 		_edgeplug_cnt = 0;
 		//initialize lists
@@ -41,16 +41,10 @@ public class CornerDesign : VoxelComponent
 			switch (axi) {
 				case 2:
 					return 0;
-				case 3:
-					return 2;
 				case 4:
-					return 4;
-				case 5:
-					return 6;
+					return 2;
 				case 6:
-					return 8;
-				case 7:
-					return 10;
+					return 4;
 				default:
 					return -1;
 			}
@@ -60,16 +54,10 @@ public class CornerDesign : VoxelComponent
 			switch (axi) {
 				case 2:
 					return 1;
-				case 3:
-					return 3;
 				case 4:
-					return 5;
-				case 5:
-					return 7;
+					return 3;
 				case 6:
-					return 9;
-				case 7:
-					return 11;
+					return 5;
 				default:
 					return -1;
 			}
@@ -78,11 +66,11 @@ public class CornerDesign : VoxelComponent
 		else {
 			switch (axi) {
 				case 5:
-					return 12;
+					return 6;
 				case 7:
-					return 13;
+					return 7;
 				case 3:
-					return 14;
+					return 8;
 				default:
 					return -1;
 			}

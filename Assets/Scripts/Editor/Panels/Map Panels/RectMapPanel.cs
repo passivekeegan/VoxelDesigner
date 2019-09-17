@@ -5,7 +5,7 @@ using UnityEditorInternal;
 
 public class RectMapPanel : PanelGUI
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Rect _rect_selectheader;
 	private Rect _rect_selectscroll;
@@ -20,20 +20,20 @@ public class RectMapPanel : PanelGUI
 	private Vector2 _patscroll;
 
 	//Mapping CornerDesign List
-	private List<RectFaceDesign> _faces;
+	private List<RectDesign> _faces;
 	private ReorderableList _facelist;
 
 	//Pattern List
-	private RectFacePattern _addpat;
-	private List<RectFacePattern> _patterns;
+	private RectPattern _addpat;
+	private List<RectPattern> _patterns;
 	private ReorderableList _patternlist;
 
 
 	public RectMapPanel(string title)
 	{
 		_title = title;
-		_faces = new List<RectFaceDesign>();
-		_patterns = new List<RectFacePattern>();
+		_faces = new List<RectDesign>();
+		_patterns = new List<RectPattern>();
 	}
 
 	public override void Enable()
@@ -41,11 +41,11 @@ public class RectMapPanel : PanelGUI
 		_update_mesh = true;
 		_render_mesh = true;
 		_repaint_menu = true;
-		_addpat = RectFacePattern.empty;
+		_addpat = RectPattern.empty;
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
 
-		_facelist = new ReorderableList(_faces, typeof(RectFaceDesign), false, false, false, false);
+		_facelist = new ReorderableList(_faces, typeof(RectDesign), false, false, false, false);
 		_facelist.showDefaultBackground = false;
 		_facelist.headerHeight = 0;
 		_facelist.footerHeight = 0;
@@ -54,7 +54,7 @@ public class RectMapPanel : PanelGUI
 		_facelist.drawElementCallback += DrawFaceElement;
 		_facelist.drawElementBackgroundCallback += DrawFaceElementBackground;
 
-		_patternlist = new ReorderableList(_patterns, typeof(RectFacePattern), false, false, false, false);
+		_patternlist = new ReorderableList(_patterns, typeof(RectPattern), false, false, false, false);
 		_patternlist.showDefaultBackground = false;
 		_patternlist.headerHeight = 0;
 		_patternlist.footerHeight = 0;
@@ -172,7 +172,7 @@ public class RectMapPanel : PanelGUI
 		bool flipy = EditorGUI.Foldout(VxlGUI.GetLeftElement(rect_row, 1, two), _addpat.yflip, "FlipY", true, GUI.skin.GetStyle("LightFoldout"));
 		//apply change
 		if (EditorGUI.EndChangeCheck()) {
-			_addpat = new RectFacePattern(flipx, flipy, a0, b0, a1, b1, vin, vout);
+			_addpat = new RectPattern(flipx, flipy, a0, b0, a1, b1, vin, vout);
 			_repaint_menu = false;
 		}
 	}
@@ -204,7 +204,7 @@ public class RectMapPanel : PanelGUI
 			return;
 		}
 		//fill list
-		target.AddRectFacesToList(_faces);
+		target.AddRectsToList(_faces);
 	}
 
 	private void DrawFaceNoneElement(Rect rect)

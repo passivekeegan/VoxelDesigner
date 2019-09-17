@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LongitudeMapPanel : PanelGUI
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Rect _rect_selectheader;
 	private Rect _rect_selectscroll;
@@ -21,20 +21,20 @@ public class LongitudeMapPanel : PanelGUI
 	private Vector2 _patscroll;
 
 	//Mapping CornerDesign List
-	private List<LongEdgeDesign> _edges;
+	private List<LongitudeDesign> _edges;
 	private ReorderableList _edgelist;
 
 	//Pattern List
-	private LongEdgePattern _addpat;
-	private List<LongEdgePattern> _patterns;
+	private LongitudePattern _addpat;
+	private List<LongitudePattern> _patterns;
 	private ReorderableList _patternlist;
 
 
 	public LongitudeMapPanel(string title)
 	{
 		_title = title;
-		_edges = new List<LongEdgeDesign>();
-		_patterns = new List<LongEdgePattern>();
+		_edges = new List<LongitudeDesign>();
+		_patterns = new List<LongitudePattern>();
 	}
 
 	public override void Enable()
@@ -42,11 +42,11 @@ public class LongitudeMapPanel : PanelGUI
 		_update_mesh = true;
 		_render_mesh = true;
 		_repaint_menu = true;
-		_addpat = LongEdgePattern.empty;
+		_addpat = LongitudePattern.empty;
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
 
-		_edgelist = new ReorderableList(_edges, typeof(LongEdgeDesign), false, false, false, false);
+		_edgelist = new ReorderableList(_edges, typeof(LongitudeDesign), false, false, false, false);
 		_edgelist.showDefaultBackground = false;
 		_edgelist.headerHeight = 0;
 		_edgelist.footerHeight = 0;
@@ -55,7 +55,7 @@ public class LongitudeMapPanel : PanelGUI
 		_edgelist.drawElementCallback += DrawEdgeElement;
 		_edgelist.drawElementBackgroundCallback += DrawEdgeElementBackground;
 
-		_patternlist = new ReorderableList(_patterns, typeof(LongEdgePattern), false, false, false, false);
+		_patternlist = new ReorderableList(_patterns, typeof(LongitudePattern), false, false, false, false);
 		_patternlist.showDefaultBackground = false;
 		_patternlist.headerHeight = 0;
 		_patternlist.footerHeight = 0;
@@ -124,7 +124,7 @@ public class LongitudeMapPanel : PanelGUI
 
 		//apply change
 		if (EditorGUI.EndChangeCheck()) {
-			_addpat = new LongEdgePattern(flipx, flipy, p0, p1, vin, vout0, vout1);
+			_addpat = new LongitudePattern(flipx, flipy, p0, p1, vin, vout0, vout1);
 			_repaint_menu = false;
 		}
 		//draw pattern header
@@ -199,7 +199,7 @@ public class LongitudeMapPanel : PanelGUI
 			return;
 		}
 		//fill list
-		target.AddLongitudeEdgesToList(_edges);
+		target.AddLongitudesToList(_edges);
 	}
 
 	private void DrawEdgeNoneElement(Rect rect)

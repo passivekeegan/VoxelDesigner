@@ -36,26 +36,33 @@ public struct CornerPacket
 		if (design == null || slotindex < 0) {
 			return -1;
 		}
-		int socketcount = design.GetEdgeSocketCountByIndex(socketaxi_index);
+		int socketcount = design.GetEdgeSocketCountByIndex(invx, invy, socketaxi_index);
 		if (socketcount <= 0) {
 			return -1;
 		}
-		if ((invx && !invy && !flip) || (!invx && invy && !flip) || (!invx && !invy && flip) || (invx && invy && flip)) {
+		if (flip) {
 			socket_index = socketcount - 1 - socket_index;
 		}
-		int offset = design.GetEdgeSocketByIndex(socketaxi_index, socket_index);
+		int offset = design.GetEdgeSocketByIndex(invx, invy, socketaxi_index, socket_index);
 		if (offset < 0) {
 			return -1;
 		}
 		return slotindex + offset;
 	}
 
-	public int GetFaceSocketSlotIndex(int socket_index)
+	public int GetFaceSocketSlotIndex(int socket_index, bool flip)
 	{
 		if (design == null || slotindex < 0) {
 			return -1;
 		}
-		int offset = design.GetFaceSocketByIndex(socketaxi_index, socket_index);
+		int socketcount = design.GetFaceSocketCountByIndex(invx, invy, socketaxi_index);
+		if (socketcount <= 0) {
+			return -1;
+		}
+		if (flip) {
+			socket_index = socketcount - 1 - socket_index;
+		}
+		int offset = design.GetFaceSocketByIndex(invx, invy, socketaxi_index, socket_index);
 		if (offset < 0) {
 			return -1;
 		}

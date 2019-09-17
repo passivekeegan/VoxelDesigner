@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 
-public class LateralModeGUI : ModeGUI<LatEdgeDesign>
+public class LateralModeGUI : ModeGUI<LateralDesign>
 {
 	private readonly string[] TRIANGLE_CORNERPLUG_OPTIONS = new string[] {
-		"Forward", "Backward"
+		"Backward", "Forward"
 	};
 	private readonly string[] CORNERPLUG_LABELS = new string[] {
-		"Forwards Plug", "Backwards Plug"
+		"Backward", "Forward"
 	};
 	private readonly string[] FACESOCKET_LABELS = new string[] {
-		"Above Socket", "Below Socket", "D0 Socket", "D3 Socket"
+		"Above", "Below", "D0", "D3"
 	};
 
 	public LateralModeGUI()
@@ -22,11 +22,11 @@ public class LateralModeGUI : ModeGUI<LatEdgeDesign>
 		_preview.setFrameAltPos = new Vector3(-1, -0.5f, 0);
 		_mode = 0;
 		_modes = new PanelGUI[] {
-			new SelectionPanel<LatEdgeDesign>("Lateral Selection"),
+			new SelectionPanel<LateralDesign>("Lateral Selection"),
 			new VertexPanel("Vertices", Quaternion.Euler(0, 90f, 0)),
 			new TrianglePanel(_preview, "Triangles", TRIANGLE_CORNERPLUG_OPTIONS, new string[0]),
 			new PlugPanel("Corner Plugs", CORNERPLUG_LABELS, CORNERPLUG_LABELS.Length),
-			new SocketPanel(_preview, "Face Sockets", FACESOCKET_LABELS,  FACESOCKET_LABELS.Length, SocketType.Face)
+			new SocketPanel(_preview, "Face Sockets", false, FACESOCKET_LABELS)
 		};
 		_mode_labels = new string[] {
 			"Select", "Vertex", "Triangle", "Corner Plug", "Face Socket"
@@ -50,7 +50,7 @@ public class LateralModeGUI : ModeGUI<LatEdgeDesign>
 			case 4:
 				SocketPanel face = (SocketPanel)_modes[_mode];
 				_preview.vertexMode = VertexMode.PrimarySecondarySelet;
-				_preview.UpdatePrimarySocketSelection(face.selectedSocket, SocketType.Face, face.selectlist);
+				_preview.UpdatePrimarySocketSelection(face.inverseX, face.inverseY, false, face.axiSocket, face.selectlist);
 				break;
 			default:
 				_preview.vertexMode = VertexMode.None;
@@ -65,7 +65,7 @@ public class LateralModeGUI : ModeGUI<LatEdgeDesign>
 		}
 		switch (_mode) {
 			case 0:
-				SelectionPanel<LatEdgeDesign> select = (SelectionPanel<LatEdgeDesign>)_modes[_mode];
+				SelectionPanel<LateralDesign> select = (SelectionPanel<LateralDesign>)_modes[_mode];
 				if (selected != select.selected) {
 					selected = select.selected;
 				}

@@ -5,7 +5,7 @@ using UnityEditorInternal;
 
 public class HexagonMapPanel : PanelGUI
 {
-	public MappingObject target;
+	public MapObject target;
 
 	private Rect _rect_selectheader;
 	private Rect _rect_selectscroll;
@@ -20,20 +20,20 @@ public class HexagonMapPanel : PanelGUI
 	private Vector2 _patscroll;
 
 	//Mapping CornerDesign List
-	private List<HexagonFaceDesign> _faces;
+	private List<HexagonDesign> _faces;
 	private ReorderableList _facelist;
 
 	//Pattern List
-	private HexagonFacePattern _addpat;
-	private List<HexagonFacePattern> _patterns;
+	private HexagonPattern _addpat;
+	private List<HexagonPattern> _patterns;
 	private ReorderableList _patternlist;
 
 
 	public HexagonMapPanel(string title)
 	{
 		_title = title;
-		_faces = new List<HexagonFaceDesign>();
-		_patterns = new List<HexagonFacePattern>();
+		_faces = new List<HexagonDesign>();
+		_patterns = new List<HexagonPattern>();
 	}
 
 	public override void Enable()
@@ -41,11 +41,11 @@ public class HexagonMapPanel : PanelGUI
 		_update_mesh = true;
 		_render_mesh = true;
 		_repaint_menu = true;
-		_addpat = HexagonFacePattern.empty;
+		_addpat = HexagonPattern.empty;
 		_selectscroll = Vector2.zero;
 		_patscroll = Vector2.zero;
 
-		_facelist = new ReorderableList(_faces, typeof(HexagonFaceDesign), false, false, false, false);
+		_facelist = new ReorderableList(_faces, typeof(HexagonDesign), false, false, false, false);
 		_facelist.showDefaultBackground = false;
 		_facelist.headerHeight = 0;
 		_facelist.footerHeight = 0;
@@ -54,7 +54,7 @@ public class HexagonMapPanel : PanelGUI
 		_facelist.drawElementCallback += DrawFaceElement;
 		_facelist.drawElementBackgroundCallback += DrawFaceElementBackground;
 
-		_patternlist = new ReorderableList(_patterns, typeof(HexagonFacePattern), false, false, false, false);
+		_patternlist = new ReorderableList(_patterns, typeof(HexagonPattern), false, false, false, false);
 		_patternlist.showDefaultBackground = false;
 		_patternlist.headerHeight = 0;
 		_patternlist.footerHeight = 0;
@@ -174,7 +174,7 @@ public class HexagonMapPanel : PanelGUI
 		bool flipy = EditorGUI.Foldout(VxlGUI.GetLeftElement(rect_row, 1, two), _addpat.yflip, "FlipY", true, GUI.skin.GetStyle("LightFoldout"));
 		//apply change
 		if (EditorGUI.EndChangeCheck()) {
-			_addpat = new HexagonFacePattern(flipx, flipy, c0, c1, c2, c3, c4, c5, va, vb);
+			_addpat = new HexagonPattern(flipx, flipy, c0, c1, c2, c3, c4, c5, va, vb);
 			_repaint_menu = false;
 		}
 	}
@@ -206,7 +206,7 @@ public class HexagonMapPanel : PanelGUI
 			return;
 		}
 		//fill list
-		target.AddHexagonFacesToList(_faces);
+		target.AddHexagonsToList(_faces);
 	}
 
 	private void DrawFaceNoneElement(Rect rect)
