@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990b25e0791ffa545bfe289915c9c1df, type: 3}
+  m_Name: Bsc_LShape
+  m_EditorClassIdentifier: 
+  objname: Bsc_LShape
+  vertices:
+  - {x: -0.23397493, y: 0, z: -0.1350855}
+  - {x: -0.13397527, y: -0.1, z: -0.17735003}
+  - {x: -0.08688633, y: -0.041758, z: -0.0016144622}
+  - {x: -0.18727025, y: 0.074582, z: 0.030339608}
+  - {x: -0.010000111, y: 0.08484, z: 0.1187147}
+  - {x: -0.14536703, y: 0.175162, z: 0.12649107}
+  - {x: -0.092695005, y: 0.3, z: 0.19414847}
+  - {x: 0.0866021, y: 0.27, z: 0.20470075}
+  triangles:
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 2
+    vertex2: 1
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 3
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 2
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 3
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 4
+    vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 6
+    vertex1: 7
+    vertex2: 4
+  edgesockets:
+  - normal: 0600000007000000
+    invx: 0700000006000000
+    invy: 01000000020000000400000007000000
+    invxy: 07000000040000000200000001000000
+  - normal: 07000000040000000200000001000000
+    invx: 01000000020000000400000007000000
+    invy: 0700000006000000
+    invxy: 0600000007000000
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 0100000000000000
+    invx: 06000000050000000300000000000000
+    invy: 0000000001000000
+    invxy: 00000000030000000500000006000000
+  - normal: 00000000030000000500000006000000
+    invx: 0000000001000000
+    invy: 06000000050000000300000000000000
+    invxy: 0100000000000000
+  _edgesocket_cnt: 5
+  facesockets:
+  - normal: 07000000
+    invx: 07000000
+    invy: 07000000
+    invxy: 07000000
+  - normal: 07000000
+    invx: 07000000
+    invy: 07000000
+    invxy: 07000000
+  - normal: 
+    invx: 06000000
+    invy: 01000000
+    invxy: 
+  - normal: 01000000
+    invx: 
+    invy: 
+    invxy: 06000000
+  - normal: 06000000
+    invx: 
+    invy: 
+    invxy: 01000000
+  - normal: 
+    invx: 01000000
+    invy: 06000000
+    invxy: 
+  - normal: 00000000
+    invx: 00000000
+    invy: 00000000
+    invxy: 00000000
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  _facesocket_cnt: 9
+  cornerplugs: 
+  _cornerplug_cnt: 0
+  edgeplugs: 
+  _edgeplug_cnt: 0

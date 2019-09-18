@@ -29,6 +29,8 @@ public class MeshPreview : PanelGUI
 	public Color colour_selectsecondary = new Color(0.1098039f, 0.566f, 1);
 	public Color colour_normal = new Color(1, 1, 1);
 
+	public bool invx;
+	public bool invy;
 	public VoxelComponent target;
 	public Mesh vertex_mesh;
 	public Material vertex_mat;
@@ -54,7 +56,7 @@ public class MeshPreview : PanelGUI
 	private Mesh _mesh;
 	protected PreviewAxiDisplay _display;
 
-	public MeshPreview(int displaymode)
+	public MeshPreview()
 	{
 		_previewblock = new MaterialPropertyBlock();
 		_meshvertex = new List<Vector3>();
@@ -69,7 +71,7 @@ public class MeshPreview : PanelGUI
 		_secondarylist = new List<int>();
 		_primarytset = new HashSet<int>();
 		_secondarytset = new HashSet<int>();
-		_display = new PreviewAxiDisplay(displaymode);
+		_display = new PreviewAxiDisplay();
 	}
 
 
@@ -176,6 +178,29 @@ public class MeshPreview : PanelGUI
 	}
 
 	#region Properties
+	public bool setVoxelFrame {
+		set {
+			_display.enable_voxelframe = value;
+		}
+	}
+	public bool setVoxelFlip {
+		set {
+			_display.enable_voxelflip = value;
+		}
+	}
+
+	public Vector3 setFramePos {
+		set {
+			_display.voxelpos = value;
+		}
+	}
+
+	public Vector3 setFrameAltPos {
+		set {
+			_display.altvoxelpos = value;
+		}
+	}
+
 	public int secondaryCount {
 		get {
 			return _secondarylist.Count;
@@ -244,7 +269,7 @@ public class MeshPreview : PanelGUI
 			}
 		}
 	}
-	public void UpdatePrimarySocketSelection(int socket_index, SocketType type, List<int> selectlist)
+	public void UpdatePrimarySocketSelection(bool invx, bool invy, bool is_edge, int axi_index, List<int> selectlist)
 	{
 		if (_vertexmode != VertexMode.PrimarySelect &&
 			_vertexmode != VertexMode.PrimarySecondarySelet) {
@@ -255,7 +280,13 @@ public class MeshPreview : PanelGUI
 		if (target == null || !target.IsValid()) {
 			return;
 		}
-		List<int> socket = target.GetSocket(type, socket_index);
+		List<int> socket;
+		if (is_edge) {
+			socket = target.GetEdgeSocketList(invx, invy, axi_index);
+		}
+		else {
+			socket = target.GetFaceSocketList(invx, invy, axi_index);
+		}
 		if (selectlist == null || socket == null) {
 			return;
 		}
@@ -311,7 +342,8 @@ public class MeshPreview : PanelGUI
 		if (_vertexmode == VertexMode.None) {
 			return;
 		}
-		List<VertexVector> vectors = target.vertices;
+		PatternMatch match = new PatternMatch(invx, invy, 0);
+		List<Vector3> vectors = target.vertices;
 		if (_vertexmode == VertexMode.PrimarySelectTriangle) {
 			int super_vertex0 = -1; int super_vertex1 = -1; int super_vertex2 = -1;
 			HashSet<int> trivertex = new HashSet<int>();
@@ -335,7 +367,6 @@ public class MeshPreview : PanelGUI
 				}
 			}
 			for (int k = 0; k < vectors.Count; k++) {
-				Vector3 vertex = vectors[k].GenerateVertexVector(0);
 				bool primary_superselect = false;
 				bool primary_select = trivertex.Contains(k);
 				if (primary_select) {
@@ -347,13 +378,11 @@ public class MeshPreview : PanelGUI
 					secondary_superselect = _secondarylist[_secondarylist.Count - 1] == k;
 				}
 				SetMaterialBlock(primary_select, primary_superselect, secondary_select, secondary_superselect);
-				_previewutility.DrawMesh(vertex_mesh, vertex, Quaternion.identity, vertex_mat, 0, _previewblock);
+				_previewutility.DrawMesh(vertex_mesh, Vx.TransformVertex(vectors[k], Vx.ReflVector, match), Quaternion.identity, vertex_mat, 0, _previewblock);
 			}
 		}
 		else {
 			for (int k = 0; k < vectors.Count; k++) {
-				Vector3 vertex = vectors[k].GenerateVertexVector(0);
-
 				bool primary_superselect = false;
 				bool primary_select = _primarytset.Contains(k);
 				if (primary_select) {
@@ -366,7 +395,7 @@ public class MeshPreview : PanelGUI
 				}
 
 				SetMaterialBlock(primary_select, primary_superselect, secondary_select, secondary_superselect);
-				_previewutility.DrawMesh(vertex_mesh, vertex, Quaternion.identity, vertex_mat, 0, _previewblock);
+				_previewutility.DrawMesh(vertex_mesh, Vx.TransformVertex(vectors[k], Vx.ReflVector, match), Quaternion.identity, vertex_mat, 0, _previewblock);
 			}
 		}
 	}
@@ -425,17 +454,22 @@ public class MeshPreview : PanelGUI
 			UploadMeshChanges();
 			return;
 		}
-		List<VertexVector> vertices = target.vertices;
+		bool flip = (invx && !invy) || (!invx && invy);
+		PatternMatch match = new PatternMatch(invx, invy, 0);
+		List<Vector3> vertices = target.vertices;
 		List<Triangle> triangles = target.triangles;
 		for (int k = 0;k < triangles.Count;k++) {
 			Triangle tri = triangles[k];
 			if (!tri.IsValid(vertices.Count, null, null)) {
 				continue;
 			}
+			if (flip) {
+				tri = Triangle.Flip(tri);
+			}
 			Vector2 uv = GetTriangleUV(k);
-			Vector3 vertex0 = vertices[tri.vertex0].GenerateVertexVector(0);
-			Vector3 vertex1 = vertices[tri.vertex1].GenerateVertexVector(0);
-			Vector3 vertex2 = vertices[tri.vertex2].GenerateVertexVector(0);
+			Vector3 vertex0 = Vx.TransformVertex(vertices[tri.vertex0], Vx.ReflVector, match);
+			Vector3 vertex1 = Vx.TransformVertex(vertices[tri.vertex1], Vx.ReflVector, match);
+			Vector3 vertex2 = Vx.TransformVertex(vertices[tri.vertex2], Vx.ReflVector, match);
 			AddTriangle(vertex0, vertex1, vertex2, uv);
 		}
 		UploadMeshChanges();
@@ -693,13 +727,14 @@ public class MeshPreview : PanelGUI
 		if (ray.direction == Vector3.zero || target == null || target.vertices == null) {
 			return -1;
 		}
+		PatternMatch match = new PatternMatch(invx, invy, 0);
 		float nearest_t = Mathf.Infinity;
 		int nearest_sphere = -1;
 		float near_clip = _previewutility.camera.nearClipPlane;
 		float far_clip = _previewutility.camera.farClipPlane;
-		List<VertexVector> vertices = target.vertices;
+		List<Vector3> vertices = target.vertices;
 		for (int k = 0; k < vertices.Count; k++) {
-			Vector3 vertex = vertices[k].GenerateVertexVector(0);
+			Vector3 vertex = Vx.TransformVertex(vertices[k], Vx.ReflVector, match);
 			Vector3 point_vector = ray.origin - vertex;
 			float proj_pv = Vector3.Dot(ray.direction, point_vector);
 			float sqr_magn = Vector3.SqrMagnitude(point_vector - (proj_pv * ray.direction));

@@ -1,0 +1,297 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af1a4026b485b34293805ab8b38ff1d, type: 3}
+  m_Name: BasicMap
+  m_EditorClassIdentifier: 
+  objname: BasicMap
+  _corner:
+    _ids: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+    _components:
+    - {fileID: 11400000, guid: fe492f1c86aa1414892a31f21a17b9bd, type: 2}
+    - {fileID: 11400000, guid: 405fed0ad2e30d0468080f44ad41462d, type: 2}
+    - {fileID: 11400000, guid: 97cae815c8ac9ec448858ab78845e1ce, type: 2}
+    - {fileID: 11400000, guid: 041d4b341f1e69f48b918d3457e89a04, type: 2}
+    - {fileID: 11400000, guid: 661da3481d4a1e049918b90d139acc60, type: 2}
+    - {fileID: 11400000, guid: ac11313ac0f29574aac38aafa76715f5, type: 2}
+    - {fileID: 11400000, guid: c4faa8ec1496a0546bbc9eaf6f721a6d, type: 2}
+    - {fileID: 11400000, guid: 5b123c00cecad6a4e89764cf9eac27b8, type: 2}
+    - {fileID: 11400000, guid: aeaf50a6e23bd8d4bafa345bffb77abf, type: 2}
+    - {fileID: 11400000, guid: 32bbb740f6dcf4041a07592a2f48ed99, type: 2}
+    - {fileID: 11400000, guid: 2c1314f01b410ee4c9b35791ca0f6283, type: 2}
+    _pids: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+    _patterns:
+    - xflip: 0
+      yflip: 1
+      a0: 0
+      a1: 0
+      a2: 0
+      b0: 0
+      b1: 0
+      b2: 1
+    - xflip: 1
+      yflip: 1
+      a0: 1
+      a1: 0
+      a2: 0
+      b0: 1
+      b1: 0
+      b2: 1
+    - xflip: 0
+      yflip: 1
+      a0: 0
+      a1: 0
+      a2: 0
+      b0: 1
+      b1: 0
+      b2: 1
+    - xflip: 0
+      yflip: 1
+      a0: 0
+      a1: 0
+      a2: 0
+      b0: 1
+      b1: 1
+      b2: 1
+    - xflip: 0
+      yflip: 1
+      a0: 1
+      a1: 0
+      a2: 1
+      b0: 1
+      b1: 1
+      b2: 1
+    - xflip: 0
+      yflip: 1
+      a0: 0
+      a1: 0
+      a2: 1
+      b0: 1
+      b1: 1
+      b2: 1
+    - xflip: 0
+      yflip: 0
+      a0: 0
+      a1: 0
+      a2: 1
+      b0: 0
+      b1: 0
+      b2: 1
+    - xflip: 0
+      yflip: 0
+      a0: 1
+      a1: 0
+      a2: 1
+      b0: 1
+      b1: 0
+      b2: 1
+    - xflip: 1
+      yflip: 0
+      a0: 1
+      a1: 0
+      a2: 0
+      b0: 0
+      b1: 0
+      b2: 1
+    - xflip: 0
+      yflip: 1
+      a0: 1
+      a1: 0
+      a2: 1
+      b0: 0
+      b1: 1
+      b2: 0
+    - xflip: 1
+      yflip: 0
+      a0: 1
+      a1: 0
+      a2: 1
+      b0: 0
+      b1: 1
+      b2: 1
+  _lateral:
+    _ids: 010000000200000003000000
+    _components:
+    - {fileID: 11400000, guid: 199de2166d137bf48ad8311eca463808, type: 2}
+    - {fileID: 11400000, guid: 46b91746d2928914689113ca96bd7b81, type: 2}
+    - {fileID: 11400000, guid: 5ef2a4d363cd8ab49a641c24aa0b50c6, type: 2}
+    _pids: 01000000020000000200000003000000
+    _patterns:
+    - xflip: 0
+      yflip: 1
+      p0: 2
+      p1: 2
+      cid0: -1
+      cid1: -1
+      a0: 0
+      b0: 1
+      a1: 0
+      b1: 0
+    - xflip: 0
+      yflip: 1
+      p0: 4
+      p1: 4
+      cid0: -1
+      cid1: -1
+      a0: 0
+      b0: 1
+      a1: 0
+      b1: 1
+    - xflip: 0
+      yflip: 1
+      p0: 4
+      p1: 4
+      cid0: -1
+      cid1: -1
+      a0: 1
+      b0: 1
+      a1: 0
+      b1: 1
+    - xflip: 0
+      yflip: 0
+      p0: 8
+      p1: 8
+      cid0: -1
+      cid1: -1
+      a0: 0
+      b0: 1
+      a1: 1
+      b1: 0
+  _longitude:
+    _ids: 0100000002000000
+    _components:
+    - {fileID: 11400000, guid: 2dee3154cea4b5349b869713b030a747, type: 2}
+    - {fileID: 11400000, guid: b453b6ca59a0c2c47905faa5088f4431, type: 2}
+    _pids: 0100000002000000
+    _patterns:
+    - xflip: 0
+      yflip: 0
+      p0: 2
+      p1: 2
+      cid0: -1
+      cid1: -1
+      in0: 1
+      out0: 0
+      out1: 0
+    - xflip: 0
+      yflip: 0
+      p0: 4
+      p1: 4
+      cid0: -1
+      cid1: -1
+      in0: 1
+      out0: 1
+      out1: 0
+  _rect:
+    _ids: 010000000200000003000000040000000500000006000000
+    _components:
+    - {fileID: 11400000, guid: 9ca4fcab39a9d8c488586b3e6d5746b0, type: 2}
+    - {fileID: 11400000, guid: 2df1822297d45314e9775cbf8d539491, type: 2}
+    - {fileID: 11400000, guid: 9ba2cbd2eed2ec54d9556632cb5494e7, type: 2}
+    - {fileID: 11400000, guid: a938568334175b646aa769d89dc0e916, type: 2}
+    - {fileID: 11400000, guid: 117ead9aa7eced049b5502857a905ba7, type: 2}
+    - {fileID: 11400000, guid: 3662d8c7692d0474190515ed3df8d7ab, type: 2}
+    _pids: 010000000200000003000000040000000500000006000000
+    _patterns:
+    - xflip: 0
+      yflip: 0
+      a0_p: 1
+      b0_p: 1
+      a1_p: 1
+      b1_p: 1
+      a0_cid: -1
+      b0_cid: -1
+      a1_cid: -1
+      b1_cid: -1
+      vin: 1
+      vout: 0
+    - xflip: 1
+      yflip: 1
+      a0_p: 2
+      b0_p: 1
+      a1_p: 1
+      b1_p: 1
+      a0_cid: -1
+      b0_cid: -1
+      a1_cid: -1
+      b1_cid: -1
+      vin: 1
+      vout: 0
+    - xflip: 0
+      yflip: 1
+      a0_p: 2
+      b0_p: 1
+      a1_p: 2
+      b1_p: 1
+      a0_cid: -1
+      b0_cid: -1
+      a1_cid: -1
+      b1_cid: -1
+      vin: 1
+      vout: 0
+    - xflip: 1
+      yflip: 0
+      a0_p: 2
+      b0_p: 2
+      a1_p: 1
+      b1_p: 1
+      a0_cid: -1
+      b0_cid: -1
+      a1_cid: -1
+      b1_cid: -1
+      vin: 1
+      vout: 0
+    - xflip: 1
+      yflip: 1
+      a0_p: 2
+      b0_p: 2
+      a1_p: 2
+      b1_p: 1
+      a0_cid: -1
+      b0_cid: -1
+      a1_cid: -1
+      b1_cid: -1
+      vin: 1
+      vout: 0
+    - xflip: 0
+      yflip: 0
+      a0_p: 2
+      b0_p: 2
+      a1_p: 2
+      b1_p: 2
+      a0_cid: -1
+      b0_cid: -1
+      a1_cid: -1
+      b1_cid: -1
+      vin: 1
+      vout: 0
+  _hexagon:
+    _ids: 01000000
+    _components:
+    - {fileID: 11400000, guid: 90a63886c9fe4c74683451858dc2e791, type: 2}
+    _pids: 01000000
+    _patterns:
+    - xflip: 0
+      yflip: 1
+      c0_p: 1
+      c1_p: 1
+      c2_p: 1
+      c3_p: 1
+      c4_p: 1
+      c5_p: 1
+      c0_cid: -1
+      c1_cid: -1
+      c2_cid: -1
+      c3_cid: -1
+      c4_cid: -1
+      c5_cid: -1
+      va: 0
+      vb: 1

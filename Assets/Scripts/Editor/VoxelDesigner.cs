@@ -8,7 +8,7 @@ using System;
 public class VoxelDesigner : EditorWindow
 {
 	private readonly static string[] MODES = new string[] {
-		"Corner", "Edge", "Face", "Mapping"
+		"Corner", "Lateral", "Longitude", "Rect", "Hexagon", "Mapping"
 	};
 	public Mesh vertex_mesh;
 	public Mesh axi_mesh;
@@ -26,8 +26,10 @@ public class VoxelDesigner : EditorWindow
 	private Rect _rect_menucontent;
 	private Rect _rect_preview;
 	private CornerModeGUI _cornergui;
-	private EdgeModeGUI _edgegui;
-	private FaceModeGUI _facegui;
+	private LateralModeGUI _latgui;
+	private LongitudeModeGUI _longgui;
+	private RectModeGUI _rectgui;
+	private HexagonModeGUI _hexgui;
 	private MappingModeGUI _mappinggui;
 
 	[MenuItem("Window/Voxel Designer")]
@@ -50,44 +52,86 @@ public class VoxelDesigner : EditorWindow
 		DisableMode(_mode);
 	}
 
+	
+
 	public void Intialize()
 	{
 		_mode = 0;
 		_cornergui = new CornerModeGUI();
-		_cornergui.vertexMesh = vertex_mesh;
-		_cornergui.vertexMaterial = vertex_material;
-		_cornergui.meshMaterial = mesh_material;
-		_cornergui.axiMaterial = axi_material;
-		_cornergui.axiMesh = axi_mesh;
-		_cornergui.originMesh = vertex_mesh;
-		_cornergui.voxelMesh = voxel_mesh;
-		_edgegui = new EdgeModeGUI();
-		_edgegui.vertexMesh = vertex_mesh;
-		_edgegui.vertexMaterial = vertex_material;
-		_edgegui.meshMaterial = mesh_material;
-		_edgegui.axiMaterial = axi_material;
-		_edgegui.axiMesh = axi_mesh;
-		_edgegui.originMesh = vertex_mesh;
-		_edgegui.voxelMesh = voxel_mesh;
-		_facegui = new FaceModeGUI();
-		_facegui.vertexMesh = vertex_mesh;
-		_facegui.vertexMaterial = vertex_material;
-		_facegui.meshMaterial = mesh_material;
-		_facegui.axiMaterial = axi_material;
-		_facegui.axiMesh = axi_mesh;
-		_facegui.originMesh = vertex_mesh;
-		_facegui.voxelMesh = voxel_mesh;
+		InitializeMode(_cornergui);
+		_latgui = new LateralModeGUI();
+		InitializeMode(_latgui);
+		_longgui = new LongitudeModeGUI();
+		InitializeMode(_longgui);
+		_rectgui = new RectModeGUI();
+		InitializeMode(_rectgui);
+		_hexgui = new HexagonModeGUI();
+		InitializeMode(_hexgui);
 		_mappinggui = new MappingModeGUI();
-		_mappinggui.vertexMesh = vertex_mesh;
-		_mappinggui.vertexMaterial = vertex_material;
-		_mappinggui.meshMaterial = mesh_material;
-		_mappinggui.axiMaterial = axi_material;
-		_mappinggui.axiMesh = axi_mesh;
-		_mappinggui.originMesh = vertex_mesh;
-		_mappinggui.voxelMesh = voxel_mesh;
-
+		InitializeMode(_mappinggui);
 		UpdateLayoutRects();
 		EnableMode(_mode);
+	}
+
+	private void InitializeMode(CornerModeGUI modegui)
+	{
+		modegui.vertexMesh = vertex_mesh;
+		modegui.vertexMaterial = vertex_material;
+		modegui.meshMaterial = mesh_material;
+		modegui.axiMaterial = axi_material;
+		modegui.axiMesh = axi_mesh;
+		modegui.originMesh = vertex_mesh;
+		modegui.voxelMesh = voxel_mesh;
+	}
+	private void InitializeMode(LateralModeGUI modegui)
+	{
+		modegui.vertexMesh = vertex_mesh;
+		modegui.vertexMaterial = vertex_material;
+		modegui.meshMaterial = mesh_material;
+		modegui.axiMaterial = axi_material;
+		modegui.axiMesh = axi_mesh;
+		modegui.originMesh = vertex_mesh;
+		modegui.voxelMesh = voxel_mesh;
+	}
+	private void InitializeMode(LongitudeModeGUI modegui)
+	{
+		modegui.vertexMesh = vertex_mesh;
+		modegui.vertexMaterial = vertex_material;
+		modegui.meshMaterial = mesh_material;
+		modegui.axiMaterial = axi_material;
+		modegui.axiMesh = axi_mesh;
+		modegui.originMesh = vertex_mesh;
+		modegui.voxelMesh = voxel_mesh;
+	}
+	private void InitializeMode(RectModeGUI modegui)
+	{
+		modegui.vertexMesh = vertex_mesh;
+		modegui.vertexMaterial = vertex_material;
+		modegui.meshMaterial = mesh_material;
+		modegui.axiMaterial = axi_material;
+		modegui.axiMesh = axi_mesh;
+		modegui.originMesh = vertex_mesh;
+		modegui.voxelMesh = voxel_mesh;
+	}
+	private void InitializeMode(HexagonModeGUI modegui)
+	{
+		modegui.vertexMesh = vertex_mesh;
+		modegui.vertexMaterial = vertex_material;
+		modegui.meshMaterial = mesh_material;
+		modegui.axiMaterial = axi_material;
+		modegui.axiMesh = axi_mesh;
+		modegui.originMesh = vertex_mesh;
+		modegui.voxelMesh = voxel_mesh;
+	}
+	private void InitializeMode(MappingModeGUI modegui)
+	{
+		modegui.vertexMesh = vertex_mesh;
+		modegui.vertexMaterial = vertex_material;
+		modegui.meshMaterial = mesh_material;
+		modegui.axiMaterial = axi_material;
+		modegui.axiMesh = axi_mesh;
+		modegui.originMesh = vertex_mesh;
+		modegui.voxelMesh = voxel_mesh;
 	}
 
 	private void OnGUI()
@@ -116,12 +160,18 @@ public class VoxelDesigner : EditorWindow
 				DrawMode(_cornergui, _rect_menucontent, _rect_preview);
 				break;
 			case 1:
-				DrawMode(_edgegui, _rect_menucontent, _rect_preview);
+				DrawMode(_latgui, _rect_menucontent, _rect_preview);
 				break;
 			case 2:
-				DrawMode(_facegui, _rect_menucontent, _rect_preview);
+				DrawMode(_longgui, _rect_menucontent, _rect_preview);
 				break;
 			case 3:
+				DrawMode(_rectgui, _rect_menucontent, _rect_preview);
+				break;
+			case 4:
+				DrawMode(_hexgui, _rect_menucontent, _rect_preview);
+				break;
+			case 5:
 				DrawMode(_mappinggui, _rect_menucontent, _rect_preview);
 				break;
 		}
@@ -141,12 +191,18 @@ public class VoxelDesigner : EditorWindow
 				_cornergui.Enable();
 				break;
 			case 1:
-				_edgegui.Enable();
+				_latgui.Enable();
 				break;
 			case 2:
-				_facegui.Enable();
+				_longgui.Enable();
 				break;
 			case 3:
+				_rectgui.Enable();
+				break;
+			case 4:
+				_hexgui.Enable();
+				break;
+			case 5:
 				_mappinggui.Enable();
 				break;
 		}
@@ -162,12 +218,18 @@ public class VoxelDesigner : EditorWindow
 				_cornergui.Disable();
 				break;
 			case 1:
-				_edgegui.Disable();
+				_latgui.Disable();
 				break;
 			case 2:
-				_facegui.Disable();
+				_longgui.Disable();
 				break;
 			case 3:
+				_rectgui.Disable();
+				break;
+			case 4:
+				_hexgui.Disable();
+				break;
+			case 5:
 				_mappinggui.Disable();
 				break;
 		}
@@ -188,11 +250,11 @@ public class VoxelDesigner : EditorWindow
 	private void UpdateLayoutRects()
 	{
 		Rect window_rect = new Rect(Vector2.zero, position.size);
-		float pixels = Mathf.Clamp(0.5f * window_rect.width, VxlGUI.MINWIDTH_WINDOW, VxlGUI.MAXWIDTH_WINDOW);
-		Rect menu_rect = VxlGUI.GetLeftElement(window_rect, 0, pixels);
-		_rect_mode = VxlGUI.GetAboveElement(menu_rect, 0, VxlGUI.MODE);
-		_rect_menucontent = VxlGUI.GetSandwichedRectY(menu_rect, VxlGUI.MODE, 0);
-		_rect_preview = VxlGUI.GetRightElement(window_rect, 0, window_rect.width - pixels);
+		_rect_mode = VxlGUI.GetAboveElement(window_rect, 0, VxlGUI.MODE);
+		Rect content_rect = VxlGUI.GetSandwichedRectY(window_rect, VxlGUI.MODE, 0);
+		float pixels = Mathf.Clamp(0.5f * content_rect.width, VxlGUI.MINWIDTH_WINDOW, VxlGUI.MAXWIDTH_WINDOW);
+		_rect_menucontent = VxlGUI.GetLeftElement(content_rect, 0, pixels);
+		_rect_preview = VxlGUI.GetRightElement(content_rect, 0, content_rect.width - pixels);
 	}
 
 	//Callbacks

@@ -3,166 +3,339 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-public class SocketPanel: PanelGUI
+
+public class SocketPanel : PanelGUI
 {
 	public VoxelComponent target;
-	public List<int> selectlist;
-	public HashSet<int> selectset;
+
+	public List<int> selectlist { get; }
+	public HashSet<int> selectset { get; }
+	
+
+
+	private Rect _rect_axititle;
+	private Rect _rect_sockethead;
+	private Rect _rect_sockettitle;
+	private Rect _rect_invx;
+	private Rect _rect_invy;
+	private Rect _rect_socketscroll;
+	private Rect _rect_socketcontent;
+	private Rect _rect_axiscroll;
+	private Rect _rect_axicontent;
+	private Rect _rect_socketbuttonpanel;
+	private Rect _rect_addsocket;
+	private Rect _rect_delsocket;
+	private Rect _rect_secondaddsocket;
+
+	private bool _invx;
+	private bool _invy;
+	private bool _is_edge;
+	private Vector2 _axiscroll;
+	private Vector2 _socketscroll;
+
+	private string[] _axilabels;
+	private ReorderableList _axilist;
+
+	private List<int> _sockets;
+	private ReorderableList _socketlist;
 
 	private MeshPreview _preview;
-	private int _selectsocket;
-	private int _socketcnt;
-	private SocketType _type;
-	private Vector2 _scroll;
-	private Rect _rect_title;
-	private Rect _rect_scroll;
-	private Rect _rect_content;
-	private List<Rect> _socketrects;
-	private List<string> _socket_labels;
-	private List<List<int>> _sockets;
-	private List<ReorderableList> _socketlists;
+	private PreviewVertexDisplay _selectdisplay;
+	private PreviewMeshDisplay _meshdisplay;
 
-	public SocketPanel(MeshPreview preview, string title, string[] labels, int socket_count, SocketType type)
+
+	public SocketPanel(MeshPreview preview, string title, bool is_edge, string[] axilabels)
 	{
-		_title = title;
-		_preview = preview;
 		selectlist = new List<int>();
 		selectset = new HashSet<int>();
-		_selectsocket = -1;
-		_type = type;
 
-		_socketcnt = socket_count;
-		_socketrects = new List<Rect>();
-		_socket_labels = new List<string>();
-		_sockets = new List<List<int>>();
-		_socketlists = new List<ReorderableList>();
-		for (int k = 0; k < _socketcnt; k++) {
-			//initialize socket rects
-			_socketrects.Add(new Rect());
-			//initialize socket labels
-			string label = "";
-			if (labels != null && k < labels.Length && labels[k] != null) {
-				label = labels[k].Trim();
-			}
-			_socket_labels.Add(label);
-			_sockets.Add(new List<int>());
-			_socketlists.Add(null);
-		}
-}
+		_title = title;
+		_is_edge = is_edge;
+		_preview = preview;
+		_axilabels = axilabels;
+		_sockets = new List<int>();
+		_selectdisplay = new PreviewVertexDisplay();
+		_meshdisplay = new PreviewMeshDisplay();
+	}
 
 	public override void Enable()
 	{
 		selectlist.Clear();
 		selectset.Clear();
-		_selectsocket = -1;
 
 		_update_mesh = true;
 		_render_mesh = true;
 		_repaint_menu = true;
-		_scroll = Vector2.zero;
-		for (int k = 0; k < _socketcnt; k++) {
-			int socket_index = k;
-			//initialize socket int lists and reorderable lists
-			ReorderableList reorderlist = new ReorderableList(_sockets[k], typeof(int), true, false, false, false);
-			reorderlist.showDefaultBackground = false;
-			reorderlist.headerHeight = 0;
-			reorderlist.footerHeight = 0;
-			reorderlist.elementHeight = VxlGUI.MED_BAR;
-			reorderlist.drawNoneElementCallback += DrawSocketNoneElement;
-			reorderlist.drawElementCallback += (Rect rect, int index, bool active, bool focused) => {
-				DrawSocketElement(rect, socket_index, index, active, focused);
-			};
-			reorderlist.drawElementBackgroundCallback += (Rect rect, int index, bool active, bool focused) => {
-				DrawSocketElementBackground(rect, socket_index, index, active, focused);
-			};
-			reorderlist.onReorderCallbackWithDetails += (ReorderableList list, int old_index, int new_index) => {
-				ReorderSocketElement(socket_index, old_index, new_index);
-			};
-			reorderlist.onSelectCallback += (ReorderableList list) => {
-				SelectSocketElement(socket_index, list.index);
-			};
-			_socketlists[k] = reorderlist;
-		}
-	}
+		_axiscroll = Vector2.zero;
+		_socketscroll = Vector2.zero;
+		_selectdisplay.Enable();
+		_meshdisplay.Enable();
 
+		_axilist = new ReorderableList(_axilabels, typeof(string), false, false, false, false);
+		_axilist.showDefaultBackground = false;
+		_axilist.headerHeight = 0;
+		_axilist.footerHeight = 0;
+		_axilist.elementHeightCallback += SocketAxiHeight;
+		_axilist.drawNoneElementCallback += DrawSocketAxiNone;
+		_axilist.drawElementCallback += DrawSocketAxi;
+		_axilist.drawElementBackgroundCallback += DrawSocketAxiBackground;
+
+		_socketlist = new ReorderableList(_sockets, typeof(int), true, false, false, false);
+		_socketlist.showDefaultBackground = false;
+		_socketlist.headerHeight = 0;
+		_socketlist.footerHeight = 0;
+		_socketlist.elementHeight = VxlGUI.MED_BAR;
+		_socketlist.drawNoneElementCallback += DrawSocketNone;
+		_socketlist.drawElementCallback += DrawSocket;
+		_socketlist.drawElementBackgroundCallback += DrawSocketBackground;
+		_socketlist.onReorderCallbackWithDetails += ReorderSocket;
+		_socketlist.onSelectCallback += SelectSocket;
+	}
 	public override void Disable()
 	{
 		selectlist.Clear();
 		selectset.Clear();
-		_selectsocket = -1;
 
 		_update_mesh = false;
 		_render_mesh = false;
 		_repaint_menu = false;
 		target = null;
-		for (int k = 0; k < _socketcnt; k++) {
-			_socketlists[k] = null;
-			_sockets[k].Clear();
-		}
+		_selectdisplay.Disable();
+		_meshdisplay.Disable();
+		_preview.invx = false;
+		_preview.invy = false;
+
+		_axilist = null;
+		_socketlist = null;
+		_sockets.Clear();
 	}
 
 	public override void DrawGUI(Rect rect)
 	{
-		//update socket lists
+		UpdateAxiList();
 		UpdateSocketList();
-		//calculate rects
-		RecalculateRects(rect);
+		//update layout rects
+		UpdateRects(rect);
 		//disable panel condition
 		EditorGUI.BeginDisabledGroup(target == null || !target.IsValid());
-		//Title
-		VxlGUI.DrawRect(_rect_title, "DarkGradient");
-		GUI.Label(_rect_title, _title, GUI.skin.GetStyle("LeftLightHeader"));
-		//socket lists
-		VxlGUI.DrawRect(_rect_scroll, "DarkWhite");
-		_scroll = GUI.BeginScrollView(_rect_scroll, _scroll, _rect_content);
-		for (int k = 0;k < _socketcnt;k++) {
-			//title
-			Rect rect_sockettitle = VxlGUI.GetAboveElement(_socketrects[k], 0, VxlGUI.MED_BAR);
-			VxlGUI.DrawRect(rect_sockettitle, "DarkGradient");
-			GUI.Label(rect_sockettitle, _socket_labels[k], GUI.skin.GetStyle("LeftLightSubHeader"));
-			//calculate bottom rects
-			Rect rect_bottom = VxlGUI.GetSandwichedRectY(_socketrects[k], VxlGUI.MED_BAR + VxlGUI.SM_SPACE, 0);
-			Rect rect_panel = VxlGUI.GetLeftElement(rect_bottom, 0, VxlGUI.SM_BAR);
-			//add button
-			Rect rect_add = VxlGUI.GetAboveElement(rect_panel, 0, VxlGUI.SM_BAR);
-			VxlGUI.DrawRect(rect_add, "DarkGradient");
-			if (GUI.Button(VxlGUI.GetPaddedRect(rect_add, 2), "", GUI.skin.GetStyle("Plus"))) {
-				AddSocketElement(k);
-			}
-			//delete button
-			Rect rect_delete = VxlGUI.GetAboveElement(rect_panel, 1, VxlGUI.SM_BAR, VxlGUI.SM_SPACE, 0);
-			EditorGUI.BeginDisabledGroup(_selectsocket != k || selectlist.Count <= 0);
-			VxlGUI.DrawRect(rect_delete, "DarkGradient");
-			if (GUI.Button(VxlGUI.GetPaddedRect(rect_delete, 2), "", GUI.skin.GetStyle("Minus"))) {
-				if (_selectsocket == k) {
-					DeleteSelectedSocketVertex();
-				}
-			}
-			EditorGUI.EndDisabledGroup();
-			//add secondary button
-			Rect rect_secondary = VxlGUI.GetAboveElement(rect_panel, 2, VxlGUI.SM_BAR, VxlGUI.SM_SPACE, 0);
-			EditorGUI.BeginDisabledGroup(_preview.secondaryCount <= 0);
-			VxlGUI.DrawRect(rect_secondary, "DarkGradient");
-			if (GUI.Button(VxlGUI.GetPaddedRect(rect_secondary, 2), "", GUI.skin.GetStyle("Select2Plus"))) {
-				AddSecondarySelection(k);
-			}
-			EditorGUI.EndDisabledGroup();
-
-			//socket list
-			Rect rect_socketlist = VxlGUI.GetSandwichedRectX(rect_bottom, VxlGUI.SM_BAR + VxlGUI.SM_SPACE, 0);
-			VxlGUI.DrawRect(rect_socketlist, "DarkWhite");
-			_socketlists[k].DoList(rect_socketlist);
-		}
+		VxlGUI.DrawRect(_rect_axititle, "DarkGrey");
+		VxlGUI.DrawRect(_rect_axiscroll, "DarkWhite");
+		//axi socket title
+		GUI.Label(_rect_axititle, _title + " Axi Sockets", "LeftLightHeader");
+		//draw list of axi sockets
+		_axiscroll = GUI.BeginScrollView(_rect_axiscroll, _axiscroll, _rect_axicontent);
+		_axilist.DoList(_rect_axicontent);
 		GUI.EndScrollView();
+
+		EditorGUI.BeginDisabledGroup(_axilist.index < 0 || _axilist.index >= _axilist.count);
+
+		//sockets
+		VxlGUI.DrawRect(_rect_sockethead, "DarkGrey");
+		VxlGUI.DrawRect(_rect_socketbuttonpanel, "DarkGrey");
+		VxlGUI.DrawRect(_rect_socketscroll, "DarkWhite");
+		//socket title
+		string socket_title = "Socket: ";
+		if (_socketlist.index < 0 || _socketlist.index >= _axilabels.Length) {
+			socket_title += "None";
+		}
+		else {
+			socket_title += _axilabels[_socketlist.index];
+		}
+		GUI.Label(_rect_sockettitle, socket_title, "LeftLightHeader");
+		//socket list type selection
+		EditorGUI.BeginChangeCheck();
+		_invx = EditorGUI.Foldout(_rect_invx, _invx, "Invert X", true, "LightBoldFoldout");
+		_invy = EditorGUI.Foldout(_rect_invy, _invy, "Invert Y", true, "LightBoldFoldout");
+		if (EditorGUI.EndChangeCheck()) {
+			selectlist.Clear();
+			selectset.Clear();
+			UpdateSocketList();
+			_repaint_menu = true;
+			_render_mesh = true;
+		}
+		//draw list scroll
+		_socketscroll = GUI.BeginScrollView(_rect_socketscroll, _socketscroll, _rect_socketcontent);
+		_socketlist.DoList(_rect_socketcontent);
+		GUI.EndScrollView();
+
+		//add button
+		if (GUI.Button(_rect_addsocket, "Add", "LightButton")) {
+			AddSocketElement();
+		}
+		//selection add button
+		EditorGUI.BeginDisabledGroup(_preview.secondaryCount <= 0);
+		if (GUI.Button(_rect_secondaddsocket, "Add S", "LightButton")) {
+			AddSecondarySelection();
+		}
 		EditorGUI.EndDisabledGroup();
+
+		//delete button
+		EditorGUI.BeginDisabledGroup(selectlist.Count <= 0);
+		if (GUI.Button(_rect_delsocket, "Delete", "LightButton")) {
+			DeleteSelectedSocketVertex();
+		}
+		EditorGUI.EndDisabledGroup();
+		EditorGUI.EndDisabledGroup();
+		EditorGUI.EndDisabledGroup();
+
+		_preview.invx = _meshdisplay.invertx;
+		_preview.invy = _meshdisplay.inverty;
 	}
 
-	private void AddSecondarySelection(int socket_index)
+	public override void DrawPreview(Rect rect)
 	{
+		//update preview displays
+		_selectdisplay.selected = _preview.secondaryCount;
+		_selectdisplay.superselected = _preview.secondarySuper;
+
+		rect = VxlGUI.GetPaddedRect(rect, VxlGUI.MED_PAD);
+		float width = Mathf.Min(200, rect.width / 3f);
+		_selectdisplay.DrawGUI(VxlGUI.GetBelowLeftElement(rect, 0, width, 0, rect.height / 3f));
+		_meshdisplay.DrawGUI(VxlGUI.GetAboveRightElement(rect, 0, width, 0, rect.height / 3f));
+	}
+
+
+	public bool inverseX {
+		get {
+			return _invx;
+		}
+	}
+	public bool inverseY {
+		get {
+			return _invy;
+		}
+	}
+
+	public int axiSocket {
+		get {
+			return _axilist.index;
+		}
+	}
+
+	public override bool repaintMenu {
+		get {
+			return _repaint_menu || _meshdisplay.repaintMenu;
+		}
+		set {
+			_repaint_menu = value;
+			_meshdisplay.repaintMenu = value;
+		}
+	}
+	public override bool updateMesh {
+		get {
+			return _update_mesh || _meshdisplay.updateMesh;
+		}
+		set {
+			_update_mesh = value;
+			_meshdisplay.updateMesh = value;
+		}
+	}
+	public override bool renderMesh {
+		get {
+			return _render_mesh || _meshdisplay.renderMesh;
+		}
+		set {
+			_render_mesh = value;
+			_meshdisplay.renderMesh = value;
+		}
+	}
+
+	private void UpdateAxiList()
+	{
+		if (target == null || !target.IsValid()) {
+			selectlist.Clear();
+			selectset.Clear();
+			_axilist.index = -1;
+			_sockets.Clear();
+		}
+	}
+
+	private void UpdateSocketList()
+	{
+		_sockets.Clear();
+		if (target == null || !target.IsValid()) {
+			selectlist.Clear();
+			selectset.Clear();
+			return;
+		}
+		List<int> socket;
+		if (_is_edge) {
+			socket = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
+		}
+		else {
+			socket = target.GetFaceSocketList(_invx, _invy, _axilist.index);
+		}
+		if (socket == null) {
+			selectlist.Clear();
+			selectset.Clear();
+			return;
+		}
+		for (int k = 0;k < socket.Count;k++) {
+			_sockets.Add(socket[k]);
+		}
+	}
+
+	private void UpdateRects(Rect rect)
+	{
+		Rect rect_col = VxlGUI.GetLeftColumn(rect, VxlGUI.SM_SPACE, 0.5f);
+		//calculate axi rects
+		_rect_axititle = VxlGUI.GetAboveElement(rect_col, 0, VxlGUI.MED_BAR);
+		_rect_axiscroll = VxlGUI.GetSandwichedRectY(rect_col, VxlGUI.MED_BAR + VxlGUI.SM_SPACE, 0);
+		_rect_axicontent = VxlGUI.GetScrollViewRect(_axilist, _rect_axiscroll.width, _rect_axiscroll.height);
+
+		rect_col = VxlGUI.GetRightColumn(rect, VxlGUI.SM_SPACE, 0.5f);
+		//calculate socket rects
+		_rect_sockethead = VxlGUI.GetAboveElement(rect_col, 0, (2 * VxlGUI.MED_BAR) + VxlGUI.MED_SPACE);
+		_rect_sockettitle = VxlGUI.GetAboveElement(_rect_sockethead, 0, VxlGUI.MED_BAR);
+		_rect_invx = VxlGUI.GetBelowLeftElement(_rect_sockethead, 0, _rect_sockethead.width / 2f, 0, VxlGUI.MED_BAR);
+		_rect_invy = VxlGUI.GetBelowRightElement(_rect_sockethead, 0, _rect_sockethead.width / 2f, 0, VxlGUI.MED_BAR);
+		_rect_socketscroll = VxlGUI.GetSandwichedRectY(rect_col, _rect_sockethead.height + VxlGUI.SM_SPACE, VxlGUI.MED_BAR + VxlGUI.SM_SPACE);
+		_rect_socketcontent = VxlGUI.GetScrollViewRect(_socketlist, _rect_socketscroll.width, _rect_socketscroll.height);
+		_rect_socketbuttonpanel = VxlGUI.GetBelowElement(rect_col, 0, VxlGUI.MED_BAR);
+		float button_width = Mathf.Min(60, _rect_socketbuttonpanel.width / 3f);
+		_rect_addsocket = VxlGUI.GetRightElement(_rect_socketbuttonpanel, 0, button_width);
+		_rect_delsocket = VxlGUI.GetLeftElement(_rect_socketbuttonpanel, 0, button_width);
+		_rect_secondaddsocket = VxlGUI.GetRightElement(_rect_socketbuttonpanel, 1, button_width);
+	}
+
+	private void AddSocketElement()
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
+		List<int> socket;
+		if (_is_edge) {
+			socket = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
+		}
+		else {
+			socket = target.GetFaceSocketList(_invx, _invy, _axilist.index);
+		}
+		if (socket == null) {
+			return;
+		}
+		Undo.RecordObject(target, "Add New Socket Vertex.");
+		socket.Add(-1);
+		_repaint_menu = true;
+		_render_mesh = true;
+		//dirty target object
+		EditorUtility.SetDirty(target);
+	}
+
+	private void AddSecondarySelection()
+	{
+		if (target == null || !target.IsValid()) {
+			return;
+		}
 		if (_preview == null || _preview.secondaryCount <= 0) {
 			return;
 		}
-		List<int> socket = target.GetSocket(_type, socket_index);
+		List<int> socket;
+		if (_is_edge) {
+			socket = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
+		}
+		else {
+			socket = target.GetFaceSocketList(_invx, _invy, _axilist.index);
+		}
 		if (socket == null) {
 			return;
 		}
@@ -174,74 +347,19 @@ public class SocketPanel: PanelGUI
 		EditorUtility.SetDirty(target);
 	}
 
-	private void UpdateSocketList()
+	private void DeleteSelectedSocketVertex()
 	{
-		//clear lists
-		for (int k = 0;k < _socketcnt;k++) {
-			_sockets[k].Clear();
-		}
-		//check if valid sockets to update
 		if (target == null || !target.IsValid()) {
 			return;
 		}
-		//update socket lists
-		for (int k = 0; k < _socketcnt; k++) {
-			List<int> socket = GetSocket(k);
-			if (socket == null) {
-				continue;
-			}
-			_sockets[k].AddRange(socket);
+		List<int> socket;
+		if (_is_edge) {
+			socket = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
 		}
-	}
-
-	public int selectedSocket {
-		get {
-			return _selectsocket;
+		else {
+			socket = target.GetFaceSocketList(_invx, _invy, _axilist.index);
 		}
-	}
-
-	private void RecalculateRects(Rect rect)
-	{
-		_rect_title = VxlGUI.GetAboveElement(rect, 0, VxlGUI.MED_BAR);
-		_rect_scroll = VxlGUI.GetSandwichedRectY(rect, VxlGUI.MED_BAR + VxlGUI.SM_SPACE, 0);
-
-		GUIStyle vscroll_style = GUI.skin.verticalScrollbar;
-		float list_width = _rect_scroll.width;
-		if (vscroll_style != null) {
-			list_width -= vscroll_style.fixedWidth;
-		}
-		float height = 0f;
-		for (int k = 0; k < _socketcnt; k++) {
-			if (k > 0) {
-				height += VxlGUI.MED_SPACE;
-			}
-			float min_listheight = (3 * VxlGUI.MED_BAR) + (2 * VxlGUI.SM_SPACE);
-			float list_height = Mathf.Max(min_listheight, _socketlists[k].GetHeight()) + VxlGUI.SM_SPACE + VxlGUI.MED_BAR + (2 * VxlGUI.MED_PAD);
-			_socketrects[k] = VxlGUI.GetPaddedRect(new Rect(0, height, list_width, list_height), VxlGUI.MED_PAD);
-			height += list_height;
-		}
-		float width = _rect_scroll.width;
-		if (height > _rect_scroll.height && vscroll_style != null) {
-			width = list_width;
-		}
-		_rect_content = new Rect(0, 0, width, height);
-	}
-	private void AddSocketElement(int socket_index)
-	{
-		List<int> socket = GetSocket(socket_index);
 		if (socket == null) {
-			return;
-		}
-		Undo.RecordObject(target, "Add New Socket Vertex.");
-		socket.Add(-1);
-		_repaint_menu = true;
-		//dirty target object
-		EditorUtility.SetDirty(target);
-	}
-	private void DeleteSelectedSocketVertex()
-	{
-		List<int> socket = GetSocket(_selectsocket);
-		if (socket == null || socket.Count <= 0 || selectlist.Count <= 0) {
 			return;
 		}
 		Undo.RecordObject(target, "Delete Selected Socket Vertex");
@@ -264,83 +382,94 @@ public class SocketPanel: PanelGUI
 		//dirty target object
 		EditorUtility.SetDirty(target);
 	}
-	private List<int> GetSocket(int index)
+
+
+	#region AxiSocket ReorderableList
+	public float SocketAxiHeight(int index)
 	{
-		if (target == null || !target.IsValid() || index < 0) {
-			return null;
+		if (_axilabels.Length <= 0) {
+			return VxlGUI.MED_BAR;
 		}
-		if (!System.Enum.IsDefined(typeof(SocketType), _type)) {
-			return null; 
+		else {
+			return VxlGUI.MED_BAR + (4 * VxlGUI.SM_BAR);
 		}
-		List<List<int>> sockets;
-		switch (_type) {
-			case SocketType.Face:
-				sockets = target.facesockets;
-				break;
-			default:
-				sockets = target.edgesockets;
-				break;
-		}
-		if (index >= sockets.Count) {
-			return null;
-		}
-		return sockets[index];
 	}
+	public void DrawSocketAxiNone(Rect rect)
+	{
+		GUI.Label(rect, "No Axi Socket Found.", GUI.skin.GetStyle("LeftListLabel"));
+	}
+	public void DrawSocketAxi(Rect rect, int index, bool active, bool focus)
+	{
+		GUI.Label(VxlGUI.GetAboveElement(rect, 0, VxlGUI.MED_BAR), "Axi " + _axilabels[index], GUI.skin.GetStyle("LeftListLabel"));
+		int normal_cnt = 0; int invertx_cnt = 0; int inverty_cnt = 0; int invertxy_cnt = 0;
+		if (target != null && target.IsValid()) {
+			if (_is_edge) {
+				normal_cnt = target.GetEdgeSocketCountByIndex(false, false, index);
+				invertx_cnt = target.GetEdgeSocketCountByIndex(true, false, index);
+				inverty_cnt = target.GetEdgeSocketCountByIndex(false, true, index);
+				invertxy_cnt = target.GetEdgeSocketCountByIndex(true, true, index);
+			}
+			else {
+				normal_cnt = target.GetFaceSocketCountByIndex(false, false, index);
+				invertx_cnt = target.GetFaceSocketCountByIndex(true, false, index);
+				inverty_cnt = target.GetFaceSocketCountByIndex(false, true, index);
+				invertxy_cnt = target.GetFaceSocketCountByIndex(true, true, index);
+			}
+			
+		}
+		GUI.Label(VxlGUI.GetAboveElement(rect, 0, VxlGUI.SM_BAR, VxlGUI.MED_BAR), normal_cnt.ToString() + " normal sockets", GUI.skin.GetStyle("RightListLabel"));
+		GUI.Label(VxlGUI.GetAboveElement(rect, 1, VxlGUI.SM_BAR, VxlGUI.MED_BAR), invertx_cnt.ToString() + " invertx sockets", GUI.skin.GetStyle("RightListLabel"));
+		GUI.Label(VxlGUI.GetAboveElement(rect, 2, VxlGUI.SM_BAR, VxlGUI.MED_BAR), inverty_cnt.ToString() + " inverty sockets", GUI.skin.GetStyle("RightListLabel"));
+		GUI.Label(VxlGUI.GetAboveElement(rect, 3, VxlGUI.SM_BAR, VxlGUI.MED_BAR), invertxy_cnt.ToString() + " invertxy sockets", GUI.skin.GetStyle("RightListLabel"));
+	}
+	public void DrawSocketAxiBackground(Rect rect, int index, bool active, bool focus)
+	{
+		bool hover = (_axilabels.Length > 0) && rect.Contains(Event.current.mousePosition);
+		bool on = (_axilabels.Length > 0) && (index == _axilist.index);
+		VxlGUI.DrawRect(rect, "SelectableGrey", hover, active, on, focus);
+	}
+	#endregion
 
 	#region Socket ReorderableList
-	private void DrawSocketNoneElement(Rect rect)
+	public void DrawSocketNone(Rect rect)
 	{
-		GUI.Label(rect, "No Socket Vertex.", GUI.skin.GetStyle("RightListLabel"));
+		GUI.Label(rect, "No Sockets Found", GUI.skin.GetStyle("RightListLabel"));
 	}
-	private void DrawSocketElement(Rect rect, int socket_index, int index, bool isActive, bool isFocused)
+	public void DrawSocket(Rect rect, int index, bool active, bool focus)
 	{
-		List<int> socket = GetSocket(socket_index);
-		if (socket == null || index < 0 || index >= socket.Count) {
-			return;
-		}
-		float max_element_width = 100f;
-		float field_width = Mathf.Min(max_element_width, 0.5f * rect.width);
-		//draw left label
-		GUI.Label(
-			VxlGUI.GetLeftElement(rect, 0, rect.width - field_width),
-			"Socket " + index
-		);
-		//draw int field
+
+		GUI.Label(VxlGUI.GetLeftColumn(rect, 0, 0.5f), "Socket " + index.ToString(), "LeftListLabel");
 		EditorGUI.BeginChangeCheck();
-		int vertex = EditorGUI.IntField(
-			VxlGUI.GetRightElement(rect, 0, field_width),
-			socket[index]
-		);
+		int socket = EditorGUI.IntField(VxlGUI.GetRightElement(rect, 0, VxlGUI.INTFIELD), _sockets[index]);
 		if (EditorGUI.EndChangeCheck()) {
-			Undo.RecordObject(target, "Update Socket");
-			socket[index] = vertex;
-			_update_mesh = true;
-			_render_mesh = true;
+			if (target == null || !target.IsValid()) {
+				return;
+			}
+			List<int> socketlist;
+			if (_is_edge) {
+				socketlist = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
+			}
+			else {
+				socketlist = target.GetFaceSocketList(_invx, _invy, _axilist.index);
+			}
+			if (socketlist == null || index < 0 || index >= socketlist.Count) {
+				return;
+			}
+			Undo.RecordObject(target, "Updated Socket");
+			socketlist[index] = socket;
 			_repaint_menu = true;
-			//dirty target object
+			_render_mesh = true;
+			_update_mesh = true;
 			EditorUtility.SetDirty(target);
 		}
 	}
-	private void DrawSocketElementBackground(Rect rect, int socket_index, int index, bool active, bool focus)
+	public void DrawSocketBackground(Rect rect, int index, bool active, bool focus)
 	{
-		List<int> socket = GetSocket(socket_index);
-		if (socket == null) {
-			return;
-		}
-		bool hover = (socket.Count > 0) && rect.Contains(Event.current.mousePosition);
-		bool on = (socket_index == _selectsocket) && selectset.Contains(index);
-		bool valid = true;
-		if (index >= 0 && index < socket.Count) {
-			valid = (socket[index] >= 0) && (socket[index] < target.vertices.Count);
-		}
-		if (valid) {
-			VxlGUI.DrawRect(rect, "SelectableGrey", hover, active, on, focus);
-		}
-		else {
-			VxlGUI.DrawRect(rect, "SelectableRed", hover, active, on, focus);
-		}
+		bool hover = (_sockets.Count > 0) && rect.Contains(Event.current.mousePosition);
+		bool on = selectset.Contains(index);
+		VxlGUI.DrawRect(rect, "SelectableGrey", hover, active, on, focus);
 	}
-	private void ReorderSocketElement(int socket_index, int old_index, int new_index)
+	private void ReorderSocket(ReorderableList list, int old_index, int new_index)
 	{
 		if (target == null || !target.IsValid()) {
 			return;
@@ -348,35 +477,48 @@ public class SocketPanel: PanelGUI
 		if (old_index < 0 || new_index < 0 || old_index == new_index) {
 			return;
 		}
-		List<int> socket = GetSocket(socket_index);
+		List<int> socket;
+		if (_is_edge) {
+			socket = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
+		}
+		else {
+			socket = target.GetFaceSocketList(_invx, _invy, _axilist.index);
+		}
 		if (socket == null || old_index >= socket.Count || new_index >= socket.Count) {
 			return;
 		}
-		Undo.RecordObject(target, "Reorder Socket");
-		int old_vertex = socket[old_index];
+		Undo.RecordObject(target, "Reorder Socket List");
+		int vertex = socket[old_index];
 		socket.RemoveAt(old_index);
-		socket.Insert(new_index, old_vertex);
+		socket.Insert(new_index, vertex);
 		//maintain selection
-		if (socket_index == _selectsocket) {
-			ReorderMaintainSelection(old_index, new_index, selectlist, selectset);
-		}
+		ReorderMaintainSelection(old_index, new_index, selectlist, selectset);
 		//dirty target object
-		_render_mesh = true;
 		_repaint_menu = true;
 		EditorUtility.SetDirty(target);
 	}
-	private void SelectSocketElement(int socket_index, int index)
+	private void SelectSocket(ReorderableList list)
 	{
-		if (socket_index != _selectsocket) {
-			selectlist.Clear();
-			selectlist.Clear();
-			_selectsocket = socket_index;
-		}
-		List<int> sockets = GetSocket(_selectsocket);
-		if (sockets == null || index < 0 || index >= sockets.Count) {
+		if (target == null || !target.IsValid()) {
 			selectset.Clear();
 			selectlist.Clear();
-			_selectsocket = -1;
+			_render_mesh = true;
+			_repaint_menu = true;
+			return;
+		}
+		List<int> socket;
+		if (_is_edge) {
+			socket = target.GetEdgeSocketList(_invx, _invy, _axilist.index);
+		}
+		else {
+			socket = target.GetFaceSocketList(_invx, _invy, _axilist.index);
+		}
+		int index = _socketlist.index;
+		if (socket == null || index < 0 || index >= socket.Count) {
+			selectset.Clear();
+			selectlist.Clear();
+			_render_mesh = true;
+			_repaint_menu = true;
 			return;
 		}
 		SelectListElement(index, selectlist, selectset);

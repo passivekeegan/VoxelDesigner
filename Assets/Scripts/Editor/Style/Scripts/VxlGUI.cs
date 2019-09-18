@@ -26,6 +26,8 @@ public static class VxlGUI
 	public const float POINT_RADIUS = 0.01f;
 	public const float POINT_RADIUSSQR = 0.0001f;
 
+	public const int INTFIELD = 40;
+
 	public readonly static Vector2 NORMAL_UV = new Vector2(0f, 0f);
 	public readonly static Vector2 SELECT_UV = new Vector2(0.25f, 0f);
 	public readonly static Vector2 GROUPSELECT_UV = new Vector2(0.55f, 0f);
@@ -285,12 +287,20 @@ public static class VxlGUI
 		return new Rect(0, 0, width, height);
 	}
 
-	public static Rect GetScrollViewRect(float width, float scrollheight, float content_height)
+	public static Rect GetVerticalScrollViewRect(float width, float scrollheight, float content_height)
 	{
 		GUIStyle vscroll_style = GUI.skin.verticalScrollbar;
 		if (vscroll_style != null && content_height > scrollheight) {
 			width -= vscroll_style.fixedWidth;
 		}
 		return new Rect(0, 0, width, content_height);
+	}
+	public static Rect GetHorizontalScrollViewRect(float height, float scrollwidth, float content_width)
+	{
+		GUIStyle vscroll_style = GUI.skin.horizontalScrollbar;
+		if (vscroll_style != null && content_width > scrollwidth) {
+			height -= vscroll_style.fixedWidth;
+		}
+		return new Rect(0, 0, content_width, height);
 	}
 }

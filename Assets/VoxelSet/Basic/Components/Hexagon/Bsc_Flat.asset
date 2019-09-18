@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b4889faf6206204fb66e3e7ed3ade71, type: 3}
+  m_Name: Bsc_Flat
+  m_EditorClassIdentifier: 
+  objname: Bsc_Flat
+  vertices: []
+  triangles:
+  - type0: 1
+    type1: 1
+    type2: 1
+    vertex0: 0
+    vertex1: 256
+    vertex2: 512
+  - type0: 1
+    type1: 1
+    type2: 1
+    vertex0: 512
+    vertex1: 768
+    vertex2: 1024
+  - type0: 1
+    type1: 1
+    type2: 1
+    vertex0: 1024
+    vertex1: 1280
+    vertex2: 0
+  - type0: 1
+    type1: 1
+    type2: 1
+    vertex0: 0
+    vertex1: 512
+    vertex2: 1024
+  edgesockets: []
+  _edgesocket_cnt: 0
+  facesockets: []
+  _facesocket_cnt: 0
+  cornerplugs: 010000000100000001000000010000000100000001000000
+  _cornerplug_cnt: 6
+  edgeplugs: ffffffffffffffffffffffffffffffffffffffffffffffff
+  _edgeplug_cnt: 6

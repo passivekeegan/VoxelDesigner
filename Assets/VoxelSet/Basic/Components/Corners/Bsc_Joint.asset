@@ -9,271 +9,253 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ab3ecded7e562a4891d4ed1cb739d86, type: 3}
+  m_Script: {fileID: 11500000, guid: 990b25e0791ffa545bfe289915c9c1df, type: 3}
   m_Name: Bsc_Joint
   m_EditorClassIdentifier: 
   objname: Bsc_Joint
   vertices:
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.092695, y: 0.3, z: -0.194148}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.035858, y: 0.3, z: -0.05975}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.069674, y: 0.3, z: -0.001178}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.12179, y: 0.3, z: 0.177351}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.145367, y: 0.175162, z: -0.126491}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.030285, y: 0.175162, z: -0.014589}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.002508, y: 0.175162, z: 0.033523}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.036861, y: 0.175162, z: 0.189137}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.18727, y: 0.074582, z: -0.030339}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.092411, y: 0.074582, z: 0.053354}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.06736, y: 0.074582, z: 0.177351}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.233975, y: 0, z: 0.135086}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.233975, y: 0, z: 0.135086}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.18727, y: -0.074582, z: -0.03034}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.092412, y: -0.074582, z: 0.053353}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.067361, y: -0.074582, z: 0.17735}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.145367, y: -0.175162, z: -0.126491}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.030286, y: -0.175162, z: -0.01459}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.002508, y: -0.175162, z: 0.033522}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.036861, y: -0.175162, z: 0.189137}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: -0.092695, y: -0.3, z: -0.194149}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.035857, y: -0.3, z: -0.05975}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.069674, y: -0.3, z: -0.001179}
-  - operations:
-    - scale: 1
-      vector_type: 0
-      vector: {x: 0.12179, y: -0.3, z: 0.17735}
+  - {x: 0.2144846, y: -0.3, z: -0.016798232}
+  - {x: 0.18222794, y: -0.175162, z: 0.062645935}
+  - {x: 0.027776903, y: -0.175162, z: 0.01893299}
+  - {x: 0.033815958, y: -0.3, z: -0.060928952}
+  - {x: 0.1199091, y: -0.074582, z: 0.14701134}
+  - {x: -0.033816516, y: -0.3, z: -0.060928073}
+  - {x: -0.0000009482792, y: -0.074582, z: 0.10670764}
+  - {x: 0.0000004089517, y: 0, z: 0.27017128}
+  - {x: -0.11991021, y: -0.074582, z: 0.14701058}
+  - {x: -0.02777831, y: -0.175162, z: 0.018933445}
+  - {x: -0.21448547, y: -0.3, z: -0.01679828}
+  - {x: -0.18222791, y: -0.175162, z: 0.06264601}
+  - {x: 0.2339754, y: 0, z: -0.13508528}
+  - {x: 0.18727046, y: 0.074582, z: 0.030340029}
+  - {x: 0.092411414, y: 0.074582, z: -0.05335327}
+  - {x: 0.067360654, y: 0.074582, z: -0.17735007}
+  - {x: 0.03028577, y: 0.175162, z: 0.014589509}
+  - {x: 0.14536694, y: 0.175162, z: 0.12649105}
+  - {x: 0.09269547, y: 0.3, z: 0.19414873}
+  - {x: -0.03585718, y: 0.3, z: 0.059750453}
+  - {x: 0.0025080564, y: 0.175162, z: -0.03352208}
+  - {x: -0.036860917, y: 0.175162, z: -0.18913701}
+  - {x: -0.069674015, y: 0.3, z: 0.0011789406}
+  - {x: -0.121789604, y: 0.3, z: -0.17735022}
   triangles:
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 23
-    vertex1: 19
-    vertex2: 18
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 23
-    vertex1: 18
-    vertex2: 22
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 15
-    vertex1: 18
-    vertex2: 19
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 21
-    vertex1: 22
-    vertex2: 18
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 15
-    vertex1: 14
-    vertex2: 18
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 12
-    vertex1: 14
-    vertex2: 15
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 12
-    vertex1: 13
-    vertex2: 14
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 21
-    vertex1: 18
-    vertex2: 17
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 18
-    vertex1: 14
-    vertex2: 17
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 13
-    vertex1: 17
-    vertex2: 14
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 17
-    vertex1: 20
-    vertex2: 21
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 13
-    vertex1: 16
-    vertex2: 17
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 17
-    vertex1: 16
-    vertex2: 20
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 11
-    vertex1: 9
-    vertex2: 10
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 11
-    vertex1: 8
-    vertex2: 9
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 10
-    vertex1: 9
-    vertex2: 6
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 10
-    vertex1: 6
-    vertex2: 7
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 6
-    vertex1: 3
-    vertex2: 7
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 6
-    vertex1: 2
-    vertex2: 3
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 8
-    vertex1: 5
-    vertex2: 9
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 5
-    vertex1: 6
-    vertex2: 9
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 2
-    vertex1: 6
-    vertex2: 5
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 8
-    vertex1: 4
-    vertex2: 5
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 2
-    vertex1: 5
-    vertex2: 1
-  - type0: 0
-    type1: 0
-    type2: 0
-    vertex0: 0
-    vertex1: 5
-    vertex2: 4
   - type0: 0
     type1: 0
     type2: 0
     vertex0: 0
     vertex1: 1
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 0
+    vertex1: 2
+    vertex2: 3
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 2
+    vertex2: 1
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 5
+    vertex1: 3
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 4
+    vertex1: 6
+    vertex2: 2
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 7
+    vertex1: 6
+    vertex2: 4
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 7
+    vertex1: 8
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 5
+    vertex1: 2
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 2
+    vertex1: 6
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 9
+    vertex2: 6
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 9
+    vertex1: 10
     vertex2: 5
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 8
+    vertex1: 11
+    vertex2: 9
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 9
+    vertex1: 11
+    vertex2: 10
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 12
+    vertex1: 14
+    vertex2: 13
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 12
+    vertex1: 15
+    vertex2: 14
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 14
+    vertex2: 16
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 13
+    vertex1: 16
+    vertex2: 17
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 16
+    vertex1: 18
+    vertex2: 17
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 16
+    vertex1: 19
+    vertex2: 18
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 15
+    vertex1: 20
+    vertex2: 14
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 20
+    vertex1: 16
+    vertex2: 14
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 19
+    vertex1: 16
+    vertex2: 20
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 15
+    vertex1: 21
+    vertex2: 20
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 19
+    vertex1: 20
+    vertex2: 22
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 23
+    vertex1: 20
+    vertex2: 21
+  - type0: 0
+    type1: 0
+    type2: 0
+    vertex0: 23
+    vertex1: 22
+    vertex2: 20
+  edgesockets:
+  - normal: 17000000160000001300000012000000
+    invx: 12000000130000001600000017000000
+    invy: 
+    invxy: 
+  - normal: 0a000000050000000300000000000000
+    invx: 0000000003000000050000000a000000
+    invy: 
+    invxy: 
+  - normal: 12000000110000000d0000000c00000000000000010000000400000007000000
+    invx: 0c0000000d000000110000001200000007000000040000000100000000000000
+    invy: 
+    invxy: 
+  - normal: 0c0000000f0000001500000017000000
+    invx: 0a0000000b0000000800000007000000
+    invy: 
+    invxy: 
+  - normal: 07000000080000000b0000000a000000
+    invx: 17000000150000000f0000000c000000
+    invy: 
+    invxy: 
   _edgesocket_cnt: 5
-  _facesocket_cnt: 15
+  facesockets:
+  - normal: 12000000
+    invx: 12000000
+    invy: 
+    invxy: 
+  - normal: 00000000
+    invx: 00000000
+    invy: 
+    invxy: 
+  - normal: 17000000
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 0a000000
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 17000000
+    invy: 
+    invxy: 
+  - normal: 0a000000
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 
+    invx: 
+    invy: 
+    invxy: 
+  - normal: 07000000
+    invx: 0c000000
+    invy: 
+    invxy: 
+  - normal: 0c000000
+    invx: 07000000
+    invy: 
+    invxy: 
+  _facesocket_cnt: 9
   cornerplugs: 
   _cornerplug_cnt: 0
   edgeplugs: 
   _edgeplug_cnt: 0
-  _serial_edgecounts: 0400000004000000080000000400000004000000
-  _serial_edgesockets: 000000000100000002000000030000001400000015000000160000001700000003000000070000000a0000000b00000017000000130000000f0000000c0000000b0000000800000004000000000000000c0000000d0000001000000014000000
-  _serial_facecounts: 010000000100000000000000000000000100000000000000000000000000000000000000010000000000000000000000000000000100000001000000
-  _serial_facesockets: 030000001700000000000000140000000c0000000b000000

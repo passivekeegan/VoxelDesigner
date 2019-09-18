@@ -28,6 +28,14 @@ public class PreviewAxiDisplay : PanelGUI
 	public Mesh voxel_mesh;
 	public Material material;
 
+	public bool invx;
+	public bool invy;
+	public bool enable_voxelframe;
+	public bool enable_voxelflip;
+	public Vector3 voxelpos;
+	public Vector3 altvoxelpos;
+	public Vector3 refl_vector;
+
 	public bool expanded;
 	public bool origin_enabled;
 	public bool global_enabled;
@@ -39,12 +47,10 @@ public class PreviewAxiDisplay : PanelGUI
 	public float distance_factor;
 
 	private Vector2 _scroll;
-	private int _displaymode;
 	private MaterialPropertyBlock _propblock;
 
-	public PreviewAxiDisplay(int displaymode)
+	public PreviewAxiDisplay()
 	{
-		_displaymode = displaymode;
 		origin_enabled = true;
 		global_enabled = false;
 		voxelaxi_enabled = true;
@@ -79,41 +85,14 @@ public class PreviewAxiDisplay : PanelGUI
 			height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
 			//axi
 			height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-			if (_displaymode == 0) {
-				//frame
+			//frame
+			if (enable_voxelframe) {
 				height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-				if (voxelframe_enabled) {
-					//flip voxel
+				//flip voxel
+				if (enable_voxelflip) {
 					height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
 				}
 			}
-			else if (_displaymode == 1) {
-				//frame
-				height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-				if (voxelframe_enabled) {
-					if (edge_vertical) {
-						//vertical edge
-						height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-					}
-					else {
-						//flip voxel
-						height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-						//vertical edge
-						height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-					}
-				}
-			}
-			else if (_displaymode == 2) {
-				//frame
-				height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-				if (voxelframe_enabled) {
-					//flip voxel
-					height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-					//hexagon face
-					height += VxlGUI.SM_SPACE + VxlGUI.MED_BAR;
-				}
-			}
-
 		}
 		return height;
 	}
@@ -140,7 +119,7 @@ public class PreviewAxiDisplay : PanelGUI
 			float scroll_height = Mathf.Max(0, panel_height - VxlGUI.SM_SPACE - VxlGUI.MED_BAR);
 			Rect panel_rect = VxlGUI.GetAboveElement(rect, 0, panel_height);
 			Rect rect_scroll = VxlGUI.GetSandwichedRectY(panel_rect, VxlGUI.MED_BAR + VxlGUI.SM_SPACE, 0);
-			Rect content_rect = VxlGUI.GetScrollViewRect(rect_scroll.width, rect_scroll.height, content_height);
+			Rect content_rect = VxlGUI.GetVerticalScrollViewRect(rect_scroll.width, rect_scroll.height, content_height);
 
 			VxlGUI.DrawRect(panel_rect, "DarkTransparentGrey");
 
@@ -167,56 +146,16 @@ public class PreviewAxiDisplay : PanelGUI
 			row_rect = VxlGUI.GetAboveElement(rect_content, level, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
 			voxelaxi_enabled = EditorGUI.Foldout(row_rect, voxelaxi_enabled, "Voxel Axi", true, GUI.skin.GetStyle("LightFoldout"));
 			level += 1;
-			
-			//extras
-			if (_displaymode == 0) {
-				//frame
+			//frame
+			if (enable_voxelframe) {
 				row_rect = VxlGUI.GetAboveElement(rect_content, level, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
 				voxelframe_enabled = EditorGUI.Foldout(row_rect, voxelframe_enabled, "Voxel Frame", true, GUI.skin.GetStyle("LightFoldout"));
 				level += 1;
-				if (voxelframe_enabled) {
+				if (enable_voxelflip && voxelframe_enabled) {
 					float y = (level * VxlGUI.MED_BAR) + ((Mathf.Max(0, level - 1) * VxlGUI.SM_SPACE));
 					Rect frame_rect = VxlGUI.GetSandwichedRectX(VxlGUI.GetSandwichedRectY(rect_content, y, 0), VxlGUI.MED_BAR, 0);
 					row_rect = VxlGUI.GetAboveElement(frame_rect, 0, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
 					voxelframe_flip = EditorGUI.Foldout(row_rect, voxelframe_flip, "Flip Voxel", true, GUI.skin.GetStyle("LightFoldout"));
-					level += 1;
-				}
-			}
-			else if (_displaymode == 1) {
-				//frame
-				row_rect = VxlGUI.GetAboveElement(rect_content, level, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-				voxelframe_enabled = EditorGUI.Foldout(row_rect, voxelframe_enabled, "Voxel Frame", true, GUI.skin.GetStyle("LightFoldout"));
-				level += 1;
-				if (voxelframe_enabled) {
-					float y = (level * VxlGUI.MED_BAR) + ((Mathf.Max(0, level - 1) * VxlGUI.SM_SPACE));
-					Rect frame_rect = VxlGUI.GetSandwichedRectX(VxlGUI.GetSandwichedRectY(rect_content, y, 0), VxlGUI.MED_BAR, 0);
-					row_rect = VxlGUI.GetAboveElement(frame_rect, 0, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-					if (edge_vertical) {
-						edge_vertical = EditorGUI.Foldout(row_rect, edge_vertical, "Vertical Edge", true, GUI.skin.GetStyle("LightFoldout"));
-						level += 1;
-					}
-					else {
-						voxelframe_flip = EditorGUI.Foldout(row_rect, voxelframe_flip, "Flip Voxel", true, GUI.skin.GetStyle("LightFoldout"));
-						level += 1;
-						row_rect = VxlGUI.GetAboveElement(frame_rect, 1, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-						edge_vertical = EditorGUI.Foldout(row_rect, edge_vertical, "Vertical Edge", true, GUI.skin.GetStyle("LightFoldout"));
-						level += 1;
-					}
-				}
-			}
-			else if (_displaymode == 2) {
-				//frame
-				row_rect = VxlGUI.GetAboveElement(rect_content, level, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-				voxelframe_enabled = EditorGUI.Foldout(row_rect, voxelframe_enabled, "Voxel Frame", true, GUI.skin.GetStyle("LightFoldout"));
-				level += 1;
-				if (voxelframe_enabled) {
-					float y = (level * VxlGUI.MED_BAR) + ((Mathf.Max(0, level - 1) * VxlGUI.SM_SPACE));
-					Rect frame_rect = VxlGUI.GetSandwichedRectX(VxlGUI.GetSandwichedRectY(rect_content, y, 0), VxlGUI.MED_BAR, 0);
-					row_rect = VxlGUI.GetAboveElement(frame_rect, 0, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-					voxelframe_flip = EditorGUI.Foldout(row_rect, voxelframe_flip, "Flip Voxel", true, GUI.skin.GetStyle("LightFoldout"));
-					level += 1;
-					row_rect = VxlGUI.GetAboveElement(frame_rect, 1, VxlGUI.MED_BAR, VxlGUI.SM_SPACE, 0);
-					face_hexagon = EditorGUI.Foldout(row_rect, face_hexagon, "Hexagon Face", true, GUI.skin.GetStyle("LightFoldout"));
 					level += 1;
 				}
 			}
@@ -239,16 +178,14 @@ public class PreviewAxiDisplay : PanelGUI
 		if (voxelaxi_enabled) {
 			DrawAxiDisplayObject(preview);
 		}
-		switch (_displaymode) {
-			case 0:
-				DrawCornerDisplayObjects(preview);
-				break;
-			case 1:
-				DrawEdgeDisplayObjects(preview);
-				break;
-			case 2:
-				DrawFaceDisplayObjects(preview);
-				break;
+		if (enable_voxelframe && voxelframe_enabled) {
+			_propblock.SetColor("_Color", COLOUR_VOXEL);
+			if (enable_voxelflip && voxelframe_flip) {
+				DrawDisplayObject(preview, voxel_mesh, altvoxelpos, Quaternion.identity, Vector3.one);
+			}
+			else {
+				DrawDisplayObject(preview, voxel_mesh, voxelpos, Quaternion.identity, Vector3.one);
+			}
 		}
 	}
 
@@ -330,67 +267,6 @@ public class PreviewAxiDisplay : PanelGUI
 		scale = new Vector3(0.01f * distance_factor, 100f, 0.01f * distance_factor);
 		_propblock.SetColor("_Color", COLOUR_AXI[7]);
 		DrawDisplayObject(preview, axis_mesh, pos, rot, scale);
-	}
-
-	private void DrawCornerDisplayObjects(PreviewRenderUtility preview)
-	{
-		Vector3 pos;
-		if (voxelframe_enabled) {
-			if (voxelframe_flip) {
-				pos = new Vector3(-1, 0.5f, -Vx.SQRT3_R1);
-			}
-			else {
-				pos = new Vector3(-1, -0.5f, -Vx.SQRT3_R1);
-			}
-			_propblock.SetColor("_Color", COLOUR_VOXEL);
-			DrawDisplayObject(preview, voxel_mesh, pos, Quaternion.identity, Vector3.one);
-		}
-	}
-
-	private void DrawEdgeDisplayObjects(PreviewRenderUtility preview)
-	{
-		Vector3 pos;
-		if (voxelframe_enabled) {
-			if (edge_vertical) {
-				pos = new Vector3(-1, 0, -Vx.SQRT3_R1);
-			}
-			else {
-				pos = new Vector3(-1, 0, 0);
-				if (voxelframe_flip) {
-					pos += 0.5f * Vector3.up;
-				}
-				else {
-					pos -= 0.5f * Vector3.up;
-				}
-			}
-			_propblock.SetColor("_Color", COLOUR_VOXEL);
-			DrawDisplayObject(preview, voxel_mesh, pos, Quaternion.identity, Vector3.one);
-		}
-	}
-
-	private void DrawFaceDisplayObjects(PreviewRenderUtility preview)
-	{
-		Vector3 pos;
-		if (voxelframe_enabled) {
-			if (face_hexagon) {
-				if (voxelframe_flip) {
-					pos = new Vector3(0, 0.5f, 0);
-				}
-				else {
-					pos = new Vector3(0, -0.5f, 0);
-				}
-			}
-			else {
-				if (voxelframe_flip) {
-					pos = new Vector3(1, 0, 0);
-				}
-				else {
-					pos = new Vector3(-1, 0, 0);
-				}
-			}
-			_propblock.SetColor("_Color", COLOUR_VOXEL);
-			DrawDisplayObject(preview, voxel_mesh, pos, Quaternion.identity, Vector3.one);
-		}
 	}
 
 	private void DrawDisplayObject(PreviewRenderUtility preview, Mesh mesh, Vector3 pos, Quaternion rot, Vector3 scale)
