@@ -1,0 +1,1724 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab68efa198694be46ab0b238031f01e7, type: 3}
+  m_Name: basic
+  m_EditorClassIdentifier: 
+  _ids: 1
+  _weld_distance: 0.0001
+  _patterns:
+  - a0: 0
+    a1: 0
+    a2: 0
+    b0: 0
+    b1: 0
+    b2: 1
+  - a0: 0
+    a1: 0
+    a2: 0
+    b0: 0
+    b1: 1
+    b2: 1
+  - a0: 0
+    a1: 0
+    a2: 0
+    b0: 1
+    b1: 1
+    b2: 1
+  - a0: 0
+    a1: 0
+    a2: 1
+    b0: 0
+    b1: 0
+    b2: 1
+  - a0: 0
+    a1: 0
+    a2: 1
+    b0: 0
+    b1: 1
+    b2: 0
+  - a0: 0
+    a1: 0
+    a2: 1
+    b0: 0
+    b1: 1
+    b2: 1
+  - a0: 0
+    a1: 0
+    a2: 1
+    b0: 1
+    b1: 1
+    b2: 0
+  - a0: 0
+    a1: 0
+    a2: 1
+    b0: 1
+    b1: 1
+    b2: 1
+  - a0: 0
+    a1: 1
+    a2: 1
+    b0: 0
+    b1: 1
+    b2: 1
+  - a0: 0
+    a1: 1
+    a2: 1
+    b0: 1
+    b1: 0
+    b2: 1
+  - a0: 0
+    a1: 1
+    a2: 1
+    b0: 1
+    b1: 1
+    b2: 1
+  - a0: 1
+    a1: 1
+    a2: 1
+    b0: 1
+    b1: 1
+    b2: 1
+  _designs:
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.2, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.5, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.17320505, y: -0.5, z: 0.09999993}
+    - shared: 0
+      vertex: {x: -0.17320505, y: -0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.51580924, y: -0.100131, z: 0.2612918}
+    - shared: 1
+      vertex: {x: -0.08181619, y: -0.5, z: 0.026175793}
+    - shared: 0
+      vertex: {x: -0.1816849, y: -0.100131, z: 0.06838547}
+    - shared: 1
+      vertex: {x: -0.55251557, y: -0.026719, z: 0.19771498}
+    - shared: 0
+      vertex: {x: -0.08181619, y: -0.2, z: 0.026175793}
+    - shared: 1
+      vertex: {x: -0.01823919, y: -0.5, z: -0.08394279}
+    - shared: 0
+      vertex: {x: -0.19152017, y: -0.026719, z: -0.01070533}
+    - shared: 1
+      vertex: {x: -0.5999998, y: 0, z: 0.11547016}
+    - shared: 0
+      vertex: {x: -0.09390504, y: -0.104358, z: -0.002531703}
+    - shared: 0
+      vertex: {x: -0.01823919, y: -0.2, z: -0.08394279}
+    - shared: 1
+      vertex: {x: -0.00000003854338, y: -0.5, z: -0.19999993}
+    - shared: 0
+      vertex: {x: -0.1999999, y: 0, z: -0.11547}
+    - shared: 1
+      vertex: {x: -1.0000004, y: 0, z: -0.5773505}
+    - shared: 1
+      vertex: {x: -0.19999981, y: 0, z: -0.57735014}
+    - shared: 0
+      vertex: {x: -0.049145035, y: -0.104358, z: -0.0800583}
+    - shared: 0
+      vertex: {x: -0.10082961, y: -0.052673, z: -0.058214}
+    - shared: 0
+      vertex: {x: -0.10503117, y: -0.026719, z: -0.16050866}
+    - shared: 1
+      vertex: {x: -0.10503156, y: -0.026719, z: -0.57735}
+    - shared: 0
+      vertex: {x: -0.03161889, y: -0.100131, z: -0.19153647}
+    - shared: 1
+      vertex: {x: -0.031619266, y: -0.100131, z: -0.57734984}
+    - shared: 0
+      vertex: {x: -0.00000003854338, y: -0.2, z: -0.19999993}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: -0.5, z: -0.5773502}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: -0.2, z: -0.5773502}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 2
+      vertex2: 3
+    - vertex0: 3
+      vertex1: 4
+      vertex2: 0
+    - vertex0: 3
+      vertex1: 2
+      vertex2: 5
+    - vertex0: 3
+      vertex1: 6
+      vertex2: 4
+    - vertex0: 6
+      vertex1: 7
+      vertex2: 4
+    - vertex0: 3
+      vertex1: 5
+      vertex2: 8
+    - vertex0: 6
+      vertex1: 3
+      vertex2: 8
+    - vertex0: 8
+      vertex1: 5
+      vertex2: 9
+    - vertex0: 6
+      vertex1: 10
+      vertex2: 7
+    - vertex0: 10
+      vertex1: 11
+      vertex2: 7
+    - vertex0: 6
+      vertex1: 8
+      vertex2: 12
+    - vertex0: 10
+      vertex1: 6
+      vertex2: 12
+    - vertex0: 8
+      vertex1: 9
+      vertex2: 13
+    - vertex0: 13
+      vertex1: 9
+      vertex2: 14
+    - vertex0: 10
+      vertex1: 15
+      vertex2: 11
+    - vertex0: 15
+      vertex1: 16
+      vertex2: 11
+    - vertex0: 17
+      vertex1: 16
+      vertex2: 15
+    - vertex0: 8
+      vertex1: 18
+      vertex2: 12
+    - vertex0: 8
+      vertex1: 13
+      vertex2: 18
+    - vertex0: 10
+      vertex1: 12
+      vertex2: 19
+    - vertex0: 15
+      vertex1: 10
+      vertex2: 19
+    - vertex0: 19
+      vertex1: 12
+      vertex2: 18
+    - vertex0: 20
+      vertex1: 17
+      vertex2: 15
+    - vertex0: 15
+      vertex1: 19
+      vertex2: 20
+    - vertex0: 20
+      vertex1: 19
+      vertex2: 18
+    - vertex0: 20
+      vertex1: 21
+      vertex2: 17
+    - vertex0: 20
+      vertex1: 18
+      vertex2: 22
+    - vertex0: 22
+      vertex1: 21
+      vertex2: 20
+    - vertex0: 13
+      vertex1: 22
+      vertex2: 18
+    - vertex0: 22
+      vertex1: 23
+      vertex2: 21
+    - vertex0: 13
+      vertex1: 14
+      vertex2: 24
+    - vertex0: 13
+      vertex1: 24
+      vertex2: 22
+    - vertex0: 24
+      vertex1: 23
+      vertex2: 22
+    - vertex0: 24
+      vertex1: 14
+      vertex2: 25
+    - vertex0: 24
+      vertex1: 26
+      vertex2: 23
+    - vertex0: 24
+      vertex1: 25
+      vertex2: 26
+    _shared: 1000000011000000150000001a000000190000000b000000070000000400000000000000010000000200000005000000090000000e00000017000000
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.49999902, y: -0.2, z: 0.2886757}
+    - shared: 1
+      vertex: {x: -0.49999902, y: -0.5, z: 0.2886757}
+    - shared: 1
+      vertex: {x: -0.17320418, y: -0.5, z: 0.100000426}
+    - shared: 0
+      vertex: {x: -0.17320418, y: -0.2, z: 0.100000426}
+    - shared: 1
+      vertex: {x: -0.51580924, y: -0.100131, z: 0.2612918}
+    - shared: 1
+      vertex: {x: -0.063117824, y: -0.5, z: 0.06582727}
+    - shared: 0
+      vertex: {x: -0.1646442, y: -0.101891, z: 0.06083412}
+    - shared: 1
+      vertex: {x: -0.5525147, y: -0.026719, z: 0.19771549}
+    - shared: 0
+      vertex: {x: -0.063117824, y: -0.2, z: 0.06582727}
+    - shared: 1
+      vertex: {x: 0.063119404, y: -0.5, z: 0.06582798}
+    - shared: 0
+      vertex: {x: -0.1743238, y: -0.029639, z: -0.017006319}
+    - shared: 1
+      vertex: {x: -0.59999895, y: 0, z: 0.11547067}
+    - shared: 0
+      vertex: {x: 0.063119404, y: -0.2, z: 0.06582798}
+    - shared: 1
+      vertex: {x: 0.17320594, y: -0.5, z: 0.1000005}
+    - shared: 0
+      vertex: {x: -0.055897094, y: -0.098128, z: 0.027976608}
+    - shared: 0
+      vertex: {x: -0.1999999, y: 0, z: -0.11547}
+    - shared: 1
+      vertex: {x: -0.9999995, y: 0, z: -0.57735}
+    - shared: 1
+      vertex: {x: -0.19999981, y: 0, z: -0.57735014}
+    - shared: 0
+      vertex: {x: -0.05890817, y: -0.031376, z: -0.045598067}
+    - shared: 0
+      vertex: {x: -0.07288294, y: 0, z: -0.15492903}
+    - shared: 1
+      vertex: {x: -0.07288267, y: 0, z: -0.5773495}
+    - shared: 1
+      vertex: {x: 0.07288377, y: 0, z: -0.5773504}
+    - shared: 0
+      vertex: {x: 0.07288387, y: 0, z: -0.15492857}
+    - shared: 1
+      vertex: {x: 0.20000006, y: 0, z: -0.57735026}
+    - shared: 0
+      vertex: {x: 0.055898752, y: -0.098128, z: 0.02797652}
+    - shared: 0
+      vertex: {x: 0.058909502, y: -0.031376, z: -0.045598254}
+    - shared: 0
+      vertex: {x: 0.20000082, y: 0, z: -0.11546958}
+    - shared: 1
+      vertex: {x: 0.99999976, y: 0, z: -0.5773504}
+    - shared: 1
+      vertex: {x: 0.5999998, y: 0, z: 0.11546993}
+    - shared: 0
+      vertex: {x: 0.17432554, y: -0.029639, z: -0.017006692}
+    - shared: 1
+      vertex: {x: 0.55251527, y: -0.026719, z: 0.1977155}
+    - shared: 0
+      vertex: {x: 0.16464536, y: -0.101891, z: 0.060833875}
+    - shared: 1
+      vertex: {x: 0.5158093, y: -0.100131, z: 0.26129216}
+    - shared: 0
+      vertex: {x: 0.17320594, y: -0.2, z: 0.1000005}
+    - shared: 1
+      vertex: {x: 0.49999976, y: -0.2, z: 0.288675}
+    - shared: 1
+      vertex: {x: 0.49999976, y: -0.5, z: 0.288675}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 2
+      vertex2: 3
+    - vertex0: 3
+      vertex1: 4
+      vertex2: 0
+    - vertex0: 5
+      vertex1: 3
+      vertex2: 2
+    - vertex0: 3
+      vertex1: 6
+      vertex2: 4
+    - vertex0: 6
+      vertex1: 7
+      vertex2: 4
+    - vertex0: 5
+      vertex1: 8
+      vertex2: 3
+    - vertex0: 6
+      vertex1: 3
+      vertex2: 8
+    - vertex0: 9
+      vertex1: 8
+      vertex2: 5
+    - vertex0: 6
+      vertex1: 10
+      vertex2: 7
+    - vertex0: 10
+      vertex1: 11
+      vertex2: 7
+    - vertex0: 9
+      vertex1: 12
+      vertex2: 8
+    - vertex0: 13
+      vertex1: 12
+      vertex2: 9
+    - vertex0: 6
+      vertex1: 8
+      vertex2: 14
+    - vertex0: 10
+      vertex1: 6
+      vertex2: 14
+    - vertex0: 10
+      vertex1: 15
+      vertex2: 11
+    - vertex0: 15
+      vertex1: 16
+      vertex2: 11
+    - vertex0: 16
+      vertex1: 15
+      vertex2: 17
+    - vertex0: 15
+      vertex1: 10
+      vertex2: 18
+    - vertex0: 10
+      vertex1: 14
+      vertex2: 18
+    - vertex0: 19
+      vertex1: 17
+      vertex2: 15
+    - vertex0: 15
+      vertex1: 18
+      vertex2: 19
+    - vertex0: 19
+      vertex1: 20
+      vertex2: 17
+    - vertex0: 21
+      vertex1: 20
+      vertex2: 19
+    - vertex0: 21
+      vertex1: 19
+      vertex2: 22
+    - vertex0: 22
+      vertex1: 19
+      vertex2: 18
+    - vertex0: 23
+      vertex1: 21
+      vertex2: 22
+    - vertex0: 8
+      vertex1: 24
+      vertex2: 14
+    - vertex0: 8
+      vertex1: 12
+      vertex2: 24
+    - vertex0: 14
+      vertex1: 25
+      vertex2: 18
+    - vertex0: 22
+      vertex1: 18
+      vertex2: 25
+    - vertex0: 14
+      vertex1: 24
+      vertex2: 25
+    - vertex0: 23
+      vertex1: 22
+      vertex2: 26
+    - vertex0: 26
+      vertex1: 22
+      vertex2: 25
+    - vertex0: 26
+      vertex1: 27
+      vertex2: 23
+    - vertex0: 26
+      vertex1: 28
+      vertex2: 27
+    - vertex0: 26
+      vertex1: 25
+      vertex2: 29
+    - vertex0: 29
+      vertex1: 28
+      vertex2: 26
+    - vertex0: 29
+      vertex1: 25
+      vertex2: 24
+    - vertex0: 29
+      vertex1: 30
+      vertex2: 28
+    - vertex0: 29
+      vertex1: 24
+      vertex2: 31
+    - vertex0: 31
+      vertex1: 30
+      vertex2: 29
+    - vertex0: 12
+      vertex1: 31
+      vertex2: 24
+    - vertex0: 31
+      vertex1: 32
+      vertex2: 30
+    - vertex0: 12
+      vertex1: 33
+      vertex2: 31
+    - vertex0: 33
+      vertex1: 32
+      vertex2: 31
+    - vertex0: 13
+      vertex1: 33
+      vertex2: 12
+    - vertex0: 33
+      vertex1: 34
+      vertex2: 32
+    - vertex0: 33
+      vertex1: 13
+      vertex2: 35
+    - vertex0: 33
+      vertex1: 35
+      vertex2: 34
+    _shared: 23000000
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.19999981, y: 0, z: -0.57735014}
+    - shared: 1
+      vertex: {x: -0.9999995, y: 0, z: -0.57735}
+    - shared: 0
+      vertex: {x: -0.1999999, y: 0, z: -0.11547}
+    - shared: 1
+      vertex: {x: -0.6000007, y: 0, z: 0.11546966}
+    - shared: 1
+      vertex: {x: -0.07288267, y: 0, z: -0.5773495}
+    - shared: 0
+      vertex: {x: 0, y: 0, z: 0}
+    - shared: 1
+      vertex: {x: 0.07288377, y: 0, z: -0.5773504}
+    - shared: 1
+      vertex: {x: -0.5364415, y: 0, z: 0.22555599}
+    - shared: 1
+      vertex: {x: -0.4635586, y: 0, z: 0.35179305}
+    - shared: 0
+      vertex: {x: 0.19999996, y: 0, z: -0.11547008}
+    - shared: 1
+      vertex: {x: 0.20000006, y: 0, z: -0.57735026}
+    - shared: 1
+      vertex: {x: 0.99999976, y: 0, z: -0.5773504}
+    - shared: 1
+      vertex: {x: 0.5999998, y: 0, z: 0.11546993}
+    - shared: 1
+      vertex: {x: 0.53644127, y: 0, z: 0.22555648}
+    - shared: 1
+      vertex: {x: 0.46355778, y: 0, z: 0.3517944}
+    - shared: 0
+      vertex: {x: -0.000000050246506, y: 0, z: 0.23094007}
+    - shared: 1
+      vertex: {x: -0.39999998, y: 0, z: 0.46188027}
+    - shared: 1
+      vertex: {x: 0.39999977, y: 0, z: 0.4618801}
+    - shared: 1
+      vertex: {x: 0.0000002822147, y: 0, z: 1.1546996}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 3
+      vertex1: 2
+      vertex2: 1
+    - vertex0: 2
+      vertex1: 4
+      vertex2: 0
+    - vertex0: 2
+      vertex1: 5
+      vertex2: 4
+    - vertex0: 4
+      vertex1: 5
+      vertex2: 6
+    - vertex0: 7
+      vertex1: 2
+      vertex2: 3
+    - vertex0: 7
+      vertex1: 5
+      vertex2: 2
+    - vertex0: 8
+      vertex1: 5
+      vertex2: 7
+    - vertex0: 9
+      vertex1: 6
+      vertex2: 5
+    - vertex0: 9
+      vertex1: 10
+      vertex2: 6
+    - vertex0: 9
+      vertex1: 11
+      vertex2: 10
+    - vertex0: 12
+      vertex1: 11
+      vertex2: 9
+    - vertex0: 13
+      vertex1: 12
+      vertex2: 9
+    - vertex0: 13
+      vertex1: 9
+      vertex2: 5
+    - vertex0: 13
+      vertex1: 5
+      vertex2: 14
+    - vertex0: 8
+      vertex1: 15
+      vertex2: 5
+    - vertex0: 14
+      vertex1: 5
+      vertex2: 15
+    - vertex0: 8
+      vertex1: 16
+      vertex2: 15
+    - vertex0: 14
+      vertex1: 15
+      vertex2: 17
+    - vertex0: 16
+      vertex1: 18
+      vertex2: 15
+    - vertex0: 17
+      vertex1: 15
+      vertex2: 18
+    _shared: 
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.2, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.5, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.17320505, y: -0.5, z: 0.09999993}
+    - shared: 0
+      vertex: {x: -0.17320505, y: -0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.08181619, y: -0.5, z: 0.026175793}
+    - shared: 0
+      vertex: {x: -0.17320505, y: -0.066667, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.066667, z: 0.2886752}
+    - shared: 0
+      vertex: {x: -0.08181619, y: -0.2, z: 0.026175793}
+    - shared: 1
+      vertex: {x: -0.01823919, y: -0.5, z: -0.08394279}
+    - shared: 0
+      vertex: {x: -0.17320505, y: 0.066667, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.066667, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.2, z: 0.2886752}
+    - shared: 0
+      vertex: {x: -0.17320505, y: 0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.5, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.17320505, y: 0.5, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.08181619, y: 0.5, z: 0.026175793}
+    - shared: 0
+      vertex: {x: -0.08181619, y: 0.2, z: 0.026175793}
+    - shared: 0
+      vertex: {x: -0.08181619, y: 0.066667, z: 0.026175793}
+    - shared: 0
+      vertex: {x: -0.01823919, y: 0.2, z: -0.08394279}
+    - shared: 1
+      vertex: {x: -0.01823919, y: 0.5, z: -0.08394279}
+    - shared: 0
+      vertex: {x: -0.08181619, y: -0.066667, z: 0.026175793}
+    - shared: 0
+      vertex: {x: -0.01823919, y: 0.066667, z: -0.08394279}
+    - shared: 0
+      vertex: {x: -0.00000003854338, y: 0.2, z: -0.19999993}
+    - shared: 1
+      vertex: {x: -0.00000003854338, y: 0.5, z: -0.19999993}
+    - shared: 0
+      vertex: {x: -0.01823919, y: -0.066667, z: -0.08394279}
+    - shared: 0
+      vertex: {x: -0.00000003854338, y: 0.066667, z: -0.19999993}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: 0.2, z: -0.5773502}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: 0.5, z: -0.5773502}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: 0.066667, z: -0.5773502}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: -0.066667, z: -0.5773502}
+    - shared: 0
+      vertex: {x: -0.00000003854338, y: -0.066667, z: -0.19999993}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: -0.2, z: -0.5773502}
+    - shared: 0
+      vertex: {x: -0.01823919, y: -0.2, z: -0.08394279}
+    - shared: 0
+      vertex: {x: -0.00000003854338, y: -0.2, z: -0.19999993}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: -0.5, z: -0.5773502}
+    - shared: 1
+      vertex: {x: -0.00000003854338, y: -0.5, z: -0.19999993}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 2
+      vertex2: 3
+    - vertex0: 3
+      vertex1: 2
+      vertex2: 4
+    - vertex0: 0
+      vertex1: 3
+      vertex2: 5
+    - vertex0: 0
+      vertex1: 5
+      vertex2: 6
+    - vertex0: 3
+      vertex1: 4
+      vertex2: 7
+    - vertex0: 5
+      vertex1: 3
+      vertex2: 7
+    - vertex0: 7
+      vertex1: 4
+      vertex2: 8
+    - vertex0: 6
+      vertex1: 5
+      vertex2: 9
+    - vertex0: 6
+      vertex1: 9
+      vertex2: 10
+    - vertex0: 9
+      vertex1: 11
+      vertex2: 10
+    - vertex0: 9
+      vertex1: 12
+      vertex2: 11
+    - vertex0: 13
+      vertex1: 11
+      vertex2: 12
+    - vertex0: 13
+      vertex1: 12
+      vertex2: 14
+    - vertex0: 12
+      vertex1: 15
+      vertex2: 14
+    - vertex0: 16
+      vertex1: 12
+      vertex2: 9
+    - vertex0: 12
+      vertex1: 16
+      vertex2: 15
+    - vertex0: 5
+      vertex1: 17
+      vertex2: 9
+    - vertex0: 16
+      vertex1: 9
+      vertex2: 17
+    - vertex0: 15
+      vertex1: 16
+      vertex2: 18
+    - vertex0: 18
+      vertex1: 16
+      vertex2: 17
+    - vertex0: 15
+      vertex1: 18
+      vertex2: 19
+    - vertex0: 5
+      vertex1: 20
+      vertex2: 17
+    - vertex0: 5
+      vertex1: 7
+      vertex2: 20
+    - vertex0: 20
+      vertex1: 21
+      vertex2: 17
+    - vertex0: 18
+      vertex1: 17
+      vertex2: 21
+    - vertex0: 19
+      vertex1: 18
+      vertex2: 22
+    - vertex0: 19
+      vertex1: 22
+      vertex2: 23
+    - vertex0: 7
+      vertex1: 24
+      vertex2: 20
+    - vertex0: 20
+      vertex1: 24
+      vertex2: 21
+    - vertex0: 25
+      vertex1: 22
+      vertex2: 18
+    - vertex0: 25
+      vertex1: 18
+      vertex2: 21
+    - vertex0: 23
+      vertex1: 22
+      vertex2: 26
+    - vertex0: 26
+      vertex1: 22
+      vertex2: 25
+    - vertex0: 23
+      vertex1: 26
+      vertex2: 27
+    - vertex0: 26
+      vertex1: 25
+      vertex2: 28
+    - vertex0: 25
+      vertex1: 29
+      vertex2: 28
+    - vertex0: 30
+      vertex1: 25
+      vertex2: 21
+    - vertex0: 25
+      vertex1: 30
+      vertex2: 29
+    - vertex0: 30
+      vertex1: 21
+      vertex2: 24
+    - vertex0: 30
+      vertex1: 31
+      vertex2: 29
+    - vertex0: 7
+      vertex1: 32
+      vertex2: 24
+    - vertex0: 32
+      vertex1: 30
+      vertex2: 24
+    - vertex0: 7
+      vertex1: 8
+      vertex2: 32
+    - vertex0: 30
+      vertex1: 33
+      vertex2: 31
+    - vertex0: 32
+      vertex1: 33
+      vertex2: 30
+    - vertex0: 8
+      vertex1: 33
+      vertex2: 32
+    - vertex0: 33
+      vertex1: 34
+      vertex2: 31
+    - vertex0: 8
+      vertex1: 35
+      vertex2: 33
+    - vertex0: 33
+      vertex1: 35
+      vertex2: 34
+    _shared: 
+  - _vertices: []
+    _triangles: []
+    _shared: 
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.49999976, y: -0.2, z: 0.288675}
+    - shared: 1
+      vertex: {x: -0.49999976, y: -0.5, z: 0.288675}
+    - shared: 1
+      vertex: {x: -0.17320508, y: -0.5, z: 0.1}
+    - shared: 0
+      vertex: {x: -0.17320508, y: -0.2, z: 0.1}
+    - shared: 1
+      vertex: {x: -0.49999976, y: -0.066667, z: 0.288675}
+    - shared: 1
+      vertex: {x: -0.06311854, y: -0.5, z: 0.06582748}
+    - shared: 0
+      vertex: {x: -0.17320508, y: -0.066667, z: 0.1}
+    - shared: 0
+      vertex: {x: -0.06311854, y: -0.2, z: 0.06582748}
+    - shared: 0
+      vertex: {x: -0.17320508, y: 0.066667, z: 0.1}
+    - shared: 1
+      vertex: {x: -0.49999976, y: 0.066667, z: 0.288675}
+    - shared: 0
+      vertex: {x: 0.06311869, y: -0.2, z: 0.06582677}
+    - shared: 1
+      vertex: {x: 0.06311869, y: -0.5, z: 0.06582677}
+    - shared: 1
+      vertex: {x: 0.17320505, y: -0.5, z: 0.09999993}
+    - shared: 0
+      vertex: {x: -0.05841641, y: -0.067276, z: 0.046923805}
+    - shared: 0
+      vertex: {x: -0.17320508, y: 0.2, z: 0.1}
+    - shared: 1
+      vertex: {x: -0.49999976, y: 0.2, z: 0.288675}
+    - shared: 1
+      vertex: {x: -0.49999976, y: 0.5, z: 0.288675}
+    - shared: 1
+      vertex: {x: -0.17320508, y: 0.5, z: 0.1}
+    - shared: 0
+      vertex: {x: -0.08181627, y: 0.2, z: 0.026176063}
+    - shared: 1
+      vertex: {x: -0.08181627, y: 0.5, z: 0.026176063}
+    - shared: 0
+      vertex: {x: 0.17320505, y: -0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: 0.49999988, y: -0.5, z: 0.2886752}
+    - shared: 1
+      vertex: {x: 0.49999988, y: -0.2, z: 0.2886752}
+    - shared: 1
+      vertex: {x: 0.5158098, y: -0.100131, z: 0.2612927}
+    - shared: 0
+      vertex: {x: 0.16464508, y: -0.101891, z: 0.060833618}
+    - shared: 1
+      vertex: {x: 0.55251557, y: -0.026719, z: 0.19771498}
+    - shared: 0
+      vertex: {x: 0.056966204, y: -0.081122, z: 0.030270359}
+    - shared: 0
+      vertex: {x: 0.17432466, y: -0.029639, z: -0.017006818}
+    - shared: 1
+      vertex: {x: 0.5999998, y: 0, z: 0.11547016}
+    - shared: 0
+      vertex: {x: 0.07281195, y: 0, z: -0.042038}
+    - shared: 0
+      vertex: {x: 0.1999999, y: 0, z: -0.11547}
+    - shared: 1
+      vertex: {x: 1.0000004, y: 0, z: -0.5773505}
+    - shared: 1
+      vertex: {x: 0.19999981, y: 0, z: -0.57735014}
+    - shared: 0
+      vertex: {x: 0.10189067, y: 0.029639, z: -0.14246619}
+    - shared: 1
+      vertex: {x: 0.101890475, y: 0.029639, z: -0.5773505}
+    - shared: 0
+      vertex: {x: -0.06984591, y: 0.067276, z: 0.02712733}
+    - shared: 0
+      vertex: {x: 0.002268201, y: 0.081122, z: -0.06446936}
+    - shared: 0
+      vertex: {x: 0.029639073, y: 0.101891, z: -0.17300363}
+    - shared: 1
+      vertex: {x: 0.029638521, y: 0.101891, z: -0.57735056}
+    - shared: 0
+      vertex: {x: -0.018239787, y: 0.2, z: -0.083942235}
+    - shared: 1
+      vertex: {x: -0.018239787, y: 0.5, z: -0.083942235}
+    - shared: 1
+      vertex: {x: 0.00000003854338, y: 0.5, z: -0.19999993}
+    - shared: 0
+      vertex: {x: 0.00000003854338, y: 0.2, z: -0.19999993}
+    - shared: 1
+      vertex: {x: -0.00000011221239, y: 0.2, z: -0.5773502}
+    - shared: 1
+      vertex: {x: -0.00000011221239, y: 0.5, z: -0.5773502}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 2
+      vertex2: 3
+    - vertex0: 3
+      vertex1: 4
+      vertex2: 0
+    - vertex0: 5
+      vertex1: 3
+      vertex2: 2
+    - vertex0: 3
+      vertex1: 6
+      vertex2: 4
+    - vertex0: 5
+      vertex1: 7
+      vertex2: 3
+    - vertex0: 6
+      vertex1: 3
+      vertex2: 7
+    - vertex0: 4
+      vertex1: 6
+      vertex2: 8
+    - vertex0: 4
+      vertex1: 8
+      vertex2: 9
+    - vertex0: 10
+      vertex1: 7
+      vertex2: 5
+    - vertex0: 10
+      vertex1: 5
+      vertex2: 11
+    - vertex0: 12
+      vertex1: 10
+      vertex2: 11
+    - vertex0: 6
+      vertex1: 7
+      vertex2: 13
+    - vertex0: 8
+      vertex1: 6
+      vertex2: 13
+    - vertex0: 9
+      vertex1: 8
+      vertex2: 14
+    - vertex0: 9
+      vertex1: 14
+      vertex2: 15
+    - vertex0: 16
+      vertex1: 15
+      vertex2: 14
+    - vertex0: 16
+      vertex1: 14
+      vertex2: 17
+    - vertex0: 18
+      vertex1: 17
+      vertex2: 14
+    - vertex0: 18
+      vertex1: 14
+      vertex2: 8
+    - vertex0: 18
+      vertex1: 19
+      vertex2: 17
+    - vertex0: 12
+      vertex1: 20
+      vertex2: 10
+    - vertex0: 20
+      vertex1: 12
+      vertex2: 21
+    - vertex0: 20
+      vertex1: 21
+      vertex2: 22
+    - vertex0: 20
+      vertex1: 22
+      vertex2: 23
+    - vertex0: 20
+      vertex1: 23
+      vertex2: 24
+    - vertex0: 10
+      vertex1: 20
+      vertex2: 24
+    - vertex0: 24
+      vertex1: 23
+      vertex2: 25
+    - vertex0: 10
+      vertex1: 24
+      vertex2: 26
+    - vertex0: 7
+      vertex1: 10
+      vertex2: 26
+    - vertex0: 7
+      vertex1: 26
+      vertex2: 13
+    - vertex0: 24
+      vertex1: 25
+      vertex2: 27
+    - vertex0: 27
+      vertex1: 26
+      vertex2: 24
+    - vertex0: 27
+      vertex1: 25
+      vertex2: 28
+    - vertex0: 29
+      vertex1: 13
+      vertex2: 26
+    - vertex0: 27
+      vertex1: 29
+      vertex2: 26
+    - vertex0: 27
+      vertex1: 28
+      vertex2: 30
+    - vertex0: 30
+      vertex1: 29
+      vertex2: 27
+    - vertex0: 30
+      vertex1: 28
+      vertex2: 31
+    - vertex0: 30
+      vertex1: 31
+      vertex2: 32
+    - vertex0: 33
+      vertex1: 30
+      vertex2: 32
+    - vertex0: 30
+      vertex1: 33
+      vertex2: 29
+    - vertex0: 33
+      vertex1: 32
+      vertex2: 34
+    - vertex0: 13
+      vertex1: 29
+      vertex2: 35
+    - vertex0: 8
+      vertex1: 13
+      vertex2: 35
+    - vertex0: 18
+      vertex1: 8
+      vertex2: 35
+    - vertex0: 35
+      vertex1: 29
+      vertex2: 36
+    - vertex0: 33
+      vertex1: 36
+      vertex2: 29
+    - vertex0: 18
+      vertex1: 35
+      vertex2: 36
+    - vertex0: 37
+      vertex1: 33
+      vertex2: 34
+    - vertex0: 33
+      vertex1: 37
+      vertex2: 36
+    - vertex0: 37
+      vertex1: 34
+      vertex2: 38
+    - vertex0: 18
+      vertex1: 36
+      vertex2: 39
+    - vertex0: 37
+      vertex1: 39
+      vertex2: 36
+    - vertex0: 39
+      vertex1: 19
+      vertex2: 18
+    - vertex0: 39
+      vertex1: 40
+      vertex2: 19
+    - vertex0: 41
+      vertex1: 40
+      vertex2: 39
+    - vertex0: 42
+      vertex1: 37
+      vertex2: 38
+    - vertex0: 37
+      vertex1: 42
+      vertex2: 39
+    - vertex0: 41
+      vertex1: 39
+      vertex2: 42
+    - vertex0: 42
+      vertex1: 38
+      vertex2: 43
+    - vertex0: 41
+      vertex1: 42
+      vertex2: 43
+    - vertex0: 41
+      vertex1: 43
+      vertex2: 44
+    _shared: 
+  - _vertices: []
+    _triangles: []
+    _shared: 
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.00000003854338, y: 0.5, z: -0.19999993}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: 0.2, z: -0.5773502}
+    - shared: 1
+      vertex: {x: 0.00000011221239, y: 0.5, z: -0.5773502}
+    - shared: 0
+      vertex: {x: -0.00000003854338, y: 0.2, z: -0.19999993}
+    - shared: 0
+      vertex: {x: -0.02544835, y: 0.2, z: -0.08757616}
+    - shared: 1
+      vertex: {x: -0.01823919, y: 0.5, z: -0.08394279}
+    - shared: 1
+      vertex: {x: 0.029638786, y: 0.101891, z: -0.57734984}
+    - shared: 1
+      vertex: {x: -0.08181619, y: 0.5, z: 0.026175793}
+    - shared: 0
+      vertex: {x: 0.029638711, y: 0.101891, z: -0.17300375}
+    - shared: 1
+      vertex: {x: 0.1018907, y: 0.029639, z: -0.57734984}
+    - shared: 0
+      vertex: {x: 0.101890996, y: 0.029639, z: -0.14246638}
+    - shared: 1
+      vertex: {x: 0.20000006, y: 0, z: -0.57735026}
+    - shared: 0
+      vertex: {x: -0.088567354, y: 0.2, z: 0.02174916}
+    - shared: 1
+      vertex: {x: -0.17320505, y: 0.5, z: 0.09999993}
+    - shared: 0
+      vertex: {x: 0.003721073, y: 0.098128, z: -0.06239709}
+    - shared: 0
+      vertex: {x: 0.19999996, y: 0, z: -0.11547008}
+    - shared: 1
+      vertex: {x: 1.0000006, y: 0, z: -0.5773499}
+    - shared: 1
+      vertex: {x: 0.6000006, y: 0, z: 0.11547041}
+    - shared: 0
+      vertex: {x: -0.052176926, y: 0.098128, z: 0.034421086}
+    - shared: 0
+      vertex: {x: 0.06894352, y: 0.031376, z: -0.028217688}
+    - shared: 0
+      vertex: {x: 0.17061481, y: 0, z: 0.014346467}
+    - shared: 1
+      vertex: {x: 0.5364421, y: 0, z: 0.22555695}
+    - shared: 0
+      vertex: {x: 0.09773181, y: 0, z: 0.14058353}
+    - shared: 1
+      vertex: {x: 0.4635591, y: 0, z: 0.351794}
+    - shared: 1
+      vertex: {x: 0.4000006, y: 0, z: 0.46188056}
+    - shared: 0
+      vertex: {x: 0.010034527, y: 0.031376, z: 0.07381569}
+    - shared: 0
+      vertex: {x: -0.000000050246506, y: 0, z: 0.23094007}
+    - shared: 1
+      vertex: {x: 0.0000006014814, y: 0, z: 1.1547009}
+    - shared: 1
+      vertex: {x: -0.39999998, y: 0, z: 0.46188027}
+    - shared: 0
+      vertex: {x: -0.07243401, y: 0.029639, z: 0.15947337}
+    - shared: 1
+      vertex: {x: -0.4490543, y: 0.029639, z: 0.37691486}
+    - shared: 0
+      vertex: {x: -0.1350063, y: 0.101891, z: 0.11216975}
+    - shared: 1
+      vertex: {x: -0.48518023, y: 0.101891, z: 0.31434286}
+    - shared: 0
+      vertex: {x: -0.17320505, y: 0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.2, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.5, z: 0.2886752}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 3
+      vertex2: 1
+    - vertex0: 4
+      vertex1: 3
+      vertex2: 0
+    - vertex0: 4
+      vertex1: 0
+      vertex2: 5
+    - vertex0: 6
+      vertex1: 1
+      vertex2: 3
+    - vertex0: 7
+      vertex1: 4
+      vertex2: 5
+    - vertex0: 6
+      vertex1: 3
+      vertex2: 8
+    - vertex0: 8
+      vertex1: 3
+      vertex2: 4
+    - vertex0: 9
+      vertex1: 6
+      vertex2: 8
+    - vertex0: 9
+      vertex1: 8
+      vertex2: 10
+    - vertex0: 11
+      vertex1: 9
+      vertex2: 10
+    - vertex0: 7
+      vertex1: 12
+      vertex2: 4
+    - vertex0: 13
+      vertex1: 12
+      vertex2: 7
+    - vertex0: 8
+      vertex1: 4
+      vertex2: 14
+    - vertex0: 10
+      vertex1: 8
+      vertex2: 14
+    - vertex0: 11
+      vertex1: 10
+      vertex2: 15
+    - vertex0: 15
+      vertex1: 16
+      vertex2: 11
+    - vertex0: 17
+      vertex1: 16
+      vertex2: 15
+    - vertex0: 4
+      vertex1: 18
+      vertex2: 14
+    - vertex0: 4
+      vertex1: 12
+      vertex2: 18
+    - vertex0: 10
+      vertex1: 14
+      vertex2: 19
+    - vertex0: 15
+      vertex1: 10
+      vertex2: 19
+    - vertex0: 18
+      vertex1: 19
+      vertex2: 14
+    - vertex0: 17
+      vertex1: 15
+      vertex2: 20
+    - vertex0: 15
+      vertex1: 19
+      vertex2: 20
+    - vertex0: 17
+      vertex1: 20
+      vertex2: 21
+    - vertex0: 21
+      vertex1: 20
+      vertex2: 22
+    - vertex0: 22
+      vertex1: 20
+      vertex2: 19
+    - vertex0: 21
+      vertex1: 22
+      vertex2: 23
+    - vertex0: 22
+      vertex1: 24
+      vertex2: 23
+    - vertex0: 22
+      vertex1: 19
+      vertex2: 25
+    - vertex0: 18
+      vertex1: 25
+      vertex2: 19
+    - vertex0: 22
+      vertex1: 26
+      vertex2: 24
+    - vertex0: 26
+      vertex1: 22
+      vertex2: 25
+    - vertex0: 26
+      vertex1: 27
+      vertex2: 24
+    - vertex0: 26
+      vertex1: 28
+      vertex2: 27
+    - vertex0: 26
+      vertex1: 25
+      vertex2: 29
+    - vertex0: 28
+      vertex1: 26
+      vertex2: 29
+    - vertex0: 29
+      vertex1: 25
+      vertex2: 18
+    - vertex0: 28
+      vertex1: 29
+      vertex2: 30
+    - vertex0: 29
+      vertex1: 18
+      vertex2: 31
+    - vertex0: 30
+      vertex1: 29
+      vertex2: 31
+    - vertex0: 12
+      vertex1: 31
+      vertex2: 18
+    - vertex0: 30
+      vertex1: 31
+      vertex2: 32
+    - vertex0: 12
+      vertex1: 33
+      vertex2: 31
+    - vertex0: 32
+      vertex1: 31
+      vertex2: 33
+    - vertex0: 13
+      vertex1: 33
+      vertex2: 12
+    - vertex0: 32
+      vertex1: 33
+      vertex2: 34
+    - vertex0: 35
+      vertex1: 33
+      vertex2: 13
+    - vertex0: 35
+      vertex1: 34
+      vertex2: 33
+    _shared: 
+  - _vertices:
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.2, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.5, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.17320505, y: -0.5, z: 0.09999993}
+    - shared: 0
+      vertex: {x: -0.17320505, y: -0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.06366068, y: -0.5, z: 0.06467553}
+    - shared: 1
+      vertex: {x: -0.49999988, y: -0.066667, z: 0.2886752}
+    - shared: 0
+      vertex: {x: -0.06366068, y: -0.2, z: 0.06467553}
+    - shared: 1
+      vertex: {x: 0.06311854, y: -0.5, z: 0.06582748}
+    - shared: 0
+      vertex: {x: -0.17320505, y: -0.066667, z: 0.09999993}
+    - shared: 0
+      vertex: {x: -0.17320505, y: 0.066667, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.066667, z: 0.2886752}
+    - shared: 0
+      vertex: {x: 0.06311854, y: -0.2, z: 0.06582748}
+    - shared: 1
+      vertex: {x: 0.17320508, y: -0.5, z: 0.1}
+    - shared: 0
+      vertex: {x: -0.06366068, y: -0.066667, z: 0.06467553}
+    - shared: 0
+      vertex: {x: 0.06311854, y: -0.066667, z: 0.06582748}
+    - shared: 0
+      vertex: {x: 0.17320508, y: -0.2, z: 0.1}
+    - shared: 1
+      vertex: {x: 0.49999976, y: -0.5, z: 0.288675}
+    - shared: 1
+      vertex: {x: 0.49999976, y: -0.2, z: 0.288675}
+    - shared: 1
+      vertex: {x: 0.49999976, y: -0.066667, z: 0.288675}
+    - shared: 0
+      vertex: {x: 0.17320508, y: -0.066667, z: 0.1}
+    - shared: 1
+      vertex: {x: 0.49999976, y: 0.066667, z: 0.288675}
+    - shared: 0
+      vertex: {x: -0.06366068, y: 0.066667, z: 0.06467553}
+    - shared: 0
+      vertex: {x: 0.06311854, y: 0.066667, z: 0.06582748}
+    - shared: 0
+      vertex: {x: 0.17320508, y: 0.066667, z: 0.1}
+    - shared: 0
+      vertex: {x: 0.06311854, y: 0.2, z: 0.06582748}
+    - shared: 0
+      vertex: {x: 0.17320508, y: 0.2, z: 0.1}
+    - shared: 1
+      vertex: {x: 0.49999976, y: 0.2, z: 0.288675}
+    - shared: 1
+      vertex: {x: 0.17320508, y: 0.5, z: 0.1}
+    - shared: 1
+      vertex: {x: 0.49999976, y: 0.5, z: 0.288675}
+    - shared: 1
+      vertex: {x: 0.06311854, y: 0.5, z: 0.06582748}
+    - shared: 0
+      vertex: {x: -0.06366068, y: 0.2, z: 0.06467553}
+    - shared: 1
+      vertex: {x: -0.06402419, y: 0.5, z: 0.065305136}
+    - shared: 0
+      vertex: {x: -0.17320505, y: 0.2, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.17320505, y: 0.5, z: 0.09999993}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.2, z: 0.2886752}
+    - shared: 1
+      vertex: {x: -0.49999988, y: 0.5, z: 0.2886752}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 2
+      vertex2: 3
+    - vertex0: 3
+      vertex1: 2
+      vertex2: 4
+    - vertex0: 5
+      vertex1: 0
+      vertex2: 3
+    - vertex0: 3
+      vertex1: 4
+      vertex2: 6
+    - vertex0: 6
+      vertex1: 4
+      vertex2: 7
+    - vertex0: 5
+      vertex1: 3
+      vertex2: 8
+    - vertex0: 8
+      vertex1: 3
+      vertex2: 6
+    - vertex0: 9
+      vertex1: 5
+      vertex2: 8
+    - vertex0: 9
+      vertex1: 10
+      vertex2: 5
+    - vertex0: 6
+      vertex1: 7
+      vertex2: 11
+    - vertex0: 11
+      vertex1: 7
+      vertex2: 12
+    - vertex0: 8
+      vertex1: 6
+      vertex2: 13
+    - vertex0: 9
+      vertex1: 8
+      vertex2: 13
+    - vertex0: 6
+      vertex1: 11
+      vertex2: 14
+    - vertex0: 6
+      vertex1: 14
+      vertex2: 13
+    - vertex0: 11
+      vertex1: 12
+      vertex2: 15
+    - vertex0: 15
+      vertex1: 14
+      vertex2: 11
+    - vertex0: 15
+      vertex1: 12
+      vertex2: 16
+    - vertex0: 15
+      vertex1: 16
+      vertex2: 17
+    - vertex0: 15
+      vertex1: 17
+      vertex2: 18
+    - vertex0: 15
+      vertex1: 18
+      vertex2: 19
+    - vertex0: 15
+      vertex1: 19
+      vertex2: 14
+    - vertex0: 19
+      vertex1: 18
+      vertex2: 20
+    - vertex0: 21
+      vertex1: 13
+      vertex2: 14
+    - vertex0: 9
+      vertex1: 13
+      vertex2: 21
+    - vertex0: 19
+      vertex1: 22
+      vertex2: 14
+    - vertex0: 21
+      vertex1: 14
+      vertex2: 22
+    - vertex0: 19
+      vertex1: 20
+      vertex2: 23
+    - vertex0: 19
+      vertex1: 23
+      vertex2: 22
+    - vertex0: 24
+      vertex1: 21
+      vertex2: 22
+    - vertex0: 23
+      vertex1: 24
+      vertex2: 22
+    - vertex0: 20
+      vertex1: 25
+      vertex2: 23
+    - vertex0: 23
+      vertex1: 25
+      vertex2: 24
+    - vertex0: 20
+      vertex1: 26
+      vertex2: 25
+    - vertex0: 27
+      vertex1: 25
+      vertex2: 26
+    - vertex0: 27
+      vertex1: 24
+      vertex2: 25
+    - vertex0: 27
+      vertex1: 26
+      vertex2: 28
+    - vertex0: 27
+      vertex1: 29
+      vertex2: 24
+    - vertex0: 24
+      vertex1: 30
+      vertex2: 21
+    - vertex0: 29
+      vertex1: 30
+      vertex2: 24
+    - vertex0: 30
+      vertex1: 9
+      vertex2: 21
+    - vertex0: 29
+      vertex1: 31
+      vertex2: 30
+    - vertex0: 30
+      vertex1: 32
+      vertex2: 9
+    - vertex0: 31
+      vertex1: 32
+      vertex2: 30
+    - vertex0: 32
+      vertex1: 10
+      vertex2: 9
+    - vertex0: 31
+      vertex1: 33
+      vertex2: 32
+    - vertex0: 32
+      vertex1: 34
+      vertex2: 10
+    - vertex0: 34
+      vertex1: 32
+      vertex2: 33
+    - vertex0: 34
+      vertex1: 33
+      vertex2: 35
+    _shared: 
+  - _vertices: []
+    _triangles: []
+    _shared: 
+  - _vertices:
+    - shared: 1
+      vertex: {x: 0.17320502, y: 0.5, z: 0.09999999}
+    - shared: 1
+      vertex: {x: 0.5, y: 0.2, z: 0.28867498}
+    - shared: 1
+      vertex: {x: 0.5, y: 0.5, z: 0.28867498}
+    - shared: 0
+      vertex: {x: 0.17320502, y: 0.2, z: 0.09999999}
+    - shared: 1
+      vertex: {x: 0.48518103, y: 0.101891, z: 0.31434196}
+    - shared: 0
+      vertex: {x: 0.06311901, y: 0.2, z: 0.06582699}
+    - shared: 1
+      vertex: {x: 0.06311901, y: 0.5, z: 0.06582699}
+    - shared: 1
+      vertex: {x: -0.063118994, y: 0.5, z: 0.065827005}
+    - shared: 0
+      vertex: {x: 0.13500601, y: 0.101891, z: 0.11216898}
+    - shared: 1
+      vertex: {x: 0.44905502, y: 0.029639, z: 0.37691498}
+    - shared: 0
+      vertex: {x: 0.072434016, y: 0.029639, z: 0.159473}
+    - shared: 1
+      vertex: {x: 0.40000004, y: 0, z: 0.46187997}
+    - shared: 0
+      vertex: {x: 0.042712007, y: 0.10493, z: 0.07896099}
+    - shared: 0
+      vertex: {x: -0.063118994, y: 0.2, z: 0.065827005}
+    - shared: 0
+      vertex: {x: 0.000000020189416, y: 0, z: 0.23094}
+    - shared: 1
+      vertex: {x: 0.000000100947084, y: 0, z: 1.1547}
+    - shared: 1
+      vertex: {x: -0.39999998, y: 0, z: 0.46188003}
+    - shared: 0
+      vertex: {x: 0.000000009481, y: 0.051854, z: 0.10845}
+    - shared: 0
+      vertex: {x: -0.072433986, y: 0.029639, z: 0.159473}
+    - shared: 1
+      vertex: {x: -0.44905496, y: 0.029639, z: 0.37691504}
+    - shared: 0
+      vertex: {x: -0.04271199, y: 0.10493, z: 0.07896101}
+    - shared: 0
+      vertex: {x: -0.13500598, y: 0.101891, z: 0.11216901}
+    - shared: 1
+      vertex: {x: -0.48518097, y: 0.101891, z: 0.31434202}
+    - shared: 0
+      vertex: {x: -0.17320499, y: 0.2, z: 0.10000002}
+    - shared: 1
+      vertex: {x: -0.17320499, y: 0.5, z: 0.10000002}
+    - shared: 1
+      vertex: {x: -0.49999997, y: 0.2, z: 0.28867504}
+    - shared: 1
+      vertex: {x: -0.49999997, y: 0.5, z: 0.28867504}
+    _triangles:
+    - vertex0: 0
+      vertex1: 1
+      vertex2: 2
+    - vertex0: 0
+      vertex1: 3
+      vertex2: 1
+    - vertex0: 4
+      vertex1: 1
+      vertex2: 3
+    - vertex0: 0
+      vertex1: 5
+      vertex2: 3
+    - vertex0: 0
+      vertex1: 6
+      vertex2: 5
+    - vertex0: 5
+      vertex1: 6
+      vertex2: 7
+    - vertex0: 4
+      vertex1: 3
+      vertex2: 8
+    - vertex0: 8
+      vertex1: 3
+      vertex2: 5
+    - vertex0: 9
+      vertex1: 4
+      vertex2: 8
+    - vertex0: 9
+      vertex1: 8
+      vertex2: 10
+    - vertex0: 11
+      vertex1: 9
+      vertex2: 10
+    - vertex0: 8
+      vertex1: 5
+      vertex2: 12
+    - vertex0: 10
+      vertex1: 8
+      vertex2: 12
+    - vertex0: 5
+      vertex1: 7
+      vertex2: 13
+    - vertex0: 13
+      vertex1: 12
+      vertex2: 5
+    - vertex0: 11
+      vertex1: 10
+      vertex2: 14
+    - vertex0: 14
+      vertex1: 15
+      vertex2: 11
+    - vertex0: 14
+      vertex1: 16
+      vertex2: 15
+    - vertex0: 10
+      vertex1: 12
+      vertex2: 17
+    - vertex0: 14
+      vertex1: 10
+      vertex2: 17
+    - vertex0: 18
+      vertex1: 16
+      vertex2: 14
+    - vertex0: 14
+      vertex1: 17
+      vertex2: 18
+    - vertex0: 18
+      vertex1: 19
+      vertex2: 16
+    - vertex0: 12
+      vertex1: 20
+      vertex2: 17
+    - vertex0: 18
+      vertex1: 17
+      vertex2: 20
+    - vertex0: 13
+      vertex1: 20
+      vertex2: 12
+    - vertex0: 21
+      vertex1: 19
+      vertex2: 18
+    - vertex0: 18
+      vertex1: 20
+      vertex2: 21
+    - vertex0: 13
+      vertex1: 21
+      vertex2: 20
+    - vertex0: 21
+      vertex1: 22
+      vertex2: 19
+    - vertex0: 7
+      vertex1: 23
+      vertex2: 13
+    - vertex0: 13
+      vertex1: 23
+      vertex2: 21
+    - vertex0: 23
+      vertex1: 22
+      vertex2: 21
+    - vertex0: 7
+      vertex1: 24
+      vertex2: 23
+    - vertex0: 23
+      vertex1: 25
+      vertex2: 22
+    - vertex0: 26
+      vertex1: 23
+      vertex2: 24
+    - vertex0: 26
+      vertex1: 25
+      vertex2: 23
+    _shared: 
+  - _vertices: []
+    _triangles: []
+    _shared: 

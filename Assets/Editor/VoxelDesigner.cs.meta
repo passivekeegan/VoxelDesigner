@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: afda99cf4f1d8d8419ec0ea051087b0a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - skin: {fileID: 11400000, guid: efc56edde611ad4478b4448670a75fd5, type: 2}
+  - vertexmesh: {fileID: -2961673720017555547, guid: 272cbd51b24ffb14fa06a7599b7e4585,
+      type: 3}
+  - aximesh: {fileID: -3116219750261275149, guid: 5f3ab1af7cc1c284bbf77de58204cd3e,
+      type: 3}
+  - aximaterial: {fileID: 2100000, guid: 31a415884686075419f72b40b9c36725, type: 2}
+  - meshmaterial: {fileID: 2100000, guid: bc2604de5b7cadd408ce58659c7b0a7f, type: 2}
+  - vertexmaterial: {fileID: 2100000, guid: e083c9018965b6741a60a444046a4187, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
